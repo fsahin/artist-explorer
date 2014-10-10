@@ -84,3 +84,28 @@ body {
 h4 {
   color: #81b900;
 }
+
+#popularTracks {
+  padding-left: 0;
+}
+
+.now-playing {
+  padding-left: 30px;
+}
+.now-playing::before {
+  /*content: "- ";*/
+  display: inlne-block;
+}
+
+.now-playing.active {
+  background: url('../img/spotify.png') no-repeat left top;
+  background-size: 67px;
+  background-position-x: 0px;
+}
+
+
+
+#popularTracks {
+  list-style-position: inside;
+}
+

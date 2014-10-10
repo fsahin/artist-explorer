@@ -155,17 +155,6 @@
         d = toggleChildren(d);
     }
 
-
-    function playFromList(obj) {
-        var trackId = obj.getAttribute("data-track-id");
-        var previewUrl = obj.getAttribute("data-preview-url");
-        trac = {
-            "id": trackId,
-            "preview_url": previewUrl,
-        }
-        playForTrack(trac);
-    }
-
     function toTitleCase(str) {
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
@@ -181,7 +170,6 @@
             + d.artist.uri
             + "&bucket=genre&bucket=biographies&format=json",
         }).done(function(data) {
-            console.log(data);
             var found = false;
             data.response.artist.biographies.forEach(function(biography){
                 if (!biography.truncated && !found) {
@@ -202,9 +190,15 @@
           + "/top-tracks?country=SE",
         }).done(function(data) {
             $("#popularTracks").empty();
-            data.tracks.forEach(function(track){
+            data.tracks.forEach(function(track, i){
+                var className = "now-playing";
+                console.log("playMusic", playMusic);
+                if (i === 0 && playMusic) {
+                    className += " active";
+                }
+
                 $("#popularTracks")
-                    .append("<li onmouseover=\"playFromList(this)\" data-track-id="
+                    .append('<li class="' + className +'" onmouseover="playFromList(this)" data-track-id='
                             + track.id + " data-preview-url=" + track.preview_url +">"
                             + track.name +
                             "</li>");

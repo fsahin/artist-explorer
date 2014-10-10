@@ -52,8 +52,17 @@ var audio = null;
 
    var api = new SpotifyWebApi();
 
+   function setDefaultPopularTracks() {
+      $("#popularTracks li").removeClass("active");
+   }
+
    function playFromList(obj) {
-       console.log(obj);
+      setDefaultPopularTracks();
+      if (!playMusic) {
+        return;
+      }
+       $(obj).addClass("now-playing active");
+
        var trackId = obj.getAttribute("data-track-id");
        var previewUrl = obj.getAttribute("data-preview-url");
        trac = {
@@ -86,6 +95,7 @@ var audio = null;
    }
 
    function clearMusic() {
+      setDefaultPopularTracks();
       console.log("clearing music");
       if (audio) {
         audio.pause();
