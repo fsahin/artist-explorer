@@ -116,8 +116,9 @@
         return new Promise(function(resolve, reject) {
             return api.getArtistRelatedArtists(artistId, function(error, data) {
 
+            //Sort in popularity order
             resolve(data.artists.sort(function(a, b) {
-                return a.popularity - b.popularity;
+                return b.popularity - a.popularity;
             }).slice(0, n));
             // resolve(data.artists.slice(0, n));
           });
@@ -127,7 +128,7 @@
     function setChildrenAndUpdate(node) {
         var artists;
 
-        getRelated(node.artist.id, 10).then(function(artists) {
+        getRelated(node.artist.id, numberOfArtistsToShow).then(function(artists) {
             if (!node.children) {
                 node.children = []
             }

@@ -61,7 +61,7 @@
   #tree-container {
     position: absolute;
     top: 140px;
-    left:300px;
+    left:350px;
     right:0;
   }
 
@@ -69,13 +69,13 @@
     position: absolute;
     top: 0px;
     left:0px;
-    width: 300px;
+    width: 350px;
     top: 60px;
   }
 
   #search {
     position: absolute;
-    left: 300px;
+    left: 350px;
     top: 50px;
     right: 0;
     padding: 20px;
@@ -93,7 +93,7 @@
   }
 
   #bigoraphyDiv {
-    height: 400px;
+    height: 300px;
     overflow: scroll;
   }
 
@@ -101,6 +101,22 @@
 <script>
    var audio = null;
    var currentPlayingSongId = null;
+   var playMusic = true;
+   var numberOfArtistsToShow = 10;
+
+   function playMusicHandler() {
+    if(document.getElementById('playMusic').checked) {
+      playMusic = true;
+    } else {
+      playMusic = false;
+      clearMusic();
+    }
+   }
+
+   function changeNumberOfArtists(value) {
+      numberOfArtistsToShow = value;
+      document.getElementById("range").innerHTML=value;
+   }
 
    $(function() {
        var api = new SpotifyWebApi();
@@ -149,6 +165,11 @@
    }
 
    function playForTrack(track_to_play) {
+       console.log(playMusic);
+       if (!playMusic) {
+        return;
+       }
+
        if (currentPlayingSongId == track_to_play.id) {
            return;
        }
@@ -163,6 +184,15 @@
            audio.play();
        }
        currentPlayingSongId = track_to_play.id;
+   }
+
+   function clearMusic() {
+      console.log("clearing music");
+      if (audio) {
+        audio.pause();
+      }
+      currentPlayingSongId = null;
+
    }
 
    function playForArtist(artist) {
@@ -197,14 +227,23 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-    <div id="leftpane">
-        <div id="hoverwarning" class="modal-body">
-          <p>Click on an artist to see related artists. </p>
-          <p>Hover over an artist to hear a sample of their music.</p>
-          <p>Enter an artist name in the search box and explore relationships between over 2,000,000 artists on Spotify.</p>
+    <div id="leftpane" class="modal-body">
+        <div id="config">
+          <input type="checkbox" checked="true" id="playMusic" onclick="playMusicHandler()"> Play Music<br>
+          <h4>Number of artists to show:</h4>
+          <input type="range" min="0" max="20" step="1" onchange="changeNumberOfArtists(this.value)"/>
+          <span id="range">10</span>
+        </div>
+        <hr>
+        <div id="hoverwarning">
+          <ul>
+          <li>Click on an artist to see related artists. </li>
+          <li>Hover over an artist to hear a sample of their music.</li>
+          <li>Enter an artist name in the search box and explore relationships between over 2,000,000 artists on Spotify.</li>
+          </ul>
         </div>
 
-        <div id="infobox" class="modal-body">
+        <div id="infobox">
           <h4>Artist Info </h4>
           <p id="artistInfo"> </p>
 
