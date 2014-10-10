@@ -191,7 +191,7 @@
         $('#artistInfo').text(d.artist.name);
         $('#popularityScore').text(d.artist.popularity);
         $.ajax({
-            url: "http://developer.echonest.com/api/v4/artist/profile?api_key=74YUTJPKNBURV2BLX%20&id="
+            url: "https://developer.echonest.com/api/v4/artist/profile?api_key=74YUTJPKNBURV2BLX%20&id="
             + d.artist.uri
             + "&bucket=genre&bucket=biographies&format=json",
         }).done(function(data) {
