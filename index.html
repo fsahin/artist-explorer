@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
 <meta charset="utf-8">
 <script src="./bower_components/spotify-web-api-js/src/spotify-web-api.js"></script>
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -32,15 +36,17 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-    <div id="leftpane" class="modal-body">
+    <div id="leftpane" class="modal-body warning">
         <div id="config">
+          <h4>Configuration </h4>
           <input type="checkbox" checked="true" id="playMusic" onclick="playMusicHandler()"> Play Music<br>
-          <h4>Number of artists to show:</h4>
-          <input type="range" min="0" max="20" step="1" onchange="changeNumberOfArtists(this.value)"/>
+          <h3>#Artists to expand:</h3>
+          <input type="range" min="1" max="20" step="1" onchange="changeNumberOfArtists(this.value)"/>
           <span id="range">10</span>
         </div>
         <hr>
         <div id="hoverwarning">
+          <h4>Help</h4>
           <ul>
           <li>Click on an artist to see related artists. </li>
           <li>Hover over an artist to hear a sample of their music.</li>
@@ -51,16 +57,16 @@
         <div id="infobox">
           <h4>Artist Info </h4>
           <p id="artistInfo"> </p>
+          <p id="artistInfo"> </p>
 
-          <h4>Popularity</h4>
-          <p id="popularityScore"> </p>
+          <div id="chart_div" style="width: 350px; height: 120px;"></div>
 
           <h4>Popular Tracks</h4>
           <ul id="popularTracks"> </ul>
           <hr>
 
           <h4>Main Genres</h4>
-          <div id="mainGenres"> </div>
+          <ul id="mainGenres"> </ul>
 
           <h4>Biography</h4>
           <div id="bigoraphyDiv">
@@ -78,4 +84,26 @@
 </body>
 <script src="js/main.js"></script>
 <script src="js/dndTree.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['gauge']}]}"></script>
+    <script type="text/javascript">
+       google.setOnLoadCallback(drawChart);
+      function drawChart(popularity_val) {
+
+        var popData = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Popularity', popularity_val]
+        ]);
+
+        var options = {
+          width: 300, height: 120,
+          redFrom: 80, redTo: 100,
+          yellowFrom:50, yellowTo: 80,
+          minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+        chart.draw(popData, options);
+
+      }
+    </script>
 </html>

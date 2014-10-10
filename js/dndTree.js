@@ -19,8 +19,8 @@
     var root;
 
     // size of the diagram
-    var viewerWidth = $(document).width() - 320;
-    var viewerHeight = $(document).height() - 120;
+    var viewerWidth = $(window).width() - 370;
+    var viewerHeight = $(window).height() - 120;
 
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
@@ -30,12 +30,6 @@
         .projection(function(d) {
             return [d.y, d.x];
         });
-
-    function sortTree() {
-        tree.sort(function(a, b) {
-            return b.artist.name.toLowerCase() < a.artist.name.toLowerCase() ? 1 : -1;
-        });
-    }
 
     // TODO: Pan function, can be better implemented.
     function pan(domNode, direction) {
@@ -91,8 +85,8 @@
         // var y = w.innerHeight|| e.clientHeight|| g.clientHeight;
         // console.log(x, y);
         // console.log("finished");
-        viewerWidth = $(document).width() - 320;
-        viewerHeight = $(document).height() - 120;
+        viewerWidth = $(window).width() - 370;
+        viewerHeight = $(window).height() - 120;
         baseSvg.attr("width", viewerWidth).attr("height", viewerHeight);
         console.log("finished");
     }
@@ -105,7 +99,7 @@
         var y = -source.x0;
         x = x * scale + viewerWidth / 2;
         y = y * scale + viewerHeight / 2;
-        d3.select('g').transition()
+        d3.select('#tree-container g').transition()
             .duration(duration)
             .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
         zoomListener.scale(scale);
@@ -184,13 +178,16 @@
         playForTrack(trac);
     }
 
+    function toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
 
     function getInfo(d) {
         playForArtist(d.artist);
         $('#infobox').css("visibility", "visible")
         $('#hoverwarning').css("display", "none")
         $('#artistInfo').text(d.artist.name);
-        $('#popularityScore').text(d.artist.popularity);
+        drawChart(d.artist.popularity);
         $.ajax({
             url: "https://developer.echonest.com/api/v4/artist/profile?api_key=74YUTJPKNBURV2BLX%20&id="
             + d.artist.uri
@@ -207,7 +204,7 @@
 
             $("#mainGenres").empty();
             data.response.artist.genres.forEach(function(genre) {
-                $("#mainGenres").append("<li>" + genre.name + "</li>");
+                $("#mainGenres").append("<li>" + toTitleCase(genre.name) + "</li>");
             });
         });
 
@@ -260,7 +257,7 @@
             //d.y = (d.depth * (maxLabelLength * 10)); //maxLabelLength * 10px
             // alternatively to keep a fixed scale one can set a fixed depth per level
             // Normalize for fixed-depth by commenting out below line
-             d.y = (d.depth * 200); //500px per level.
+             d.y = (d.depth * 220); //500px per level.
         });
 
         // Update the nodes…
