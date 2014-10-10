@@ -75,20 +75,9 @@
         .call(zoomListener);
 
     function updateWindow(){
-        // console.log("here");
-        // var w = window,
-        //     d = document,
-        //     e = d.documentElement,
-        //     g = d.getElementsByTagName('body')[0];
-        // console.log("here");
-        // var x = w.innerWidth || e.clientWidth || g.clientWidth;
-        // var y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-        // console.log(x, y);
-        // console.log("finished");
         viewerWidth = $(window).width() - 370;
         viewerHeight = $(window).height() - 120;
         baseSvg.attr("width", viewerWidth).attr("height", viewerHeight);
-        console.log("finished");
     }
     window.onresize = updateWindow;
 
@@ -168,7 +157,6 @@
 
 
     function playFromList(obj) {
-        console.log(obj);
         var trackId = obj.getAttribute("data-track-id");
         var previewUrl = obj.getAttribute("data-preview-url");
         trac = {
@@ -419,14 +407,11 @@
     // Append a group which holds all nodes and which the zoom Listener can act upon.
     var svgGroup = baseSvg.append("g");
 
-    api.searchArtists('Queen', function(err, data) {
+    api.searchArtists('Cake', function(err, data) {
         if (data.artists && data.artists.items.length) {
             root = initWithArtist(data.artists.items[0]);
             root.x0 = viewerHeight / 2;
             root.y0 = 0;
-            // root.children.forEach(function(child){
-            //     collapse(child);
-            // });
             update(root);
             centerNode(root);
         }
