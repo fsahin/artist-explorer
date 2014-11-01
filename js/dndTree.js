@@ -201,6 +201,11 @@ var dndTree = (function() {
                     getInfo(d.artist);
                 }
             })
+            .on("mouseout", function(d) {
+                if ('artist' in d) {
+                    getInfoCancel();
+                }
+            })
             // .on("mouseout", clearLabel)
             .on('click', click);
 

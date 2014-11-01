@@ -53,7 +53,18 @@ function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
+var getInfoTimeoutid;
 function getInfo(artist) {
+    getInfoTimeoutid = window.setTimeout(function(){
+        _getInfo(artist);
+    }, 500);
+}
+
+function getInfoCancel(artist) {
+    window.clearTimeout(getInfoTimeoutid);
+}
+
+function _getInfo(artist) {
 
     playForArtist(artist);
     $('#infobox').css("visibility", "visible")
@@ -99,7 +110,7 @@ function getInfo(artist) {
             }
 
             $("#popularTracks")
-                .append('<li class="' + className +'" onmouseover="playFromList(this)" data-track-id='
+                .append('<li class="' + className +'" onmouseover="playFromList(this)" onmouseout="playFromListCancel()" data-track-id='
                         + track.id + " data-preview-url=" + track.preview_url + ">"
                         + '<a target="_blank" href="'+ track['external_urls']['spotify'] + '">' + track.name + '</a>'
                         + "</li>");
@@ -221,7 +232,18 @@ function setDefaultPopularTracks() {
     $("#popularTracks li").removeClass("active");
 }
 
+var playPopTrackTimeoutId;
 function playFromList(obj) {
+    playPopTrackTimeoutId = window.setTimeout(function(){
+        _playFromList(obj)
+    }, 500);
+}
+
+function playFromListCancel() {
+    window.clearTimeout(playPopTrackTimeoutId);
+}
+
+function _playFromList(obj) {
     setDefaultPopularTracks();
     if (!playMusic) {
         return;
