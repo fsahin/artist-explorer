@@ -1,8 +1,7 @@
 // Get JSON data
 
-(function() {
+var dndTree = (function() {
     'use strict';
-    var api = new SpotifyWebApi();
 
     // Misc. variables
     var i = 0;
@@ -42,8 +41,10 @@
     function updateWindow(){
         viewerWidth = $(window).width() - 370;
         viewerHeight = $(window).height() - 120;
-        baseSvg.attr("width", viewerWidth).attr("height", viewerHeight);
+        baseSvg.attr("width", viewerWidth)
+            .attr("height", viewerHeight);
     }
+
     window.onresize = updateWindow;
 
     // Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
@@ -60,22 +61,8 @@
         zoomListener.translate([x, y]);
     }
 
-    function getRelated(artistId, n) {
-        return new Promise(function(resolve, reject) {
-            return api.getArtistRelatedArtists(artistId, function(error, data) {
-
-            //Sort in popularity order
-            resolve(data.artists.sort(function(a, b) {
-                return b.popularity - a.popularity;
-            }).slice(0, n));
-            // resolve(data.artists.slice(0, n));
-          });
-        });
-    }
-
     function setChildrenAndUpdate(node) {
         var artists;
-
         getRelated(node.artist.id, numberOfArtistsToShow).then(function(artists) {
             if (!node.children) {
                 node.children = []
@@ -114,61 +101,9 @@
     }
 
     // Toggle children on click.
-
     function click(d) {
         if (d3.event.defaultPrevented) return; // click suppressed
         d = toggleChildren(d);
-    }
-
-    function toTitleCase(str) {
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
-
-    function getInfo(d) {
-        playForArtist(d.artist);
-        $('#infobox').css("visibility", "visible")
-        $('#hoverwarning').css("display", "none")
-        $('#artistInfo').text(d.artist.name);
-        drawChart(d.artist.popularity);
-        $.ajax({
-            url: "https://developer.echonest.com/api/v4/artist/profile?api_key=74YUTJPKNBURV2BLX%20&id="
-            + d.artist.uri
-            + "&bucket=genre&bucket=biographies&format=json",
-        }).done(function(data) {
-            var found = false;
-            data.response.artist.biographies.forEach(function(biography){
-                if (!biography.truncated && !found) {
-                    $('#biography').text(biography.text);
-                    found = true;
-                }
-            });
-
-            $("#mainGenres").empty();
-            data.response.artist.genres.forEach(function(genre) {
-                $("#mainGenres").append("<li>" + toTitleCase(genre.name) + "</li>");
-            });
-        });
-
-        $.ajax({
-          url: "https://api.spotify.com/v1/artists/"
-          + d.artist.id
-          + "/top-tracks?country=SE",
-        }).done(function(data) {
-            $("#popularTracks").empty();
-            data.tracks.forEach(function(track, i){
-                var className = "now-playing";
-                console.log("playMusic", playMusic);
-                if (i === 0 && playMusic) {
-                    className += " active";
-                }
-
-                $("#popularTracks")
-                    .append('<li class="' + className +'" onmouseover="playFromList(this)" data-track-id='
-                            + track.id + " data-preview-url=" + track.preview_url +">"
-                            + track.name +
-                            "</li>");
-            });
-        });
     }
 
     function clearLabel(d) {
@@ -220,7 +155,7 @@
             .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
-            .on("mouseover", getInfo)
+            .on("mouseover", function(d) {getInfo(d.artist)})
             // .on("mouseout", clearLabel)
             .on('click', click);
 
@@ -366,32 +301,15 @@
     // Append a group which holds all nodes and which the zoom Listener can act upon.
     var svgGroup = baseSvg.append("g");
 
-    api.searchArtists('Cake', function(err, data) {
-        if (data.artists && data.artists.items.length) {
-            root = initWithArtist(data.artists.items[0]);
+    return {
+         "setRoot" : function(artist) {
+            root = initWithArtist(artist);
             root.x0 = viewerHeight / 2;
             root.y0 = 0;
             update(root);
             centerNode(root);
         }
-      });
-
-    window.addEventListener('load', function() {
-
-    var form = document.querySelector('form');
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          var search = document.getElementById('artist-search');
-          api.searchArtists(search.value.trim(), function(err, data) {
-            if (data.artists && data.artists.items.length) {
-              // search.value = '';
-              root = initWithArtist(data.artists.items[0]);
-              update(root);
-              centerNode(root);
-            }
-          });
-
-        }, false);
-      }, false);
+    }
 
 })();
+

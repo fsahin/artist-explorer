@@ -3,6 +3,80 @@ var currentPlayingSongId = null;
 var playMusic = true;
 var numberOfArtistsToShow = 10;
 
+var api = new SpotifyWebApi();
+
+window.addEventListener('load', function() {
+    var form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var search = document.getElementById('artist-search');
+        api.searchArtists(search.value.trim(), function(err, data) {
+            if (data.artists && data.artists.items.length) {
+                dndTree.setRoot(data.artists.items[0]);
+            }
+        });
+
+    }, false);
+}, false);
+
+api.searchArtists('Cake', function(err, data) {
+    if (data.artists && data.artists.items.length) {
+        dndTree.setRoot(data.artists.items[0]);
+    }
+});
+
+function getInfo(artist) {
+    function toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+
+    playForArtist(artist);
+    $('#infobox').css("visibility", "visible")
+    $('#hoverwarning').css("display", "none")
+    $('#artistInfo').text(artist.name);
+    drawChart(artist.popularity);
+    $.ajax({
+        url: "https://developer.echonest.com/api/v4/artist/profile?api_key=74YUTJPKNBURV2BLX%20&id="
+        + artist.uri
+        + "&bucket=genre&bucket=biographies&format=json",
+    }).done(function(data) {
+        var found = false;
+        data.response.artist.biographies.forEach(function(biography){
+            if (!biography.truncated && !found) {
+                $('#biography').text(biography.text);
+                found = true;
+            }
+        });
+
+        $("#mainGenres").empty();
+        data.response.artist.genres.forEach(function(genre) {
+            $("#mainGenres").append("<li>" + toTitleCase(genre.name) + "</li>");
+        });
+    });
+
+    $.ajax({
+      url: "https://api.spotify.com/v1/artists/"
+      + artist.id
+      + "/top-tracks?country=SE",
+    }).done(function(data) {
+        $("#popularTracks").empty();
+        data.tracks.forEach(function(track, i){
+            var className = "now-playing";
+            console.log("playMusic", playMusic);
+            if (i === 0 && playMusic) {
+                className += " active";
+            }
+
+            $("#popularTracks")
+                .append('<li class="' + className +'" onmouseover="playFromList(this)" data-track-id='
+                        + track.id + " data-preview-url=" + track.preview_url +">"
+                        + track.name +
+                        "</li>");
+        });
+    });
+}
+
+
 function playMusicHandler() {
     if (document.getElementById('playMusic').checked) {
         playMusic = true;
@@ -12,13 +86,25 @@ function playMusicHandler() {
     }
 }
 
+function getRelated(artistId, n) {
+    return new Promise(function(resolve, reject) {
+        return api.getArtistRelatedArtists(artistId, function(error, data) {
+
+        //Sort in popularity order
+        resolve(data.artists.sort(function(a, b) {
+            return b.popularity - a.popularity;
+        }).slice(0, n));
+        // resolve(data.artists.slice(0, n));
+      });
+    });
+}
+
 function changeNumberOfArtists(value) {
     numberOfArtistsToShow = value;
     document.getElementById("range").innerHTML = value;
 }
 
 $(function() {
-    var api = new SpotifyWebApi();
     $("#artist-search")
         // don't navigate away from the field on tab when selecting an item
         .bind("keydown", function(event) {
@@ -49,8 +135,6 @@ $(function() {
             }
         });
 });
-
-var api = new SpotifyWebApi();
 
 function setDefaultPopularTracks() {
     $("#popularTracks li").removeClass("active");
