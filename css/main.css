@@ -45,23 +45,23 @@ body {
 #tree-container {
   position: absolute;
   top: 140px;
-  left:350px;
+  left:0px;
   right:0;
 }
 
-#leftpane {
+#rightpane {
   position: absolute;
   top: 0px;
-  left:0px;
+  right:0px;
   width: 350px;
   top: 60px;
 }
 
 #search {
   position: absolute;
-  left: 350px;
+  left: 0px;
   top: 50px;
-  right: 0;
+  right: 350px;
   padding: 20px;
   padding-left : 0px;
 }

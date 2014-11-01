@@ -36,7 +36,13 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-    <div id="leftpane" class="modal-body warning">
+    <div id="tree-container"></div>
+    <div id="search">
+        <form class="form-horizontal" role="form">
+            <input id="artist-search" class="form-control" placeholder="Search for an Artist">
+        </form>
+    </div>
+    <div id="rightpane" class="modal-body warning">
         <div id="config">
           <h4>Configuration </h4>
           <input type="checkbox" checked="true" id="playMusic" onclick="playMusicHandler()"> Play Music<br>
@@ -74,12 +80,6 @@
           </div>
 
         </div>
-    </div>
-    <div id="tree-container"></div>
-    <div id="search">
-        <form class="form-horizontal" role="form">
-            <input id="artist-search" class="form-control" placeholder="Search for an Artist">
-        </form>
     </div>
 </body>
 <script src="js/main.js"></script>
