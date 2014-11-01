@@ -6,8 +6,8 @@ var numberOfArtistsToShow = 10;
 var api = new SpotifyWebApi();
 
 window.addEventListener('load', function() {
-    var form = document.querySelector('form');
-    form.addEventListener('submit', function(e) {
+    var formArtist = document.getElementById('search-artist');
+    formArtist.addEventListener('submit', function(e) {
         e.preventDefault();
         var search = document.getElementById('artist-search');
         api.searchArtists(search.value.trim(), function(err, data) {
@@ -15,8 +15,17 @@ window.addEventListener('load', function() {
                 dndTree.setRoot(data.artists.items[0]);
             }
         });
-
     }, false);
+
+    var formGenre = document.getElementById('search-genre');
+    formGenre.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var search = document.getElementById('genre-search');
+        console.log("setting root genre")
+        genreName = search.value.trim();
+        dndTree.setRootGenre(genreName);
+    }, false);
+
 }, false);
 
 api.searchArtists('Cake', function(err, data) {
@@ -25,10 +34,26 @@ api.searchArtists('Cake', function(err, data) {
     }
 });
 
+var allGenres = [];
+
+loadAllGenres();
+console.log(allGenres);
+
+function loadAllGenres() {
+    $.ajax({
+        url: "https://developer.echonest.com/api/v4/genre/list?api_key=74YUTJPKNBURV2BLX&format=json&results=1500"
+    }).done(function(data) {
+        data.response.genres.forEach(function(genre){
+            allGenres.push(genre.name);
+        });
+    });
+}
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
 function getInfo(artist) {
-    function toTitleCase(str) {
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
 
     playForArtist(artist);
     $('#infobox').css("visibility", "visible")
@@ -54,8 +79,11 @@ function getInfo(artist) {
 
         $("#mainGenres").empty();
         data.response.artist.genres.forEach(function(genre) {
-            $("#mainGenres").append("<li>" + toTitleCase(genre.name) + "</li>");
+            $("#mainGenres").append("<li><a>" + toTitleCase(genre.name) + "</a></li>");
         });
+        $('#mainGenres li').click( function() {
+            dndTree.setRootGenre($(this).text());
+        } );
     });
 
     $.ajax({
@@ -93,14 +121,44 @@ function getRelated(artistId, n) {
     return new Promise(function(resolve, reject) {
         return api.getArtistRelatedArtists(artistId, function(error, data) {
 
-        //Sort in popularity order
-        resolve(data.artists.sort(function(a, b) {
-            return b.popularity - a.popularity;
-        }).slice(0, n));
-        // resolve(data.artists.slice(0, n));
+            //Sort in popularity order
+            resolve(data.artists.sort(function(a, b) {
+                return b.popularity - a.popularity;
+            }).slice(0, n));
+            // resolve(data.artists.slice(0, n));
       });
     });
 }
+
+
+function getIdFromArtistUri(artistUri) {
+    return artistUri.split(':').pop();
+}
+
+function getArtistsForGenre(genreName, n) {
+    return new Promise(function(resolve, reject) {
+        return $.ajax({
+            url: "https://developer.echonest.com/api/v4/genre/artists?api_key=74YUTJPKNBURV2BLX"
+            +"&format=json&results=15&bucket=id:spotify"
+            + "&name=" + genreName.toLowerCase()
+        }).then(function(data) {
+            console.log("in then");
+            var idsToRequest = []
+            data.response.artists.forEach(function(artist) {
+                if (artist.foreign_ids) {
+                    idsToRequest.push(getIdFromArtistUri(artist.foreign_ids[0].foreign_id));
+                }
+            });
+            return api.getArtists(idsToRequest, function(error, data) {
+                //Sort in popularity order
+                resolve(data.artists.sort(function(a, b) {
+                    return b.popularity - a.popularity;
+                }).slice(0, n));
+            });
+        });
+    });
+}
+
 
 function changeNumberOfArtists(value) {
     numberOfArtistsToShow = value;
@@ -137,6 +195,26 @@ $(function() {
                 return false;
             }
         });
+
+    $("#genre-search")
+        // don't navigate away from the field on tab when selecting an item
+        .bind("keydown", function(event) {
+            if (event.keyCode === $.ui.keyCode.TAB &&
+                $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+            if (event.keyCode == 13) {
+                $(".ui-menu-item").hide();
+            }
+        })
+        .autocomplete({
+            minLength: 0,
+            source: allGenres,
+            focus: function(e, ui) {
+                // prevent value inserted on focus
+                return false;
+            }
+        });
 });
 
 function setDefaultPopularTracks() {
@@ -160,7 +238,6 @@ function playFromList(obj) {
 }
 
 function playForTrack(track_to_play) {
-    console.log(playMusic);
     if (!playMusic) {
         return;
     }
@@ -173,7 +250,6 @@ function playForTrack(track_to_play) {
         audio.load();
         audio.play();
     } else {
-        console.log("init sound");
         audio = new Audio(track_to_play.preview_url);
         audio.load();
         audio.play();
@@ -183,7 +259,6 @@ function playForTrack(track_to_play) {
 
 function clearMusic() {
     setDefaultPopularTracks();
-    console.log("clearing music");
     if (audio) {
         audio.pause();
     }

@@ -61,9 +61,29 @@ var dndTree = (function() {
         zoomListener.translate([x, y]);
     }
 
-    function setChildrenAndUpdate(node) {
+    function setChildrenAndUpdateForArtist(node) {
         var artists;
         getRelated(node.artist.id, numberOfArtistsToShow).then(function(artists) {
+            if (!node.children) {
+                node.children = []
+            }
+
+            artists.forEach(function(artist) {
+                node.children.push(
+                    {
+                        'artist': artist,
+                        'children': null
+                    }
+                )
+            });
+            update(node);
+            centerNode(node);
+        });
+    }
+
+    function setChildrenAndUpdateForGenre(node) {
+        var artists;
+        getArtistsForGenre(node.genre.name, numberOfArtistsToShow).then(function(artists) {
             if (!node.children) {
                 node.children = []
             }
@@ -88,6 +108,23 @@ var dndTree = (function() {
         }
     };
 
+    function initWithGenre(genreName) {
+        return {
+            'genre' : {
+                'name':genreName
+            },
+            'children': null,
+        }
+    };
+
+    function isArtist(d) {
+        return 'artist' in d;
+    }
+
+    function isGenre(d) {
+        return 'genre' in d;
+    }
+
     // Toggle children function
     function toggleChildren(d) {
         if (d.children) {
@@ -95,7 +132,11 @@ var dndTree = (function() {
             update(d);
             centerNode(d);
         } else {
-            setChildrenAndUpdate(d);
+            if (isArtist(d)) {
+                setChildrenAndUpdateForArtist(d);
+            } else if (isGenre(d)) {
+                setChildrenAndUpdateForGenre(d);
+            }
         }
         return d;
     }
@@ -155,7 +196,11 @@ var dndTree = (function() {
             .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
-            .on("mouseover", function(d) {getInfo(d.artist)})
+            .on("mouseover", function(d) {
+                if ('artist' in d) {
+                    getInfo(d.artist);
+                }
+            })
             // .on("mouseout", clearLabel)
             .on('click', click);
 
@@ -176,7 +221,12 @@ var dndTree = (function() {
                 return d.children || d._children ? "end" : "start";
             })
             .text(function(d) {
-                return d.artist.name;
+                if (isArtist(d)) {
+                    return d.artist.name;
+                } else if (isGenre(d)){
+                    return "Genre:" + toTitleCase(d.genre.name);
+                }
+
             })
             .style("fill-opacity", 0);
 
@@ -191,11 +241,13 @@ var dndTree = (function() {
 
          nodeEnter.append("image")
             .attr("xlink:href", function(d) {
-              if (d.artist.images[1]) {
-                return d.artist.images[1].url;
-              } else {
-                return '';
-              }
+                if (isArtist(d)) {
+                    if (d.artist.images[1]) {
+                        return d.artist.images[1].url;
+                    }
+                } else {
+                    return 'img/spotify.jpeg';
+                }
             })
             .attr("x", "-32px")
             .attr("y", "-32px")
@@ -203,26 +255,35 @@ var dndTree = (function() {
             .attr("clip-path", "url(#clipCircle)")
             .attr("width",
               function(d) {
-                  var image = d.artist.images[1];
-                  if (!image) {
-                    return 64;
-                  }
-                  if (image.width > image.height) {
-                      return 64 * (image.width/image.height)
+                  if (isArtist(d)) {
+                      var image = d.artist.images[1];
+                      if (!image) {
+                        return 64;
+                      }
+                      if (image.width > image.height) {
+                          return 64 * (image.width / image.height)
+                      } else {
+                          return 64;
+                      }
                   } else {
-                      return 64;
+                    return 64;
                   }
               })
             .attr("height",
               function(d) {
-                  var image = d.artist.images[1];
-                  if (!image) {
-                    return 64;
-                  }
-                  if (image.height > image.width) {
-                      return 64 * (image.height/image.width)
+                  if (isArtist(d)) {
+
+                      var image = d.artist.images[1];
+                      if (!image) {
+                        return 64;
+                      }
+                      if (image.height > image.width) {
+                          return 64 * (image.height/image.width)
+                      } else {
+                          return 64;
+                      }
                   } else {
-                      return 64;
+                    return 64;
                   }
               })
 
@@ -304,6 +365,14 @@ var dndTree = (function() {
     return {
          "setRoot" : function(artist) {
             root = initWithArtist(artist);
+            root.x0 = viewerHeight / 2;
+            root.y0 = 0;
+            update(root);
+            centerNode(root);
+        },
+
+        "setRootGenre" : function(genreName) {
+            root = initWithGenre(genreName);
             root.x0 = viewerHeight / 2;
             root.y0 = 0;
             update(root);

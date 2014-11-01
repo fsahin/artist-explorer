@@ -23,7 +23,14 @@ a:hover {
 }
 
 .overlay{
-    background-color:#FFFFFF;
+  background-color:#FFFFFF;
+}
+
+.ui-autocomplete {
+  max-height: 400px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
 }
 
 .node circle {
@@ -81,11 +88,20 @@ a:hover {
   padding-left : 0px;
 }
 
-#search input {
-  font-size: 40px;
-  width: 100%;
+#artist-search {
+  font-size: 20px;
+  width: 50%;
+  float:left;
   height: 60px;
 }
+
+#genre-search {
+  font-size: 20px;
+  float:right;
+  width: 50%;
+  height: 60px;
+}
+
 
 #infobox {
   visibility: hidden;
@@ -122,6 +138,28 @@ h4 {
 #popularTracks {
   list-style-position: inside;
 }
+
+#mainGenres li {
+  cursor: pointer;
+}
+
+#mainGenres a {
+    color: #222327;
+}
+
+
+#mainGenres a:link {
+    color: #222327;
+}
+
+#mainGenres a:visited {
+    color: #222327;
+}
+
+#mainGenres a:hover {
+    color: #6FB100;
+}
+
 
 
 
