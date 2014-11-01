@@ -33,7 +33,11 @@ function getInfo(artist) {
     playForArtist(artist);
     $('#infobox').css("visibility", "visible")
     $('#hoverwarning').css("display", "none")
-    $('#artistInfo').text(artist.name);
+
+    $('#artistName').text(artist.name);
+    $('#artistName').attr("href", artist['external_urls']['spotify']);
+    $('#artistName').attr("target", "_blank");
+
     drawChart(artist.popularity);
     $.ajax({
         url: "https://developer.echonest.com/api/v4/artist/profile?api_key=74YUTJPKNBURV2BLX%20&id="
@@ -62,16 +66,15 @@ function getInfo(artist) {
         $("#popularTracks").empty();
         data.tracks.forEach(function(track, i){
             var className = "now-playing";
-            console.log("playMusic", playMusic);
             if (i === 0 && playMusic) {
                 className += " active";
             }
 
             $("#popularTracks")
                 .append('<li class="' + className +'" onmouseover="playFromList(this)" data-track-id='
-                        + track.id + " data-preview-url=" + track.preview_url +">"
-                        + track.name +
-                        "</li>");
+                        + track.id + " data-preview-url=" + track.preview_url + ">"
+                        + '<a target="_blank" href="'+ track['external_urls']['spotify'] + '">' + track.name + '</a>'
+                        + "</li>");
         });
     });
 }

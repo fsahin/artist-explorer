@@ -3,6 +3,21 @@ body {
   padding: 0;
 }
 
+a:link {
+    color: #222327;
+}
+
+/* visited link */
+a:visited {
+    color: #222327;
+}
+
+
+a:hover {
+    color: #6FB100;
+}
+
+
 .node {
   cursor: pointer;
 }
@@ -92,6 +107,7 @@ h4 {
 .now-playing {
   padding-left: 30px;
 }
+
 .now-playing::before {
   /*content: "- ";*/
   display: inlne-block;
@@ -103,9 +119,9 @@ h4 {
   background-position-x: 0px;
 }
 
-
-
 #popularTracks {
   list-style-position: inside;
 }
+
+
 
