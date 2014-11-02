@@ -28,16 +28,11 @@ window.addEventListener('load', function() {
 
 }, false);
 
-api.searchArtists('Cake', function(err, data) {
-    if (data.artists && data.artists.items.length) {
-        dndTree.setRoot(data.artists.items[0]);
-    }
-});
+dndTree.setRootGenre("Rock");
 
 var allGenres = [];
 
 loadAllGenres();
-console.log(allGenres);
 
 function loadAllGenres() {
     $.ajax({
@@ -153,7 +148,6 @@ function getArtistsForGenre(genreName, n) {
             +"&format=json&results=15&bucket=id:spotify"
             + "&name=" + genreName.toLowerCase()
         }).then(function(data) {
-            console.log("in then");
             var idsToRequest = []
             data.response.artists.forEach(function(artist) {
                 if (artist.foreign_ids) {

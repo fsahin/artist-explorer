@@ -210,7 +210,6 @@ var dndTree = (function() {
             .on('click', click);
 
         nodeEnter.append("circle")
-            .attr('class', 'nodeCircle')
             .attr("r", 32)
             .style("fill", function(d) {
                 return d._children ? "black" : "#fff";
@@ -236,9 +235,6 @@ var dndTree = (function() {
             .style("fill-opacity", 0);
 
         nodeEnter.append("clipPath")
-            .attr("cx", "0")
-            .attr("cy", "0")
-            .attr("r", "50")
             .attr("id", "clipCircle")
                 .append("circle")
                 .attr("r", 32);
@@ -256,7 +252,6 @@ var dndTree = (function() {
             })
             .attr("x", "-32px")
             .attr("y", "-32px")
-            .attr("r", "32")
             .attr("clip-path", "url(#clipCircle)")
             .attr("width",
               function(d) {

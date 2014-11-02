@@ -98,9 +98,8 @@
       function drawChart(popularity_val) {
 
         var popData = google.visualization.arrayToDataTable([
-          ['Label', 'Value'],
-          ['Popularity', popularity_val]
-        ]);
+          ['Popularity', popularity_val],
+        ], true);
 
         var options = {
           width: 300, height: 120,
