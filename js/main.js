@@ -173,7 +173,7 @@ function getArtistsForGenre(genreName, n) {
 
 function changeNumberOfArtists(value) {
     numberOfArtistsToShow = value;
-    document.getElementById("range").innerHTML = value;
+    document.getElementById("range-indicator").innerHTML = value;
 }
 
 $(function() {

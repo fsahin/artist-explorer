@@ -64,19 +64,57 @@ a:hover {
      display: none;
 }
 
+#navbarcontainer {
+  position:absolute;
+  left:0px;
+  right: 370px;
+}
+
 #tree-container {
   position: absolute;
-  top: 140px;
+  top: 130px;
   left:0px;
   right:0;
 }
 
+.navbar {
+    position: absolute;
+    right: 370px;
+    left:0px;
+}
+
+.slider {
+  width: 200px;
+}
+
+#range-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 25px;
+}
+
+#range-desc {
+  float: left;
+  width: 130px;
+}
+
+#range-indicator {
+  padding-top: 3px;
+  text-align: center;
+}
+
+#range-bar {
+  float: right;
+  width: 190px;
+}
+
 #rightpane {
+  font-size: 15px !important;
   position: absolute;
   top: 0px;
   right:0px;
   width: 350px;
-  top: 60px;
+  padding-left: 0px !important;
 }
 
 #search {
@@ -89,17 +127,15 @@ a:hover {
 }
 
 #artist-search {
-  font-size: 20px;
   width: 50%;
   float:left;
-  height: 60px;
+  height: 50px;
 }
 
 #genre-search {
-  font-size: 20px;
   float:right;
   width: 50%;
-  height: 60px;
+  height: 50px;
 }
 
 
