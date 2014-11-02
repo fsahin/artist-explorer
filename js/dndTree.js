@@ -143,7 +143,7 @@ var dndTree = (function() {
 
     // Toggle children on click.
     function click(d) {
-        if (d3.event.defaultPrevented) return; // click suppressed
+        //if (d3.event.defaultPrevented) return; // click suppressed
         d = toggleChildren(d);
     }
 
@@ -374,6 +374,7 @@ var dndTree = (function() {
             root.y0 = 0;
             update(root);
             centerNode(root);
+
         },
 
         "setRootGenre" : function(genreName) {
@@ -382,6 +383,7 @@ var dndTree = (function() {
             root.y0 = 0;
             update(root);
             centerNode(root);
+            click(root);
         }
     }
 
