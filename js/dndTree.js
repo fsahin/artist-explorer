@@ -244,7 +244,7 @@ var dndTree = (function() {
             .attr("xlink:href", function(d) {
                 if (isArtist(d)) {
                     if (d.artist.images[1]) {
-                        return d.artist.images[1].url;
+                        return getSmallestLargerThan64ImageUrl(d.artist);
                     }
                 } else {
                     return 'img/spotify.jpeg';

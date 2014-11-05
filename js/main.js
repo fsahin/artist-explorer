@@ -187,12 +187,11 @@ function changeNumberOfArtists(value) {
 }
 
 function getSmallestLargerThan64ImageUrl(artist) {
-    var image = artist.images[artist.images.length - 1];
-    if (image && image.height > 64 && image.width > 64) {
-        return image.url;
-    } else {
-        image = artist.images[artist.images.length - 2];
-        if (image) {
+    var size = artist.images.length;
+    var image;
+    for (i = size - 1; i >= 0; i --) {
+        image = artist.images[i];
+        if (image && image.height > 64 && image.width > 64) {
             return image.url;
         }
     }
