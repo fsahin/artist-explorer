@@ -369,7 +369,7 @@ var dndTree = (function() {
             root.y0 = 0;
             update(root);
             centerNode(root);
-
+            click(root);
         },
 
         "setRootGenre" : function(genreName) {

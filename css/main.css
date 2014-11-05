@@ -7,16 +7,13 @@ a:link {
     color: #222327;
 }
 
-/* visited link */
 a:visited {
     color: #222327;
 }
 
-
 a:hover {
     color: #6FB100;
 }
-
 
 .node {
   cursor: pointer;
@@ -53,14 +50,6 @@ a:hover {
   fill: none;
   stroke: red;
   stroke-width: 3px;
-}
-
-.ghostCircle.show{
-    display:block;
-}
-
-.ghostCircle, .activeDrag .ghostCircle{
-     display: none;
 }
 
 #navbarcontainer {
@@ -124,7 +113,14 @@ a:hover {
 #search {
   padding-bottom: 5px;
   padding-top: 5px;
+}
 
+#search-artist {
+  padding-right: 2px;
+}
+
+#search-genre {
+  padding-left: 2px;
 }
 
 #infobox {
@@ -171,7 +167,6 @@ h4 {
     color: #222327;
 }
 
-
 #mainGenres a:link {
     color: #222327;
 }
@@ -184,6 +179,25 @@ h4 {
     color: #6FB100;
 }
 
+.autocomplete-item {
+  height: 60px;
+}
 
+.artist-label {
+  padding-left: 60px;
+  line-height: 60px;
+}
 
+.artist-icon-container {
+  padding-top: 3px;
+}
 
+.artist-icon {
+  vertical-align: middle;
+  float: left;
+  height: 54px;
+  width: 54px;
+  border-radius: 27px;
+  -webkit-border-radius: 27px;
+  -moz-border-radius: 27px;
+}

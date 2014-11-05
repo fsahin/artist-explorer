@@ -15,11 +15,10 @@ window.addEventListener('load', function() {
         var search = document.getElementById('artist-search');
         api.searchArtists(search.value.trim(), function(err, data) {
             if (data.artists && data.artists.items.length) {
-                dndTree.setRoot(data.artists.items[0]);
+                initRootWithArtist(data.artists.items[0]);
             }
         });
 
-        $(".ui-menu-item").hide();
     }, false);
 
 
@@ -30,23 +29,33 @@ window.addEventListener('load', function() {
         var search = document.getElementById('genre-search');
         console.log("setting root genre")
         genreName = search.value.trim();
-        dndTree.setRootGenre(genreName);
+        initRootWithGenre(genreName);
     }, false);
 
 }, false);
 
-dndTree.setRootGenre("Rock");
+initRootWithGenre("Rock");
 
 var allGenres = [];
 
 loadAllGenres();
+
+function initRootWithArtist(artist) {
+    dndTree.setRoot(artist);
+    $('#genre-search').val('')
+}
+
+function initRootWithGenre(genre) {
+    dndTree.setRootGenre(genre);
+    $('#artist-search').val('')
+}
 
 function loadAllGenres() {
     $.ajax({
         url: "https://developer.echonest.com/api/v4/genre/list?api_key=74YUTJPKNBURV2BLX&format=json&results=1500"
     }).done(function(data) {
         data.response.genres.forEach(function(genre){
-            allGenres.push(genre.name);
+            allGenres.push(toTitleCase(genre.name));
         });
     });
 }
@@ -95,7 +104,7 @@ function _getInfo(artist) {
             $("#mainGenres").append("<li><a>" + toTitleCase(genre.name) + "</a></li>");
         });
         $('#mainGenres li').click( function() {
-            dndTree.setRootGenre($(this).text());
+            initRootWithGenre($(this).text());
         } );
     });
 
@@ -177,6 +186,32 @@ function changeNumberOfArtists(value) {
     document.getElementById("range-indicator").innerHTML = value;
 }
 
+function getSmallestLargerThan64ImageUrl(artist) {
+    var image = artist.images[artist.images.length - 1];
+    if (image && image.height > 64 && image.width > 64) {
+        return image.url;
+    } else {
+        image = artist.images[artist.images.length - 2];
+        if (image) {
+            return image.url;
+        }
+    }
+}
+
+function createAutoCompleteDiv(artist) {
+    if (!artist) {
+        return
+    }
+    var val =
+    '<div class="autocomplete-item">'
+        + '<div class="artist-icon-container">'
+        +      '<img src="' + getSmallestLargerThan64ImageUrl(artist) + '" class="circular artist-icon" />'
+        +      '<div class="artist-label">' + artist.name  + '</div>'
+        + '</div>'
+    + '</div>'
+    return val;
+}
+
 $(function() {
     $("#artist-search")
         // don't navigate away from the field on tab when selecting an item
@@ -190,16 +225,16 @@ $(function() {
         .autocomplete({
             minLength: 0,
             source: function(request, response) {
-                api.searchArtists(request.term + '*', function(err, data) {
+                api.searchArtists(request.term + '*', {'limit': 50}, function(err, data) {
                     if (data.artists && data.artists.items.length) {
                         res = []
                         data.artists.items.forEach(function(artist) {
-                            res.push(artist.name);
+                            res.push(artist);
                         });
-                        if (!showCompletion) {
-                            response([])
+                        if (showCompletion) {
+                            response(res)
                         } else {
-                            response(res);
+                            response([]);
                         }
                     }
                 });
@@ -207,8 +242,23 @@ $(function() {
             focus: function() {
                 // prevent value inserted on focus
                 return false;
+            },
+            select: function(event, ui) {
+                $("#artist-search").val(ui.item.name);
+                initRootWithArtist(ui.item);
+                return false;
             }
-        });
+        })
+        .autocomplete("instance")._renderItem = function(ul, item) {
+            if (!item) {
+                console.log("no item");
+                return;
+            }
+            return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append(createAutoCompleteDiv(item))
+            .appendTo( ul );
+        };
 
     $("#genre-search")
         // don't navigate away from the field on tab when selecting an item
@@ -224,9 +274,20 @@ $(function() {
         })
         .autocomplete({
             minLength: 0,
-            source: allGenres,
+            source: function(request, response) {
+                if (showCompletion) {
+                    response($.ui.autocomplete.filter(allGenres, request.term));
+                } else {
+                    response([]);
+                }
+            },
             focus: function(e, ui) {
                 // prevent value inserted on focus
+                return false;
+            },
+            select: function(event, ui) {
+                $("#genre-search").val(ui.item.value);
+                initRootWithGenre(ui.item.value);
                 return false;
             }
         });
@@ -237,6 +298,7 @@ function setDefaultPopularTracks() {
 }
 
 var playPopTrackTimeoutId;
+
 function playFromList(obj) {
     playPopTrackTimeoutId = window.setTimeout(function(){
         _playFromList(obj)
