@@ -12,6 +12,8 @@ var dndTree = (function() {
     var viewerWidth = $(window).width() - 350;
     var viewerHeight = $(window).height();
 
+    var lastExpandedNode;
+
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
 
@@ -43,12 +45,16 @@ var dndTree = (function() {
         viewerHeight = $(window).height();
         baseSvg.attr("width", viewerWidth)
             .attr("height", viewerHeight);
+        if (lastExpandedNode) {
+            centerNode(lastExpandedNode);
+        }
     }
 
     window.onresize = updateWindow;
 
     // Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
     function centerNode(source) {
+        lastExpandedNode = source;
         var scale = zoomListener.scale();
         var x = -source.y0;
         var y = -source.x0;
