@@ -5,9 +5,12 @@ var numberOfArtistsToShow = 10;
 
 var api = new SpotifyWebApi();
 
+var showCompletion = true;
+
 window.addEventListener('load', function() {
     var formArtist = document.getElementById('search-artist');
     formArtist.addEventListener('submit', function(e) {
+        showCompletion = false;
         e.preventDefault();
         var search = document.getElementById('artist-search');
         api.searchArtists(search.value.trim(), function(err, data) {
@@ -15,10 +18,14 @@ window.addEventListener('load', function() {
                 dndTree.setRoot(data.artists.items[0]);
             }
         });
+
+        $(".ui-menu-item").hide();
     }, false);
+
 
     var formGenre = document.getElementById('search-genre');
     formGenre.addEventListener('submit', function(e) {
+        showCompletion = false;
         e.preventDefault();
         var search = document.getElementById('genre-search');
         console.log("setting root genre")
@@ -174,12 +181,10 @@ $(function() {
     $("#artist-search")
         // don't navigate away from the field on tab when selecting an item
         .bind("keydown", function(event) {
+            showCompletion = true;
             if (event.keyCode === $.ui.keyCode.TAB &&
                 $(this).autocomplete("instance").menu.active) {
                 event.preventDefault();
-            }
-            if (event.keyCode == 13) {
-                $(".ui-menu-item").hide();
             }
         })
         .autocomplete({
@@ -191,7 +196,11 @@ $(function() {
                         data.artists.items.forEach(function(artist) {
                             res.push(artist.name);
                         });
-                        response(res);
+                        if (!showCompletion) {
+                            response([])
+                        } else {
+                            response(res);
+                        }
                     }
                 });
             },
@@ -204,6 +213,7 @@ $(function() {
     $("#genre-search")
         // don't navigate away from the field on tab when selecting an item
         .bind("keydown", function(event) {
+            showCompletion = true;
             if (event.keyCode === $.ui.keyCode.TAB &&
                 $(this).autocomplete("instance").menu.active) {
                 event.preventDefault();

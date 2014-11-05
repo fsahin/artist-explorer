@@ -9,8 +9,8 @@ var dndTree = (function() {
     var root;
 
     // size of the diagram
-    var viewerWidth = $(window).width() - 370;
-    var viewerHeight = $(window).height() - 120;
+    var viewerWidth = $(window).width() - 350;
+    var viewerHeight = $(window).height();
 
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
@@ -39,8 +39,8 @@ var dndTree = (function() {
         .call(zoomListener);
 
     function updateWindow(){
-        viewerWidth = $(window).width() - 370;
-        viewerHeight = $(window).height() - 120;
+        viewerWidth = $(window).width() - 350;
+        viewerHeight = $(window).height();
         baseSvg.attr("width", viewerWidth)
             .attr("height", viewerHeight);
     }

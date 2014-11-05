@@ -1,52 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-
   </head>
-<meta charset="utf-8">
-<script src="./bower_components/spotify-web-api-js/src/spotify-web-api.js"></script>
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.12/d3.min.js"></script>
-
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/main.css">
-
-<body>
-   <div class="navbar navbar-default" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="">
-            <span class="navbar-logo">Spotify</span>
-            <span class="navbar-title">Artist Explorer</span>
-          </a>
-        </div>
-        <!--<div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="">Start Over</a></li>
-          </ul>
-        </div>--><!--/.nav-collapse -->
-      </div>
-    </div>
-    <div id="tree-container"></div>
-    <div id="search">
-        <form id="search-artist" class="form-horizontal" role="form">
-            <input id="artist-search" class="form-control" placeholder="Search for an Artist">
-        </form>
-        <form id="search-genre" class="form-horizontal" role="form">
-            <input id="genre-search" class="form-control" placeholder="Search for a Genre">
-        </form>
-    </div>
-
-    <div id="rightpane" class="modal-body warning">
+  <meta charset="utf-8">
+  <script src="./bower_components/spotify-web-api-js/src/spotify-web-api.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.12/d3.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/main.css">
+  <body>
+    <div class="main-container">
+      <div id="rightpane" class="modal-body warning">
         <div id="config">
           <h4>Configuration </h4>
           <input type="checkbox" checked="true" id="playMusic" onclick="playMusicHandler()"> Play Music<br>
@@ -62,55 +29,83 @@
         <div id="hoverwarning">
           <h4>Help</h4>
           <ul>
-          <li>Click on an artist to see related artists. </li>
-          <li>Hover over an artist to hear a sample of their music.</li>
-          <li>Enter an artist name in the search box and explore relationships between over 2,000,000 artists on Spotify.</li>
+            <li>Click on an artist to see related artists. </li>
+            <li>Hover over an artist to hear a sample of their music.</li>
+            <li>Enter an artist name in the search box and explore relationships between over 2,000,000 artists on Spotify.</li>
           </ul>
         </div>
-
         <div id="infobox">
           <h4>Artist Info </h4>
           <a id="artistName"> </a>
           <p </p>
-
           <div id="chart_div" style="width: 350px; height: 120px;"></div>
-
           <h4>Popular Tracks</h4>
           <ul id="popularTracks"> </ul>
           <hr>
-
           <h4>Main Genres</h4>
           <ul id="mainGenres"> </ul>
-
           <h4>Biography</h4>
           <div id="bigoraphyDiv">
             <p id="biography"> </p>
           </div>
-
         </div>
+      </div>
+      <div class ="left">
+        <div class="navbar navbar-default" role="navigation">
+          <div class="menu-items">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="">
+              <span class="navbar-logo">Spotify</span>
+              <span class="navbar-title">Artist Explorer</span>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse">
+              <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="">Start Over</a></li>
+              </ul>
+            </div>
+            <!--/.nav-collapse -->
+          </div>
+        </div>
+        <div id="search" class="row">
+          <form id="search-artist" class="form-horizontal col-sm-6 col-md-6" role="form">
+            <input id="artist-search" class="form-control" placeholder="Search for an Artist">
+          </form>
+          <form id="search-genre" class="form-horizontal col-sm-6 col-md-6" role="form">
+            <input id="genre-search" class="form-control" placeholder="Search for a Genre">
+          </form>
+        </div>
+        <div id="tree-container"></div>
+      </div>
     </div>
-</body>
-<script src="js/dndTree.js"></script>
-<script src="js/main.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['gauge']}]}"></script>
-    <script type="text/javascript">
-       google.setOnLoadCallback(drawChart);
-      function drawChart(popularity_val) {
+  </body>
+  <script src="js/dndTree.js"></script>
+  <script src="js/main.js"></script>
+  <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['gauge']}]}"></script>
+  <script type="text/javascript">
+    google.setOnLoadCallback(drawChart);
+    function drawChart(popularity_val) {
 
-        var popData = google.visualization.arrayToDataTable([
-          ['Popularity', popularity_val],
-        ], true);
+     var popData = google.visualization.arrayToDataTable([
+       ['Popularity', popularity_val],
+     ], true);
 
-        var options = {
-          width: 300, height: 120,
-          redFrom: 80, redTo: 100,
-          yellowFrom:50, yellowTo: 80,
-          minorTicks: 5
-        };
+     var options = {
+       width: 300, height: 120,
+       redFrom: 80, redTo: 100,
+       yellowFrom:50, yellowTo: 80,
+       minorTicks: 5
+     };
 
-        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-        chart.draw(popData, options);
+     var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+     chart.draw(popData, options);
 
-      }
-    </script>
+    }
+  </script>
 </html>

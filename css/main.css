@@ -70,16 +70,6 @@ a:hover {
 }
 
 #tree-container {
-  position: absolute;
-  top: 130px;
-  left:0px;
-  right:0;
-}
-
-.navbar {
-    position: absolute;
-    right: 370px;
-    left:0px;
 }
 
 .slider {
@@ -103,40 +93,39 @@ a:hover {
 }
 
 #range-bar {
+  padding-top: 2px;
   float: right;
-  width: 190px;
+  width: 175px;
 }
 
 #rightpane {
   font-size: 15px !important;
-  position: absolute;
+  float: right;
   top: 0px;
   right:0px;
   width: 350px;
-  padding-left: 0px !important;
+}
+
+.main-container {
+  overflow: hidden;
+  height: auto;
+}
+
+.menu-items {
+  padding-right: 20px;
+}
+
+.left {
+  float: none;
+  width: auto;
+  overflow: hidden;
 }
 
 #search {
-  position: absolute;
-  left: 0px;
-  top: 50px;
-  right: 350px;
-  padding: 20px;
-  padding-left : 0px;
-}
+  padding-bottom: 5px;
+  padding-top: 5px;
 
-#artist-search {
-  width: 50%;
-  float:left;
-  height: 50px;
 }
-
-#genre-search {
-  float:right;
-  width: 50%;
-  height: 50px;
-}
-
 
 #infobox {
   visibility: hidden;
