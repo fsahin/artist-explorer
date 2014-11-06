@@ -3,31 +3,22 @@ body {
   padding: 0;
 }
 
-a:link {
-    color: #222327;
-}
-
-a:visited {
-    color: #222327;
+a:link, a:visited {
+  color: #222327;
 }
 
 a:hover {
-    color: #6FB100;
+  color: #6FB100;
 }
+
+h4 {
+  color: #81b900;
+}
+
+/* dndTree */
 
 .node {
   cursor: pointer;
-}
-
-.overlay{
-  background-color:#FFFFFF;
-}
-
-.ui-autocomplete {
-  max-height: 400px;
-  overflow-y: auto;
-  /* prevent horizontal scrollbar */
-  overflow-x: hidden;
 }
 
 .node circle {
@@ -52,13 +43,89 @@ a:hover {
   stroke-width: 3px;
 }
 
+.overlay{
+  background-color:#FFFFFF;
+}
+
+/* autocomplete */
+
+.ui-autocomplete {
+  max-height: 400px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+
+.autocomplete-item {
+  height: 60px;
+}
+
+.artist-icon-container {
+  padding-top: 3px;
+}
+
+.artist-icon {
+  vertical-align: middle;
+  float: left;
+  height: 54px;
+  width: 54px;
+  border-radius: 27px;
+  -webkit-border-radius: 27px;
+  -moz-border-radius: 27px;
+}
+
+.artist-label {
+  padding-left: 60px;
+  line-height: 60px;
+}
+
+/* navbar */
+
 #navbarcontainer {
   position:absolute;
   left:0px;
   right: 370px;
 }
 
-#tree-container {
+.menu-items {
+  padding-right: 20px;
+}
+
+/* Left Container */
+
+.main-container {
+  overflow: hidden;
+  height: auto;
+}
+
+.left {
+  float: none;
+  width: auto;
+  overflow: hidden;
+}
+
+#search {
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+#search-artist {
+  padding-right: 2px;
+}
+
+#search-genre {
+  padding-left: 2px;
+}
+
+
+/* Right Pange */
+
+#rightpane {
+  font-size: 15px !important;
+  float: right;
+  top: 0px;
+  right:0px;
+  width: 350px;
 }
 
 .slider {
@@ -87,42 +154,6 @@ a:hover {
   width: 175px;
 }
 
-#rightpane {
-  font-size: 15px !important;
-  float: right;
-  top: 0px;
-  right:0px;
-  width: 350px;
-}
-
-.main-container {
-  overflow: hidden;
-  height: auto;
-}
-
-.menu-items {
-  padding-right: 20px;
-}
-
-.left {
-  float: none;
-  width: auto;
-  overflow: hidden;
-}
-
-#search {
-  padding-bottom: 5px;
-  padding-top: 5px;
-}
-
-#search-artist {
-  padding-right: 2px;
-}
-
-#search-genre {
-  padding-left: 2px;
-}
-
 #infobox {
   visibility: hidden;
 }
@@ -130,10 +161,6 @@ a:hover {
 #bigoraphyDiv {
   height: 300px;
   overflow: scroll;
-}
-
-h4 {
-  color: #81b900;
 }
 
 #popularTracks {
@@ -145,7 +172,6 @@ h4 {
 }
 
 .now-playing::before {
-  /*content: "- ";*/
   display: inlne-block;
 }
 
@@ -163,41 +189,11 @@ h4 {
   cursor: pointer;
 }
 
-#mainGenres a {
-    color: #222327;
-}
-
-#mainGenres a:link {
-    color: #222327;
-}
-
-#mainGenres a:visited {
-    color: #222327;
+#mainGenres a, a:link, a:visited {
+  color: #222327;
 }
 
 #mainGenres a:hover {
-    color: #6FB100;
+  color: #6FB100;
 }
 
-.autocomplete-item {
-  height: 60px;
-}
-
-.artist-label {
-  padding-left: 60px;
-  line-height: 60px;
-}
-
-.artist-icon-container {
-  padding-top: 3px;
-}
-
-.artist-icon {
-  vertical-align: middle;
-  float: left;
-  height: 54px;
-  width: 54px;
-  border-radius: 27px;
-  -webkit-border-radius: 27px;
-  -moz-border-radius: 27px;
-}

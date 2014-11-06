@@ -7,9 +7,10 @@ var dndTree = (function() {
     var i = 0;
     var duration = 750;
     var root;
+    var rightPaneWidth = 350;
 
     // size of the diagram
-    var viewerWidth = $(window).width() - 350;
+    var viewerWidth = $(window).width() - rightPaneWidth;
     var viewerHeight = $(window).height();
 
     var lastExpandedNode;
@@ -32,7 +33,6 @@ var dndTree = (function() {
     // define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
     var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
 
-
     // define the baseSvg, attaching a class for styling and the zoomListener
     var baseSvg = d3.select("#tree-container").append("svg")
         .attr("width", viewerWidth)
@@ -41,10 +41,9 @@ var dndTree = (function() {
         .call(zoomListener);
 
     function updateWindow(){
-        viewerWidth = $(window).width() - 350;
+        viewerWidth = $(window).width() - rightPaneWidth;
         viewerHeight = $(window).height();
-        baseSvg.attr("width", viewerWidth)
-            .attr("height", viewerHeight);
+        baseSvg.attr("width", viewerWidth).attr("height", viewerHeight);
         if (lastExpandedNode) {
             centerNode(lastExpandedNode);
         }
@@ -153,14 +152,7 @@ var dndTree = (function() {
         d = toggleChildren(d);
     }
 
-    function clearLabel(d) {
-        console.log("hover clear");
-    }
-
     function update(source) {
-        // Compute the new height, function counts total children of root node and sets tree height accordingly.
-        // This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
-        // This makes the layout more consistent.
         var levelWidth = [1];
         var childCount = function(level, n) {
             if (n.children && n.children.length > 0) {
@@ -181,12 +173,9 @@ var dndTree = (function() {
         var nodes = tree.nodes(root).reverse();
         var links = tree.links(nodes);
 
-        // Set widths between levels based on maxLabelLength.
+        // Set widths between levels
         nodes.forEach(function(d) {
-            //d.y = (d.depth * (maxLabelLength * 10)); //maxLabelLength * 10px
-            // alternatively to keep a fixed scale one can set a fixed depth per level
-            // Normalize for fixed-depth by commenting out below line
-             d.y = (d.depth * 220); //500px per level.
+             d.y = (d.depth * 220);
         });
 
         // Update the nodes…
@@ -212,7 +201,6 @@ var dndTree = (function() {
                     getInfoCancel();
                 }
             })
-            // .on("mouseout", clearLabel)
             .on('click', click);
 
         nodeEnter.append("circle")
@@ -312,8 +300,8 @@ var dndTree = (function() {
             })
             .remove();
 
-        // nodeExit.select("circle")
-        //     .attr("r", 0);
+        nodeExit.select("circle")
+            .attr("r", 0);
 
         nodeExit.select("text")
             .style("fill-opacity", 0);
