@@ -58,7 +58,9 @@ if (initArtistId) {
 } else if (initGenre) {
     initRootWithGenre(initGenre);
 } else {
-    initRootWithGenre("Rock");
+    api.getArtist('43ZHCT0cAZBISjO8DG9PnE', function(error, data) {
+        initRootWithArtist(data);
+    });
 }
 
 var allGenres = [];
