@@ -79,7 +79,7 @@ function initRootWithGenre(genre) {
 
 function loadAllGenres() {
     $.ajax({
-        url: "https://developer.echonest.com/api/v4/genre/list?api_key=74YUTJPKNBURV2BLX&format=json&results=1500"
+        url: "https://developer.echonest.com/api/v4/genre/list?api_key=WKWPYLFXFLROAQB2B&format=json&results=1500"
     }).done(function(data) {
         data.response.genres.forEach(function(genre){
             allGenres.push(toTitleCase(genre.name));
@@ -114,7 +114,7 @@ function _getInfo(artist) {
 
     drawChart(artist.popularity);
     $.ajax({
-        url: "https://developer.echonest.com/api/v4/artist/profile?api_key=74YUTJPKNBURV2BLX%20&id="
+        url: "https://developer.echonest.com/api/v4/artist/profile?api_key=WKWPYLFXFLROAQB2B&id="
         + artist.uri
         + "&bucket=genre&bucket=biographies&format=json",
     }).done(function(data) {
@@ -187,7 +187,7 @@ function getIdFromArtistUri(artistUri) {
 function getArtistsForGenre(genreName, n) {
     return new Promise(function(resolve, reject) {
         return $.ajax({
-            url: "https://developer.echonest.com/api/v4/genre/artists?api_key=74YUTJPKNBURV2BLX"
+            url: "https://developer.echonest.com/api/v4/genre/artists?api_key=WKWPYLFXFLROAQB2B"
             +"&format=json&results=15&bucket=id:spotify"
             + "&name=" + encodeURIComponent(genreName.toLowerCase())
         }).then(function(data) {
