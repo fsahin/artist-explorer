@@ -34,7 +34,32 @@ window.addEventListener('load', function() {
 
 }, false);
 
-initRootWithGenre("Rock");
+function qs(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function stripTrailingSlash(str) {
+    if(str.substr(-1) == '/') {
+        return str.substr(0, str.length - 1);
+    }
+    return str;
+}
+
+initArtistId = stripTrailingSlash(qs('artist_id'))
+initGenre = stripTrailingSlash(qs('genre'))
+
+if (initArtistId) {
+    api.getArtist(initArtistId, function(error, data) {
+        initRootWithArtist(data);
+    });
+} else if (initGenre) {
+    initRootWithGenre(initGenre);
+} else {
+    initRootWithGenre("Rock");
+}
 
 var allGenres = [];
 
