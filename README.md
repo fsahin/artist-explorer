@@ -1,7 +1,7 @@
 Artist Explorer
 ===============
 
-See the demo at [fsahin.github.io](https://fsahin.github.io)
+See the demo at [fsahin.github.io/artist-explorer](https://fsahin.github.io/artist-explorer)
 
 Artists Explorer is a tool that helps serious music enthusiasts explore artist relationships and discover new music. Start from any artist and quickly navigate through trees of related artists, previewing their music as you go.
 
