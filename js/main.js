@@ -102,6 +102,30 @@ function getInfoCancel(artist) {
     window.clearTimeout(getInfoTimeoutid);
 }
 
+function setBioVisibility(val) {
+    if (val) {
+        $('#biography').show()
+        $('#biography-label').show()
+    } else {
+        $('#biography').hide()
+        $('#biography-label').hide()
+    }
+}
+
+function setGenresVisibility(val) {
+    if (val) {
+        $('#mainGenres').show()
+        $('#main-genres-label').show()
+    } else {
+        $('#mainGenres').hide()
+        $('#main-genres-label').hide()
+    }
+}
+
+function setGenreVisibility() {
+
+}
+
 function _getInfo(artist) {
 
     playForArtist(artist);
@@ -119,14 +143,25 @@ function _getInfo(artist) {
         + "&bucket=genre&bucket=biographies&format=json",
     }).done(function(data) {
         var found = false;
+        console.log(data.response);
         data.response.artist.biographies.forEach(function(biography){
             if (!biography.truncated && !found) {
                 $('#biography').text(biography.text);
                 found = true;
+                setBioVisibility(true);
             }
         });
 
+        if (found === false) {
+            setBioVisibility(false);
+        }
+
         $("#mainGenres").empty();
+        if (!data.response.artist.genres || data.response.artist.genres.length == 0) {
+            setGenresVisibility(false);
+        } else {
+            setGenresVisibility(true);
+        }
         data.response.artist.genres.forEach(function(genre) {
             $("#mainGenres").append("<li><a>" + toTitleCase(genre.name) + "</a></li>");
         });

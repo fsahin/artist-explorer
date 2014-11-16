@@ -1,5 +1,3 @@
-// Get JSON data
-
 var dndTree = (function() {
     'use strict';
 
@@ -18,7 +16,6 @@ var dndTree = (function() {
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
 
-    // define a d3 diagonal projection for use by the node paths later on.
     var diagonal = d3.svg.diagonal()
         .projection(function(d) {
             return [d.y, d.x];
@@ -146,9 +143,7 @@ var dndTree = (function() {
         return d;
     }
 
-    // Toggle children on click.
     function click(d) {
-        //if (d3.event.defaultPrevented) return; // click suppressed
         d = toggleChildren(d);
     }
 
@@ -166,7 +161,7 @@ var dndTree = (function() {
         };
 
         childCount(0, root);
-        var newHeight = d3.max(levelWidth) * 100; // 25 pixels per line
+        var newHeight = d3.max(levelWidth) * 100;
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
