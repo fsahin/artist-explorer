@@ -3,14 +3,6 @@ body {
   padding: 0;
 }
 
-a:link, a:visited {
-  color: #222327;
-}
-
-a:hover {
-  color: #6FB100;
-}
-
 h4 {
   color: #81b900;
 }
@@ -185,15 +177,15 @@ h4 {
   list-style-position: inside;
 }
 
-#mainGenres li {
+#infobox li {
   cursor: pointer;
 }
 
-#mainGenres a, a:link, a:visited {
+#infobox a, #infobox a:link, #infobox a:visited {
   color: #222327;
 }
 
-#mainGenres a:hover {
+#infobox a:hover {
   color: #6FB100;
 }
 
