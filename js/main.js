@@ -6,6 +6,7 @@ var numberOfArtistsToShow = 10;
 var api = new SpotifyWebApi();
 
 var showCompletion = true;
+var volume = 0.5;
 
 window.addEventListener('load', function() {
     var formArtist = document.getElementById('search-artist');
@@ -192,15 +193,6 @@ function _getInfo(artist) {
 }
 
 
-function playMusicHandler() {
-    if (document.getElementById('playMusic').checked) {
-        playMusic = true;
-    } else {
-        playMusic = false;
-        clearMusic();
-    }
-}
-
 function getRelated(artistId, n) {
     return new Promise(function(resolve, reject) {
         return api.getArtistRelatedArtists(artistId, function(error, data) {
@@ -386,6 +378,21 @@ function _playFromList(obj) {
     playForTrack(trac);
 }
 
+//No need for this after setting volume
+function playMusicHandler() {
+    if (document.getElementById('playMusic').checked) {
+        playMusic = true;
+    } else {
+        playMusic = false;
+        clearMusic();
+    }
+}
+
+function setVolume(vol) {
+    volume = vol;
+    audio.volume = vol;
+}
+
 function playForTrack(track_to_play) {
     if (!playMusic) {
         return;
@@ -400,6 +407,7 @@ function playForTrack(track_to_play) {
         audio.play();
     } else {
         audio = new Audio(track_to_play.preview_url);
+        audio.volume = volume;
         audio.load();
         audio.play();
     }

@@ -130,7 +130,7 @@ h4 {
   height: 25px;
 }
 
-#range-desc {
+.range-desc {
   float: left;
   width: 130px;
 }
@@ -140,7 +140,7 @@ h4 {
   text-align: center;
 }
 
-#range-bar {
+.range-bar {
   padding-top: 2px;
   float: right;
   width: 175px;

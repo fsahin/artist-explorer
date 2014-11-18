@@ -7,6 +7,8 @@ var dndTree = (function() {
     var root;
     var rightPaneWidth = 350;
 
+    var exploredArtists = []
+
     // size of the diagram
     var viewerWidth = $(window).width() - rightPaneWidth;
     var viewerHeight = $(window).height();
