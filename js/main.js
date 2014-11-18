@@ -144,7 +144,6 @@ function _getInfo(artist) {
         + "&bucket=genre&bucket=biographies&format=json",
     }).done(function(data) {
         var found = false;
-        console.log(data.response);
         data.response.artist.biographies.forEach(function(biography){
             if (!biography.truncated && !found) {
                 $('#biography').text(biography.text);
