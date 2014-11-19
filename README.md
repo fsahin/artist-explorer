@@ -11,5 +11,6 @@ Consumed Libraries:
 --------------
 * [d3](http://d3js.org/)
 * [Google Gauge Charts](https://developers.google.com/chart/interactive/docs/gallery/gauge)
+* [Spotify Web API Wrapper](https://github.com/JMPerez/spotify-web-api-js)
 
 
