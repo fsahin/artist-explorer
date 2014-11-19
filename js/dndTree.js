@@ -7,7 +7,10 @@ var dndTree = (function() {
     var root;
     var rightPaneWidth = 350;
 
-    var exploredArtistIds = []
+    var exploredArtistIds = [];
+
+    // avoid clippath issue by assigning each image its own clippath
+    var clipPathId = 0;
 
     // size of the diagram
     var viewerWidth = $(window).width() - rightPaneWidth;
@@ -249,13 +252,15 @@ var dndTree = (function() {
             })
             .style("fill-opacity", 0);
 
+        clipPathId++;
+
         nodeEnter.append("clipPath")
-            .attr("id", "clipCircle")
+            .attr("id", "clipCircle" + clipPathId)
                 .append("circle")
                 .attr("r", 32);
 
 
-         nodeEnter.append("image")
+        nodeEnter.append("image")
             .attr("xlink:href", function(d) {
                 if (isArtist(d)) {
                     if (d.artist.images[1]) {
@@ -267,7 +272,7 @@ var dndTree = (function() {
             })
             .attr("x", "-32px")
             .attr("y", "-32px")
-            .attr("clip-path", "url(#clipCircle)")
+            .attr("clip-path", "url(#clipCircle" + clipPathId + ")")
             .attr("width",
               function(d) {
                   if (isArtist(d)) {
