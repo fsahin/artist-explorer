@@ -124,15 +124,24 @@ h4 {
   width: 200px;
 }
 
+#repeat-artists-container {
+  clear: both;
+}
+
+#checkbox-div {
+  float: right;
+  width: 88px;
+}
+
 #range-container {
   margin-top: 10px;
   margin-bottom: 10px;
-  height: 25px;
+  height: 35px;
 }
 
 .range-desc {
   float: left;
-  width: 130px;
+  width: 180px;
 }
 
 #range-indicator {
@@ -143,7 +152,7 @@ h4 {
 .range-bar {
   padding-top: 2px;
   float: right;
-  width: 175px;
+  width: 130px;
 }
 
 #infobox {

@@ -25,11 +25,17 @@
           </div>
           </br>
           <div id="range-container">
-            <div class="range-desc">#Artists to expand:</div>
+            <div class="range-desc">Max #artists to expand:</div>
             <div class="range-bar">
-              <input type="range" class="slider" min="1" max="20" step="1" onchange="changeNumberOfArtists(this.value)"/>
+              <input type="range" class="slider" min="1" max="20" step="1" oninput="changeNumberOfArtists(this.value)"/>
               <div id="range-indicator">10</div>
             </div>
+          </div>
+        </div>
+        <div id="repeat-artists-container">
+          Expand already explored artists:
+          <div id="checkbox-div">
+            <input type="checkbox" id="repeatArtists" onclick="setRepeatArtists()">  <br>
           </div>
         </div>
         <hr>

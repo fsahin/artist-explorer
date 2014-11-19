@@ -8,6 +8,16 @@ var api = new SpotifyWebApi();
 var showCompletion = true;
 var volume = 0.5;
 
+var repeatArtists = false;
+
+function setRepeatArtists() {
+    if (document.getElementById('repeatArtists').checked) {
+        repeatArtists = true;
+    } else {
+        repeatArtists = false;
+    }
+}
+
 window.addEventListener('load', function() {
     var formArtist = document.getElementById('search-artist');
     formArtist.addEventListener('submit', function(e) {
@@ -192,15 +202,21 @@ function _getInfo(artist) {
 }
 
 
-function getRelated(artistId, n) {
+
+function getRelated(artistId, excludeList, n) {
     return new Promise(function(resolve, reject) {
         return api.getArtistRelatedArtists(artistId, function(error, data) {
 
-            //Sort in popularity order
-            resolve(data.artists.sort(function(a, b) {
+            data.artists.sort(function(a, b) {
                 return b.popularity - a.popularity;
-            }).slice(0, n));
-            // resolve(data.artists.slice(0, n));
+            })
+            if (!repeatArtists) {
+                data.artists = data.artists.filter(function(artist) {
+                    return excludeList.indexOf(artist.id) == -1;
+                })
+            }
+
+            resolve(data.artists.slice(0, n));
       });
     });
 }

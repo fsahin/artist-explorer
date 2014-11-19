@@ -7,7 +7,7 @@ var dndTree = (function() {
     var root;
     var rightPaneWidth = 350;
 
-    var exploredArtists = []
+    var exploredArtistIds = []
 
     // size of the diagram
     var viewerWidth = $(window).width() - rightPaneWidth;
@@ -67,18 +67,21 @@ var dndTree = (function() {
 
     function setChildrenAndUpdateForArtist(node) {
         var artists;
-        getRelated(node.artist.id, numberOfArtistsToShow).then(function(artists) {
+        getRelated(node.artist.id, exploredArtistIds, numberOfArtistsToShow).then(function(artists) {
             if (!node.children) {
                 node.children = []
             }
 
             artists.forEach(function(artist) {
+
                 node.children.push(
                     {
                         'artist': artist,
                         'children': null
                     }
                 )
+                exploredArtistIds.push(artist.id);
+
             });
             update(node);
             centerNode(node);
@@ -99,6 +102,7 @@ var dndTree = (function() {
                         'children': null
                     }
                 )
+                exploredArtistIds.push(artist.id);
             });
             update(node);
             centerNode(node);
@@ -106,6 +110,7 @@ var dndTree = (function() {
     }
 
     function initWithArtist(artist) {
+        exploredArtistIds.push(artist.id);
         return {
             'artist' : artist,
             'children': null,
@@ -129,9 +134,28 @@ var dndTree = (function() {
         return 'genre' in d;
     }
 
+
+    function removeExpandedId(d) {
+        if (d.children) {
+            d.children.forEach(function(node) {
+                removeExpandedId(node);
+            });
+        }
+        var indexToRem = exploredArtistIds.indexOf(d.artist.id);
+        exploredArtistIds.splice(indexToRem, 1);
+    }
+
+    function removeChildrenFromExplored(d) {
+        d.children.forEach(function(node) {
+            removeExpandedId(node);
+        });
+    }
+
+
     // Toggle children function
     function toggleChildren(d) {
         if (d.children) {
+            removeChildrenFromExplored(d);
             d.children = null;
             update(d);
             centerNode(d);
@@ -355,6 +379,7 @@ var dndTree = (function() {
 
     return {
          "setRoot" : function(artist) {
+            exploredArtistIds = []
             root = initWithArtist(artist);
             root.x0 = viewerHeight / 2;
             root.y0 = 0;
@@ -364,6 +389,7 @@ var dndTree = (function() {
         },
 
         "setRootGenre" : function(genreName) {
+            exploredArtistIds = []
             root = initWithGenre(genreName);
             root.x0 = viewerHeight / 2;
             root.y0 = 0;
