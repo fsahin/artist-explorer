@@ -118,6 +118,8 @@ h4 {
   top: 0px;
   right:0px;
   width: 350px;
+  position: relative;
+  padding: 15px;
 }
 
 .slider {
@@ -169,7 +171,7 @@ h4 {
 }
 
 .now-playing {
-  padding-left: 30px;
+  padding-left: 27px;
 }
 
 .now-playing::before {

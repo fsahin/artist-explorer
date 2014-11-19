@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="css/main.css">
   <body>
     <div class="main-container">
-      <div id="rightpane" class="modal-body warning">
+      <div id="rightpane">
         <div id="config">
           <h4>Configuration </h4>
           <div id="volume-container">
@@ -104,7 +104,6 @@
   <script src="js/main.js"></script>
   <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['gauge']}]}"></script>
   <script type="text/javascript">
-    google.setOnLoadCallback(drawChart);
     function drawChart(popularity_val) {
 
      var popData = google.visualization.arrayToDataTable([
