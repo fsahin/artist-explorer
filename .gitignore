@@ -1,5 +1,1 @@
 .DS_Store
-server/lib/
-server/lib/*
-server/app.yaml
-server/appengine_config.py

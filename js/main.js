@@ -8,8 +8,6 @@ var api = new SpotifyWebApi();
 var showCompletion = true;
 var volume = 0.5;
 
-var server_base_path = "http://spartistexplorer.appspot.com/"
-
 window.addEventListener('load', function() {
     var formArtist = document.getElementById('search-artist');
     formArtist.addEventListener('submit', function(e) {
@@ -21,7 +19,9 @@ window.addEventListener('load', function() {
                 initRootWithArtist(data.artists.items[0]);
             }
         });
+
     }, false);
+
 
     var formGenre = document.getElementById('search-genre');
     formGenre.addEventListener('submit', function(e) {
@@ -80,9 +80,9 @@ function initRootWithGenre(genre) {
 
 function loadAllGenres() {
     $.ajax({
-        url: server_base_path + "genres"
+        url: "https://developer.echonest.com/api/v4/genre/list?api_key=WKWPYLFXFLROAQB2B&format=json&results=1500"
     }).done(function(data) {
-        data.genres.forEach(function(genre){
+        data.response.genres.forEach(function(genre){
             allGenres.push(toTitleCase(genre.name));
         });
     });
@@ -139,10 +139,12 @@ function _getInfo(artist) {
 
     drawChart(artist.popularity);
     $.ajax({
-        url: server_base_path + "artist-info/" + artist.uri
+        url: "https://developer.echonest.com/api/v4/artist/profile?api_key=WKWPYLFXFLROAQB2B&id="
+        + artist.uri
+        + "&bucket=genre&bucket=biographies&format=json",
     }).done(function(data) {
         var found = false;
-        data.artist.biographies.forEach(function(biography){
+        data.response.artist.biographies.forEach(function(biography){
             if (!biography.truncated && !found) {
                 $('#biography').text(biography.text);
                 found = true;
@@ -155,12 +157,12 @@ function _getInfo(artist) {
         }
 
         $("#mainGenres").empty();
-        if (!data.artist.genres || data.artist.genres.length == 0) {
+        if (!data.response.artist.genres || data.response.artist.genres.length == 0) {
             setGenresVisibility(false);
         } else {
             setGenresVisibility(true);
         }
-        data.artist.genres.forEach(function(genre) {
+        data.response.artist.genres.forEach(function(genre) {
             $("#mainGenres").append("<li><a>" + toTitleCase(genre.name) + "</a></li>");
         });
         $('#mainGenres li').click( function() {
@@ -211,10 +213,12 @@ function getIdFromArtistUri(artistUri) {
 function getArtistsForGenre(genreName, n) {
     return new Promise(function(resolve, reject) {
         return $.ajax({
-            url: server_base_path + "genres/" + encodeURIComponent(genreName.toLowerCase()) + "/artists"
+            url: "https://developer.echonest.com/api/v4/genre/artists?api_key=WKWPYLFXFLROAQB2B"
+            +"&format=json&results=15&bucket=id:spotify"
+            + "&name=" + encodeURIComponent(genreName.toLowerCase())
         }).then(function(data) {
             var idsToRequest = []
-            data.artists.forEach(function(artist) {
+            data.response.artists.forEach(function(artist) {
                 if (artist.foreign_ids) {
                     idsToRequest.push(getIdFromArtistUri(artist.foreign_ids[0].foreign_id));
                 }
