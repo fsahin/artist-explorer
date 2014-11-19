@@ -139,6 +139,7 @@ h4 {
   margin-top: 10px;
   margin-bottom: 10px;
   height: 35px;
+  clear:both;
 }
 
 .range-desc {
