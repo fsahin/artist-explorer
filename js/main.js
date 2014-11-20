@@ -230,7 +230,7 @@ function getArtistsForGenre(genreName, n) {
     return new Promise(function(resolve, reject) {
         return $.ajax({
             url: "https://developer.echonest.com/api/v4/genre/artists?api_key=WKWPYLFXFLROAQB2B"
-            +"&format=json&results=15&bucket=id:spotify"
+            +"&format=json&results=15&bucket=id:spotify&limit=true"
             + "&name=" + encodeURIComponent(genreName.toLowerCase())
         }).then(function(data) {
             var idsToRequest = []
