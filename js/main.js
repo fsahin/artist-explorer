@@ -10,6 +10,8 @@ var volume = 0.5;
 
 var repeatArtists = false;
 
+var userCountry;
+
 function setRepeatArtists() {
     if (document.getElementById('repeatArtists').checked) {
         repeatArtists = true;
@@ -18,13 +20,33 @@ function setRepeatArtists() {
     }
 }
 
+function initContainer() {
+    initArtistId = stripTrailingSlash(qs('artist_id'))
+    initGenre = stripTrailingSlash(qs('genre'))
+
+    if (initArtistId) {
+        api.getArtist(initArtistId, function(error, data) {
+            initRootWithArtist(data);
+        });
+    } else if (initGenre) {
+        initRootWithGenre(initGenre);
+    } else {
+        api.getArtist('43ZHCT0cAZBISjO8DG9PnE', function(error, data) {
+            initRootWithArtist(data);
+        });
+    }
+}
+
 window.addEventListener('load', function() {
+    userCountry = geoplugin_countryCode();
+    initContainer();
+
     var formArtist = document.getElementById('search-artist');
     formArtist.addEventListener('submit', function(e) {
         showCompletion = false;
         e.preventDefault();
         var search = document.getElementById('artist-search');
-        api.searchArtists(search.value.trim(), function(err, data) {
+        api.searchArtists(search.value.trim(), {market: userCountry}, function(err, data) {
             if (data.artists && data.artists.items.length) {
                 initRootWithArtist(data.artists.items[0]);
             }
@@ -57,21 +79,6 @@ function stripTrailingSlash(str) {
         return str.substr(0, str.length - 1);
     }
     return str;
-}
-
-initArtistId = stripTrailingSlash(qs('artist_id'))
-initGenre = stripTrailingSlash(qs('genre'))
-
-if (initArtistId) {
-    api.getArtist(initArtistId, function(error, data) {
-        initRootWithArtist(data);
-    });
-} else if (initGenre) {
-    initRootWithGenre(initGenre);
-} else {
-    api.getArtist('43ZHCT0cAZBISjO8DG9PnE', function(error, data) {
-        initRootWithArtist(data);
-    });
 }
 
 var allGenres = [];
@@ -139,7 +146,6 @@ function setGenreVisibility() {
 
 function _getInfo(artist) {
 
-    playForArtist(artist);
     $('#infobox').css("visibility", "visible")
     $('#hoverwarning').css("display", "none")
 
@@ -181,10 +187,12 @@ function _getInfo(artist) {
     });
 
     $.ajax({
-      url: "https://api.spotify.com/v1/artists/"
-      + artist.id
-      + "/top-tracks?country=SE",
-    }).done(function(data) {
+      url: getTopTracksUrl(artist)
+    }).success(function(data) {
+        $("#divPopularTracks")
+            .removeClass("alert")
+            .text('');
+        playForTrack(data.tracks[0]);
         $("#popularTracks").empty();
         data.tracks.forEach(function(track, i){
             var className = "now-playing";
@@ -198,9 +206,20 @@ function _getInfo(artist) {
                         + '<a target="_blank" href="'+ track['external_urls']['spotify'] + '">' + track.name + '</a>'
                         + "</li>");
         });
+    }).fail(function(data) {
+        $("#divPopularTracks")
+            .addClass("alert")
+            .text("Oops, seems like there are no available tracks in your country");
+        $("#popularTracks").empty();
+        clearMusic();
     });
 }
 
+function getTopTracksUrl(artist) {
+    return "https://api.spotify.com/v1/artists/"
+      + artist.id
+      + "/top-tracks?country=" + userCountry;
+}
 
 
 function getRelated(artistId, excludeList, n) {
@@ -280,6 +299,20 @@ function createAutoCompleteDiv(artist) {
     return val;
 }
 
+var unavailCountryMessageSet = false;
+function setUnavailCountryErrorMessage() {
+    msg = "Oops, seems like Spotify is not available in your country yet";
+    if (unavailCountryMessageSet) {
+        return;
+    }
+  message = '<div class="alert alert-danger alert-error">'
+            + msg
+          + '</div>'
+  $('#rightpane').prepend(message);
+  unavailCountryMessageSet = true;
+}
+
+
 $(function() {
     $("#artist-search")
         // don't navigate away from the field on tab when selecting an item
@@ -293,7 +326,11 @@ $(function() {
         .autocomplete({
             minLength: 0,
             source: function(request, response) {
-                api.searchArtists(request.term + '*', {'limit': 50}, function(err, data) {
+                api.searchArtists(request.term + '*', {'limit': 50, market: userCountry}, function(err, data) {
+                    if (err && err.status == 400) {
+                        setUnavailCountryErrorMessage();
+                        return;
+                    }
                     if (data.artists && data.artists.items.length) {
                         res = []
                         data.artists.items.forEach(function(artist) {
@@ -436,11 +473,4 @@ function clearMusic() {
     }
     currentPlayingSongId = null;
 
-}
-
-function playForArtist(artist) {
-    api.getArtistTopTracks(artist.id, "SE").then(function(data) {
-        var track_to_play = data.tracks[0];
-        playForTrack(track_to_play);
-    });
 }
