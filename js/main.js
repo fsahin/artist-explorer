@@ -11,7 +11,9 @@ var volume = 0.5;
 var repeatArtists = false;
 var userCountry;
 
+//replace with configured servers uri
 var serverBasePath = "http://localhost:10000";
+
 var loadAllGenresUri = serverBasePath + "/api/genres"
 var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
 

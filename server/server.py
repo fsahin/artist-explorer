@@ -1,12 +1,10 @@
 from flask import Flask, jsonify, request
-
 from functools import  wraps
 from flask_cors import CORS, cross_origin
-
 from werkzeug.contrib.cache import SimpleCache
-cache = SimpleCache()
-
 import pyen
+
+cache = SimpleCache(threshold=10000)
 
 app = Flask(__name__)
 
@@ -18,6 +16,7 @@ app.config['CORS_RESOURCES'] = {r"/*": {"origins": ORIGINS}}
 
 cors = CORS(app)
 
+# Make sure ECHO_NEST_API_KEY environment variable is set
 en = pyen.Pyen()
 
 def cached(timeout=5 * 60, key='view/%s'):
@@ -48,7 +47,6 @@ def get_genre_artists(genre_name):
     return jsonify(response)
 
 @app.route('/api/genres')
-@cross_origin(origins=ORIGINS)
 @cached(timeout=30 * 60)
 def get_all_genres():
     response = en.get('genre/list')
