@@ -9,8 +9,17 @@ var showCompletion = true;
 var volume = 0.5;
 
 var repeatArtists = false;
-
 var userCountry;
+
+var serverBasePath = "http://localhost:10000";
+var loadAllGenresUri = serverBasePath + "/api/genres"
+var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
+
+
+function getGenreArtistsUri(genreId) {
+    return serverBasePath + "/api/genres/" + genreId + "/artists";
+}
+
 
 function setRepeatArtists() {
     if (document.getElementById('repeatArtists').checked) {
@@ -97,9 +106,9 @@ function initRootWithGenre(genre) {
 
 function loadAllGenres() {
     $.ajax({
-        url: "https://developer.echonest.com/api/v4/genre/list?api_key=WKWPYLFXFLROAQB2B&format=json&results=1500"
+        url: loadAllGenresUri
     }).done(function(data) {
-        data.response.genres.forEach(function(genre){
+        data.genres.forEach(function(genre){
             allGenres.push(toTitleCase(genre.name));
         });
     });
@@ -155,12 +164,10 @@ function _getInfo(artist) {
 
     drawChart(artist.popularity);
     $.ajax({
-        url: "https://developer.echonest.com/api/v4/artist/profile?api_key=WKWPYLFXFLROAQB2B&id="
-        + artist.uri
-        + "&bucket=genre&bucket=biographies&format=json",
+        url: loadArtistInfoUri + artist.uri
     }).done(function(data) {
         var found = false;
-        data.response.artist.biographies.forEach(function(biography){
+        data.artist.biographies.forEach(function(biography){
             if (!biography.truncated && !found) {
                 $('#biography').text(biography.text);
                 found = true;
@@ -173,12 +180,12 @@ function _getInfo(artist) {
         }
 
         $("#mainGenres").empty();
-        if (!data.response.artist.genres || data.response.artist.genres.length == 0) {
+        if (!data.artist.genres || data.artist.genres.length == 0) {
             setGenresVisibility(false);
         } else {
             setGenresVisibility(true);
         }
-        data.response.artist.genres.forEach(function(genre) {
+        data.artist.genres.forEach(function(genre) {
             $("#mainGenres").append("<li><a>" + toTitleCase(genre.name) + "</a></li>");
         });
         $('#mainGenres li').click( function() {
@@ -248,12 +255,10 @@ function getIdFromArtistUri(artistUri) {
 function getArtistsForGenre(genreName, n) {
     return new Promise(function(resolve, reject) {
         return $.ajax({
-            url: "https://developer.echonest.com/api/v4/genre/artists?api_key=WKWPYLFXFLROAQB2B"
-            +"&format=json&results=15&bucket=id:spotify&limit=true"
-            + "&name=" + encodeURIComponent(genreName.toLowerCase())
+            url: getGenreArtistsUri(encodeURIComponent(genreName.toLowerCase()))
         }).then(function(data) {
             var idsToRequest = []
-            data.response.artists.forEach(function(artist) {
+            data.artists.forEach(function(artist) {
                 if (artist.foreign_ids) {
                     idsToRequest.push(getIdFromArtistUri(artist.foreign_ids[0].foreign_id));
                 }

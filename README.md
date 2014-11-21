@@ -21,4 +21,3 @@ Consumed Libraries:
 * [Spotify Web API Wrapper](https://github.com/JMPerez/spotify-web-api-js)
 * [geoplugin](http://www.geoplugin.com/)
 
-
