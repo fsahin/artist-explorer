@@ -12,6 +12,14 @@ var repeatArtists = false;
 
 var userCountry;
 
+window.onresize = function() {
+    dndTree.resizeOverlay();
+    var height = $(window).height();
+    $("#rightpane").height(height);
+}
+
+$("#rightpane").height($(window).height());
+
 function setRepeatArtists() {
     if (document.getElementById('repeatArtists').checked) {
         repeatArtists = true;
@@ -113,6 +121,7 @@ var getInfoTimeoutid;
 function getInfo(artist) {
     getInfoTimeoutid = window.setTimeout(function(){
         _getInfo(artist);
+        $("#rightpane").animate({ scrollTop: "0px" });
     }, 500);
 }
 
