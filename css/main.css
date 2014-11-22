@@ -1,3 +1,7 @@
+html {
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -118,8 +122,11 @@ h4 {
   top: 0px;
   right:0px;
   width: 350px;
+  height: 100%;
   position: relative;
   padding: 15px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .slider {
@@ -163,8 +170,7 @@ h4 {
 }
 
 #bigoraphyDiv {
-  height: 300px;
-  overflow: scroll;
+  text-align: justify;
 }
 
 #popularTracks {

@@ -51,8 +51,6 @@ var dndTree = (function() {
         }
     }
 
-    window.onresize = updateWindow;
-
     // Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
     function centerNode(source) {
         lastExpandedNode = source;
@@ -401,6 +399,10 @@ var dndTree = (function() {
             update(root);
             centerNode(root);
             click(root);
+        },
+
+        "resizeOverlay" : function() {
+            updateWindow();
         }
     }
 

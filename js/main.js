@@ -18,10 +18,17 @@ var loadAllGenresUri = serverBasePath + "/api/genres"
 var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
 
 
+window.onresize = function() {
+    dndTree.resizeOverlay();
+    var height = $(window).height();
+    $("#rightpane").height(height);
+}
+
+$("#rightpane").height($(window).height());
+
 function getGenreArtistsUri(genreId) {
     return serverBasePath + "/api/genres/" + genreId + "/artists";
 }
-
 
 function setRepeatArtists() {
     if (document.getElementById('repeatArtists').checked) {
@@ -124,6 +131,7 @@ var getInfoTimeoutid;
 function getInfo(artist) {
     getInfoTimeoutid = window.setTimeout(function(){
         _getInfo(artist);
+        $("#rightpane").animate({ scrollTop: "0px" });
     }, 500);
 }
 
