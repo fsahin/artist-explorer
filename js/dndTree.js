@@ -68,7 +68,7 @@ var dndTree = (function() {
 
     function setChildrenAndUpdateForArtist(node) {
         var artists;
-        getRelated(node.artist.id, exploredArtistIds, numberOfArtistsToShow).then(function(artists) {
+        AE.getRelated(node.artist.id, exploredArtistIds).then(function(artists) {
             if (!node.children) {
                 node.children = []
             }
@@ -91,7 +91,7 @@ var dndTree = (function() {
 
     function setChildrenAndUpdateForGenre(node) {
         var artists;
-        getArtistsForGenre(node.genre.name, numberOfArtistsToShow).then(function(artists) {
+        AE.getArtistsForGenre(node.genre.name).then(function(artists) {
             if (!node.children) {
                 node.children = []
             }
@@ -215,12 +215,12 @@ var dndTree = (function() {
             })
             .on("mouseover", function(d) {
                 if ('artist' in d) {
-                    getInfo(d.artist);
+                    AE.getInfo(d.artist);
                 }
             })
             .on("mouseout", function(d) {
                 if ('artist' in d) {
-                    getInfoCancel();
+                    AE.getInfoCancel();
                 }
             })
             .on('click', click);
@@ -261,11 +261,9 @@ var dndTree = (function() {
         nodeEnter.append("image")
             .attr("xlink:href", function(d) {
                 if (isArtist(d)) {
-                    if (d.artist.images[1]) {
-                        return getSmallestLargerThan64ImageUrl(d.artist);
-                    }
+                  return AE.getSuitableImage(d.artist.images);
                 } else {
-                    return 'img/spotify.jpeg';
+                  return 'img/spotify.jpeg';
                 }
             })
             .attr("x", "-32px")
