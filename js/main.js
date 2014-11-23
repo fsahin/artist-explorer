@@ -2,18 +2,12 @@
 (function () {
 	'use strict';
 
-	var audio = null;
-	var currentPlayingSongId = null;
-	var playMusic = true;
 	var numberOfArtistsToShow = 10;
-
+	var playPopTrackTimeoutId;
 	var api = new SpotifyWebApi();
 
 	var showCompletion = true;
-	var volume = 0.5;
-
 	var repeatArtists = false;
-
 	var userCountry;
 
 	window.onresize = function () {
@@ -71,7 +65,6 @@
 			showCompletion = false;
 			e.preventDefault();
 			var search = document.getElementById('genre-search');
-			console.log('setting root genre');
 			var genreName = search.value.trim();
 			initRootWithGenre(genreName);
 		}, false);
@@ -198,14 +191,13 @@
 			$('#divPopularTracks')
 				.removeClass('alert')
 				.text('');
-			playForTrack(data.tracks[0]);
+			Player.playForTrack(data.tracks[0]);
 			$('#popularTracks').empty();
 			data.tracks.forEach(function (track, i) {
 				var className = 'now-playing';
-				if (i === 0 && playMusic) {
+				if (i === 0 ) {
 					className += ' active';
 				}
-
 				$('#popularTracks')
 					.append('<li class="' + className + '" onmouseover="AE.playFromList(this)" onmouseout="AE.playFromListCancel()" data-track-id=' +
 						track.id + ' data-preview-url=' + track.preview_url + '>' +
@@ -217,9 +209,33 @@
 				.addClass('alert')
 				.text('Oops, seems like there are no available tracks in your country');
 			$('#popularTracks').empty();
-			clearMusic();
+			setDefaultPopularTracks();
+			Player.clearMusic();
 		});
 	}
+
+	function playFromListCancel() {
+        window.clearTimeout(playPopTrackTimeoutId);
+    }
+
+    function _playFromList(obj) {
+        setDefaultPopularTracks();
+        $(obj).addClass('now-playing active');
+
+        var trackId = obj.getAttribute('data-track-id');
+        var previewUrl = obj.getAttribute('data-preview-url');
+        var trac = {
+            'id': trackId,
+            'preview_url': previewUrl
+        };
+        Player.playForTrack(trac);
+    }
+
+    function playFromList(obj) {
+        playPopTrackTimeoutId = window.setTimeout(function () {
+            _playFromList(obj);
+        }, 500);
+    }
 
 	function getRelated(artistId, excludeList) {
 		return new Promise(function (resolve, reject) {
@@ -238,7 +254,6 @@
 			});
 		});
 	}
-
 
 	function getIdFromArtistUri(artistUri) {
 		return artistUri.split(':').pop();
@@ -266,7 +281,6 @@
 			});
 		});
 	}
-
 
 	function changeNumberOfArtists(value) {
 		numberOfArtistsToShow = value;
@@ -390,78 +404,6 @@
 		$('#popularTracks li').removeClass('active');
 	}
 
-	var playPopTrackTimeoutId;
-
-	function playFromList(obj) {
-		playPopTrackTimeoutId = window.setTimeout(function () {
-			_playFromList(obj);
-		}, 500);
-	}
-
-	function playFromListCancel() {
-		window.clearTimeout(playPopTrackTimeoutId);
-	}
-
-	function _playFromList(obj) {
-		setDefaultPopularTracks();
-		if (!playMusic) {
-			return;
-		}
-		$(obj).addClass('now-playing active');
-
-		var trackId = obj.getAttribute('data-track-id');
-		var previewUrl = obj.getAttribute('data-preview-url');
-		var trac = {
-			'id': trackId,
-			'preview_url': previewUrl
-		};
-		playForTrack(trac);
-	}
-
-	//No need for this after setting volume
-	function playMusicHandler() {
-		if (document.getElementById('playMusic').checked) {
-			playMusic = true;
-		} else {
-			playMusic = false;
-			clearMusic();
-		}
-	}
-
-	function setVolume(vol) {
-		volume = vol;
-		audio.volume = vol;
-	}
-
-	function playForTrack(track_to_play) {
-		if (!playMusic) {
-			return;
-		}
-
-		if (currentPlayingSongId == track_to_play.id) {
-			return;
-		}
-		if (currentPlayingSongId != null) {
-			audio.setAttribute('src', track_to_play.preview_url);
-			audio.load();
-			audio.play();
-		} else {
-			audio = new Audio(track_to_play.preview_url);
-			audio.volume = volume;
-			audio.load();
-			audio.play();
-		}
-		currentPlayingSongId = track_to_play.id;
-	}
-
-	function clearMusic() {
-		setDefaultPopularTracks();
-		if (audio) {
-			audio.pause();
-		}
-		currentPlayingSongId = null;
-	}
-
 	function drawChart(popularity) {
 		var popData = google.visualization.arrayToDataTable([
 			 ['Popularity', popularity],
@@ -498,7 +440,6 @@
 		getArtistsForGenre: getArtistsForGenre,
 		getInfoCancel: getInfoCancel,
 		getInfo: getInfo,
-		setVolume: setVolume,
 		changeNumberOfArtists: changeNumberOfArtists,
 		setRepeatArtists: setRepeatArtists,
 		playFromList: playFromList,
