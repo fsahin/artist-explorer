@@ -279,7 +279,7 @@
 		}
 		var val = '<div class="autocomplete-item">' +
 			'<div class="artist-icon-container">' +
-			'<img src="' + AE.getSuitableImage(artist.images) + '" class="circular artist-icon" />' +
+			'<img src="' + getSuitableImage(artist.images) + '" class="circular artist-icon" />' +
 			'<div class="artist-label">' + artist.name + '</div>' +
 			'</div>' +
 			'</div>';
@@ -464,7 +464,7 @@
 
 	function drawChart(popularity) {
 		var popData = google.visualization.arrayToDataTable([
-		   ['Popularity', popularity],
+			 ['Popularity', popularity],
 		], true);
 
 		var options = {
@@ -502,6 +502,7 @@
 		changeNumberOfArtists: changeNumberOfArtists,
 		setRepeatArtists: setRepeatArtists,
 		playFromList: playFromList,
-		playFromListCancel: playFromListCancel
+		playFromListCancel: playFromListCancel,
+		toTitleCase: toTitleCase
 	};
 })();

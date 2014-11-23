@@ -244,7 +244,7 @@ var dndTree = (function() {
                 if (isArtist(d)) {
                     return d.artist.name;
                 } else if (isGenre(d)){
-                    return "Genre:" + toTitleCase(d.genre.name);
+                    return "Genre:" + AE.toTitleCase(d.genre.name);
                 }
 
             })
