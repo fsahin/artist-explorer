@@ -37,7 +37,16 @@ def cached(timeout=5 * 60, key='view/%s'):
 @app.route('/api/artist-info/<artist_uri>')
 @cached(timeout=30 * 60)
 def get_artist_info(artist_uri):
-    response = en.get('artist/profile', id=artist_uri, bucket=['genre','biographies'])
+    echonest_response = en.get('artist/profile', id=artist_uri, bucket=['genre','biographies'])
+    response = {}
+    response['status'] = echonest_response['status']
+    response['artist'] = {}
+    response['artist']['genres'] = echonest_response['artist']['genres']
+    for bio in echonest_response['artist']['biographies']:
+        if ('truncated' not in bio) or bio['truncated'] == False:
+            response['artist']['biographies'] = [bio]
+            break
+
     return jsonify(response)
 
 @app.route('/api/genres/<genre_name>/artists')
