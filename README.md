@@ -12,6 +12,9 @@ The app pulls related artist information from Spotify and additional data (genre
 
 Running Locally
 ===============
+**Not necessary but strongly suggested:** Create a [virtualenv] (http://docs.python-guide.org/en/latest/dev/virtualenvs/) or use an existing one before installing dependencies of this project.
+
+
 Echo Nest API calls are proxied through a flask server. You need to start the server first.
 
 ```
