@@ -10,6 +10,21 @@ The app pulls related artist information from Spotify and additional data (genre
 * [https://developer.spotify.com/web-api/](https://developer.spotify.com/web-api/)
 * [https://developer.echonest.com/docs/v4](https://developer.echonest.com/docs/v4)
 
+Running Locally
+===============
+Echo Nest API calls are proxied through a flask server. You need to start the server first.
+
+```
+cd server
+pip install -r requirements.txt
+python server.py
+```
+
+And you also need to serve the files at the root of the project. You can use SimpleHTTPServer module in python. To do that, change directyory to the project base and enter the following command:
+```
+python -m SimpleHTTPServer
+```
+
 App
 ===
 <img src="./img/ScreenShot.png" width="750px"/>
