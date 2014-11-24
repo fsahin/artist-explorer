@@ -1,9 +1,11 @@
 (function () {
     'use strict';
 
-    var audio = null;
-    var currentPlayingSongId = null;
     var volume = 0.5;
+    var audio = new Audio();
+    audio.volume = volume;
+
+    var currentPlayingSongId = null;
 
     function setVolume(vol) {
         volume = vol;
@@ -15,16 +17,10 @@
             return;
         }
 
-        if (currentPlayingSongId != null) {
-            audio.setAttribute('src', track_to_play.preview_url);
-            audio.load();
-            audio.play();
-        } else {
-            audio = new Audio(track_to_play.preview_url);
-            audio.volume = volume;
-            audio.load();
-            audio.play();
-        }
+        audio.setAttribute('src', track_to_play.preview_url);
+        audio.load();
+        audio.play();
+
         currentPlayingSongId = track_to_play.id;
     }
 
