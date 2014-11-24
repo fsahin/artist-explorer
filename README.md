@@ -20,5 +20,6 @@ Consumed Libraries:
 * [Google Gauge Charts](https://developers.google.com/chart/interactive/docs/gallery/gauge)
 * [Spotify Web API Wrapper](https://github.com/JMPerez/spotify-web-api-js)
 * [geoplugin](http://www.geoplugin.com/)
+* [freegeoip](https://freegeoip.net)
 
 

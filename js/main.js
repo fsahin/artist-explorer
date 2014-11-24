@@ -40,7 +40,16 @@
 	}
 
 	window.addEventListener('load', function () {
-		userCountry = geoplugin_countryCode();
+
+		$.ajax({
+			url: "https://freegeoip.net/json/"
+		}).done(function (data) {
+			userCountry = data.country_code;
+		}).fail(function() {
+			//default to US
+    		userCountry = "US"
+		});
+
 		initContainer();
 
 		var formArtist = document.getElementById('search-artist');
