@@ -124,7 +124,7 @@ h4 {
   width: 350px;
   height: 100%;
   position: relative;
-  padding: 15px;
+  padding: 13px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -173,12 +173,8 @@ h4 {
   text-align: justify;
 }
 
-#popularTracks {
-  padding-left: 0;
-}
-
 .now-playing {
-  padding-left: 27px;
+  padding-left: 37px;
 }
 
 .now-playing::before {
@@ -193,6 +189,8 @@ h4 {
 
 #popularTracks {
   list-style-position: inside;
+  text-indent: -12px;
+  padding-left: 0px;
 }
 
 #infobox li {
