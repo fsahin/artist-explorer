@@ -4,7 +4,7 @@ from flask_cors import CORS, cross_origin
 from werkzeug.contrib.cache import SimpleCache
 import pyen
 
-cache = SimpleCache(threshold=10000)
+cache = SimpleCache(threshold=20000)
 
 app = Flask(__name__)
 
@@ -49,7 +49,7 @@ def get_genre_artists(genre_name):
 @app.route('/api/genres')
 @cached(timeout=30 * 60)
 def get_all_genres():
-    response = en.get('genre/list')
+    response = en.get('genre/list', results=2000)
     return jsonify(response)
 
 
