@@ -177,13 +177,15 @@
 			url: loadArtistInfoUri + artist.uri
 		}).done(function (data) {
 			var found = false;
-			data.artist.biographies.forEach(function (biography) {
-				if (!biography.truncated && !found) {
-					$('#biography').text(biography.text);
-					found = true;
-					setBioVisibility(true);
-				}
-			});
+			if (data.artist.biographies) {
+				data.artist.biographies.forEach(function (biography) {
+					if (!biography.truncated && !found) {
+						$('#biography').text(biography.text);
+						found = true;
+						setBioVisibility(true);
+					}
+				});
+			}
 
 			if (found === false) {
 				setBioVisibility(false);
