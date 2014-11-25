@@ -8,7 +8,9 @@
 
 	var showCompletion = true;
 	var repeatArtists = false;
-	var userCountry;
+
+	//default to US
+	var userCountry = "US";
 
 	window.onresize = function () {
 		dndTree.resizeOverlay();
@@ -45,9 +47,6 @@
 			url: "https://freegeoip.net/json/"
 		}).done(function (data) {
 			userCountry = data.country_code;
-		}).fail(function() {
-			//default to US
-    		userCountry = "US"
 		});
 
 		initContainer();
