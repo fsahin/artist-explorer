@@ -1,117 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html class=no-js>
   <head>
+    <meta charset=utf-8>
     <title>Artist Explorer</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/main.css">
-  </head>
+    <link rel=stylesheet href=css/moved.css>
   <body>
-    <script>
-     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-     ga('create', 'UA-56769808-1', 'auto');
-     ga('send', 'pageview');
-    </script>
-    <div class="main-container">
-      <div id="rightpane">
-        <div id="config">
-          <h4>Configuration </h4>
-          <div id="volume-container">
-            <div class="range-desc">Volume:</div>
-            <div class="range-bar">
-              <input type="range" class="slider" min="0" max="1" step="0.05" oninput="Player.setVolume(this.value)"/>
-            </div>
-          </div>
-
-          <div id="range-container">
-            <div class="range-desc">Max #artists to expand:</div>
-            <div class="range-bar">
-              <input type="range" class="slider" min="1" max="20" step="1" oninput="AE.changeNumberOfArtists(this.value)"/>
-              <div id="range-indicator">10</div>
-            </div>
-          </div>
+    <div class=container>
+      <div class=default-content>
+        <div class=jumbotron>
+          <h1>Page moved</h1>
+          <p class=lead>Artist Explorer has moved to <a href="https://artistexplorer.spotify.com">artistexplorer.spotify.com</a></p>
+          <p>
+            <form action="https://artistexplorer.spotify.com">
+              <button  class="btn btn-lg btn-success">Go to the new site</button>
+            </form>
+          </p>
         </div>
-        <div id="repeat-artists-container">
-          Expand already explored artists:
-          <div id="checkbox-div">
-            <input type="checkbox" id="repeatArtists" onclick="AE.setRepeatArtists()">
-          </div>
-        </div>
-        <hr>
-        <div id="hoverwarning">
-          <h4>Help</h4>
-          <ul>
-            <li>Click on an artist to see related artists. </li>
-            <li>Hover over an artist to hear a sample of their music.</li>
-            <li>Enter an artist name or a genre and explore relationships between over 2,000,000 artists on Spotify.</li>
-          </ul>
-          <h4>Info</h4>
-          Artist Explorer displays data from two great music APIs: <a target="_blank" href="https://developer.spotify.com/web-api/">the Spotify Web API </a> and <a target="_blank" href="http://developer.echonest.com/docs/v4">the Echo Nest API </a>
-        </div>
-        <div id="infobox">
-          <h4>Artist Info </h4>
-          <a id="artistName"> </a>
-          <p </p>
-          <div id="chart_div" style="width: 350px; height: 120px;"></div>
-          <h4>Popular Tracks</h4>
-          <div id="divPopularTracks">
-          </div>
-          <ul id="popularTracks"> </ul>
-          <hr>
-          <h4 id ="main-genres-label">Main Genres</h4>
-          <ul id="mainGenres"> </ul>
-          <h4 id ="biography-label">Biography</h4>
-          <div id="bigoraphyDiv">
-            <p id="biography"> </p>
-          </div>
-        </div>
-      </div>
-      <div class ="left">
-        <div class="navbar navbar-default" role="navigation">
-          <div class="menu-items">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="">
-              <span class="navbar-logo">Spotify</span>
-              <span class="navbar-title">Artist Explorer</span>
-              </a>
-            </div>
-            <div class="collapse navbar-collapse">
-              <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code</a></li>
-              </ul>
-            </div>
-            <!--/.nav-collapse -->
-          </div>
-        </div>
-        <div id="search" class="row">
-          <form id="search-artist" class="form-horizontal col-sm-6 col-md-6" role="form">
-            <input id="artist-search" class="form-control" placeholder="Search for an Artist">
-          </form>
-          <form id="search-genre" class="form-horizontal col-sm-6 col-md-6" role="form">
-            <input id="genre-search" class="form-control" placeholder="Search for a Genre">
-          </form>
-        </div>
-        <div id="tree-container"></div>
       </div>
     </div>
   </body>
-  <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['gauge']}]}"></script>
-  <script src="./bower_components/spotify-web-api-js/src/spotify-web-api.js"></script>
-  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.12/d3.min.js"></script>
-  <script src="js/dndTree.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/audioPlayer.js"></script>
 </html>
