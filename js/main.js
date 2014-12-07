@@ -143,117 +143,102 @@
 		window.clearTimeout(getInfoTimeoutid);
 	}
 
-	function setBioVisibility(val) {
-		if (val) {
-			$('#biography').show();
-			$('#biography-label').show();
-		} else {
-			$('#biography').hide();
-			$('#biography-label').hide();
+	var artistInfoModel = function() {
+		var self = this;
+
+		self.artistName = ko.observable();
+		self.isArtistInfoVisible = ko.observable(false);
+		self.spotifyLink = ko.observable();
+		self.popularity = ko.observable();
+		self.biography = ko.observable();
+		self.bioExists = ko.observable();
+		self.genres = ko.observableArray([]);
+		self.topTracks = ko.observableArray([]);
+
+		self.switchToGenre = function() {
+			initRootWithGenre(this.name);
 		}
+
+		self.playTrack = function() {
+			var self2 = this;
+			var track = {
+				'preview_url': this.preview_url,
+				'id': this.id,
+			}
+	        playPopTrackTimeoutId = window.setTimeout(function () {
+	            _playTrack(track);
+	            ko.utils.arrayForEach(self.topTracks(), function(track) {
+                    track.isPlaying(false);
+			    });
+	            self2.isPlaying(true);
+	        }, 500);
+	    }
+
+	    self.playTrackCancel = function() {
+			window.clearTimeout(playPopTrackTimeoutId);
+	    }
 	}
 
-	function setGenresVisibility(val) {
-		if (val) {
-			$('#mainGenres').show();
-			$('#main-genres-label').show();
-		} else {
-			$('#mainGenres').hide();
-			$('#main-genres-label').hide();
-		}
-	}
+	function _playTrack(track) {
+        Player.playForTrack(track);
+    }
+
+	var my = {
+		artistInfoModel: new artistInfoModel()
+	};
+
+	ko.applyBindings(my.artistInfoModel);
 
 	function _getInfo(artist) {
-
-		$('#infobox').css('visibility', 'visible');
 		$('#hoverwarning').css('display', 'none');
 
-		$('#artistName').text(artist.name);
-		$('#artistName').attr('href', artist.external_urls.spotify);
-		$('#artistName').attr('target', '_blank');
+		my.artistInfoModel.isArtistInfoVisible(true);
+		my.artistInfoModel.artistName(artist.name);
+		my.artistInfoModel.spotifyLink(artist.external_urls.spotify)
 
 		drawChart(artist.popularity);
+
 		$.ajax({
 			url: loadArtistInfoUri + artist.uri
 		}).done(function (data) {
-			var found = false;
+			var bioFound = false;
 			if (data.artist.biographies) {
 				data.artist.biographies.forEach(function (biography) {
-					if (!biography.truncated && !found) {
-						$('#biography').text(biography.text);
-						found = true;
-						setBioVisibility(true);
+					if (!biography.truncated && !bioFound) {
+						my.artistInfoModel.biography(biography.text);
+						bioFound = true;
 					}
 				});
 			}
+			my.artistInfoModel.bioExists(bioFound);
 
-			if (found === false) {
-				setBioVisibility(false);
-			}
-
-			$('#mainGenres').empty();
-			if (!data.artist.genres || data.artist.genres.length === 0) {
-				setGenresVisibility(false);
-			} else {
-				setGenresVisibility(true);
-			}
+			my.artistInfoModel.genres([]);
 			data.artist.genres.forEach(function (genre) {
-				$('#mainGenres').append('<li><a>' + toTitleCase(genre.name) + '</a></li>');
-			});
-			$('#mainGenres li').click(function () {
-				initRootWithGenre($(this).text());
+				my.artistInfoModel.genres.push(
+					{
+						'name': genre.name,
+						'titleCaseName': toTitleCase(genre.name),
+					}
+				)
 			});
 		});
 
 		api.getArtistTopTracks(artist.id, userCountry).then(function (data) {
-			$('#divPopularTracks')
-				.removeClass('alert')
-				.text('');
 			Player.playForTrack(data.tracks[0]);
-			$('#popularTracks').empty();
+			my.artistInfoModel.topTracks([]);
 			data.tracks.forEach(function (track, i) {
-				var className = 'now-playing';
-				if (i === 0 ) {
-					className += ' active';
-				}
-				$('#popularTracks')
-					.append('<li class="' + className + '" onmouseover="AE.playFromList(this)" onmouseout="AE.playFromListCancel()" data-track-id=' +
-						track.id + ' data-preview-url=' + track.preview_url + '>' +
-						'<a target="_blank" href="' + track.external_urls.spotify + '">' + track.name + '</a>' +
-						'</li>');
+				my.artistInfoModel.topTracks.push({
+					'isPlaying': i == 0 ? ko.observable(true): ko.observable(false),
+					'id': track.id,
+					'name': track.name,
+					'preview_url': track.preview_url,
+					'spotifyLink': track.external_urls.spotify,
+				});
 			});
 		}, function (err) {
-			$('#divPopularTracks')
-				.addClass('alert')
-				.text('Oops, seems like there are no available tracks in your country');
-			$('#popularTracks').empty();
-			setDefaultPopularTracks();
 			Player.clearMusic();
 		});
 	}
-
-	function playFromListCancel() {
-        window.clearTimeout(playPopTrackTimeoutId);
-    }
-
-    function _playFromList(obj) {
-        setDefaultPopularTracks();
-        $(obj).addClass('now-playing active');
-
-        var trackId = obj.getAttribute('data-track-id');
-        var previewUrl = obj.getAttribute('data-preview-url');
-        var trac = {
-            'id': trackId,
-            'preview_url': previewUrl
-        };
-        Player.playForTrack(trac);
-    }
-
-    function playFromList(obj) {
-        playPopTrackTimeoutId = window.setTimeout(function () {
-            _playFromList(obj);
-        }, 500);
-    }
 
 	function getRelated(artistId, excludeList) {
 		return new Promise(function (resolve, reject) {
@@ -416,10 +401,6 @@
 			});
 	});
 
-	function setDefaultPopularTracks() {
-		$('#popularTracks li').removeClass('active');
-	}
-
 	function drawChart(popularity) {
 		var popData = google.visualization.arrayToDataTable([
 			 ['Popularity', popularity],
@@ -458,8 +439,6 @@
 		getInfo: getInfo,
 		changeNumberOfArtists: changeNumberOfArtists,
 		setRepeatArtists: setRepeatArtists,
-		playFromList: playFromList,
-		playFromListCancel: playFromListCancel,
 		toTitleCase: toTitleCase
 	};
 })();

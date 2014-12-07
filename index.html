@@ -44,7 +44,7 @@
           </div>
         </div>
         <hr>
-        <div id="hoverwarning">
+        <div data-bind="visible: !isArtistInfoVisible()" id="hoverwarning">
           <h4>Help</h4>
           <ul>
             <li>Click on an artist to see related artists. </li>
@@ -54,24 +54,44 @@
           <h4>Info</h4>
           Artist Explorer displays data from two great music APIs: <a target="_blank" href="https://developer.spotify.com/web-api/">the Spotify Web API </a> and <a target="_blank" href="http://developer.echonest.com/docs/v4">the Echo Nest API </a>
         </div>
-        <div id="infobox">
+
+        <!-- Artist Info -->
+        <div data-bind="visible: isArtistInfoVisible" id="infobox">
           <h4>Artist Info </h4>
-          <a id="artistName"> </a>
+          <a target="_blank" data-bind="text: artistName, attr: { href:spotifyLink }" id="artistName"> </a>
           <p </p>
           <div id="chart_div" style="width: 350px; height: 120px;"></div>
+
           <h4>Popular Tracks</h4>
-          <div id="divPopularTracks">
+
+          <ul data-bind="visible: topTracks().length > 0, foreach: topTracks" id="popularTracks">
+            <li data-bind="event: { mouseover: $parent.playTrack, mouseout: $parent.playTrackCancel }, css: {active: isPlaying}" class = "now-playing">
+              <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"> </a>
+            </li>
+          </ul>
+
+          <div data-bind="visible: topTracks().length <= 0" id="divPopularTracks" class="alert">
+            Oops, seems like there are no available tracks in your country
           </div>
-          <ul id="popularTracks"> </ul>
+
           <hr>
-          <h4 id ="main-genres-label">Main Genres</h4>
-          <ul id="mainGenres"> </ul>
-          <h4 id ="biography-label">Biography</h4>
-          <div id="bigoraphyDiv">
-            <p id="biography"> </p>
+
+          <div data-bind="visible: genres().length > 0">
+            <h4 id ="main-genres-label">Main Genres</h4>
+            <ul data-bind="foreach: genres" id="mainGenres">
+              <li>
+                <a data-bind="text: titleCaseName, click: $parent.switchToGenre"></a>
+              </li>
+            </ul>
+          </div>
+
+          <div data-bind="visible: bioExists" id="bigoraphyDiv">
+            <h4 id ="biography-label">Biography</h4>
+            <p data-bind="text: biography" id="biography"> </p>
           </div>
         </div>
       </div>
+
       <div class ="left">
         <div class="navbar navbar-default" role="navigation">
           <div class="menu-items">
@@ -109,6 +129,7 @@
   </body>
   <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['gauge']}]}"></script>
   <script src="./bower_components/spotify-web-api-js/src/spotify-web-api.js"></script>
+  <script src="./bower_components/knockout/dist/knockout.js"></script>
   <script src="./js/lib/jquery-1.10.2.min.js"></script>
   <script src="./js/lib/jquery-ui-1.11.1.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.12/d3.min.js"></script>
