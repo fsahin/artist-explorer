@@ -183,18 +183,16 @@
         Player.playForTrack(track);
     }
 
-    var my = {
-        artistInfoModel: new artistInfoModel()
-    };
+    var artistInfoModel = new artistInfoModel()
 
-    ko.applyBindings(my.artistInfoModel);
+    ko.applyBindings(artistInfoModel);
 
     function _getInfo(artist) {
         $('#hoverwarning').css('display', 'none');
 
-        my.artistInfoModel.isArtistInfoVisible(true);
-        my.artistInfoModel.artistName(artist.name);
-        my.artistInfoModel.spotifyLink(artist.external_urls.spotify)
+        artistInfoModel.isArtistInfoVisible(true);
+        artistInfoModel.artistName(artist.name);
+        artistInfoModel.spotifyLink(artist.external_urls.spotify)
 
         drawChart(artist.popularity);
 
@@ -205,16 +203,16 @@
             if (data.artist.biographies) {
                 data.artist.biographies.forEach(function (biography) {
                     if (!biography.truncated && !bioFound) {
-                        my.artistInfoModel.biography(biography.text);
+                        artistInfoModel.biography(biography.text);
                         bioFound = true;
                     }
                 });
             }
-            my.artistInfoModel.bioExists(bioFound);
+            artistInfoModel.bioExists(bioFound);
 
-            my.artistInfoModel.genres([]);
+            artistInfoModel.genres([]);
             data.artist.genres.forEach(function (genre) {
-                my.artistInfoModel.genres.push(
+                artistInfoModel.genres.push(
                     {
                         'name': genre.name,
                         'titleCaseName': toTitleCase(genre.name),
@@ -225,9 +223,9 @@
 
         api.getArtistTopTracks(artist.id, userCountry).then(function (data) {
             Player.playForTrack(data.tracks[0]);
-            my.artistInfoModel.topTracks([]);
+            artistInfoModel.topTracks([]);
             data.tracks.forEach(function (track, i) {
-                my.artistInfoModel.topTracks.push({
+                artistInfoModel.topTracks.push({
                     'isPlaying': i == 0 ? ko.observable(true): ko.observable(false),
                     'id': track.id,
                     'name': track.name,
@@ -439,6 +437,7 @@
         getInfo: getInfo,
         changeNumberOfArtists: changeNumberOfArtists,
         setRepeatArtists: setRepeatArtists,
-        toTitleCase: toTitleCase
+        toTitleCase: toTitleCase,
+        artistInfoModel: artistInfoModel
     };
 })();
