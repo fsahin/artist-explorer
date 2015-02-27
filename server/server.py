@@ -10,6 +10,7 @@ from functools import update_wrapper
 from flask import request, g
 import zlib
 import json
+import spotipy
 
 cache = SimpleCache(threshold=20000)
 
@@ -26,6 +27,8 @@ cors = CORS(app)
 
 # Make sure ECHO_NEST_API_KEY environment variable is set
 en = pyen.Pyen()
+
+sp = spotipy.Spotify()
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -107,6 +110,34 @@ def get_genre_artists(genre_name):
 @cached(timeout=30 * 60)
 def get_all_genres():
     response = en.get('genre/list', results=2000)
+    return jsonify(response)
+
+@app.route('/spotify/artists/<artist_id>')
+def get_artist(artist_id):
+    response = sp.artist(artist_id)
+    return jsonify(response)
+
+@app.route('/spotify/artists/<artist_id>/related-artists')
+def get_related_artists(artist_id):
+    response = sp.artist_related_artists(artist_id)
+    return jsonify(response)
+
+@app.route('/spotify/artists/<artist_id>/top-tracks')
+def get_top_tracks(artist_id):
+    country = request.args.get('country')
+    response = sp.artist_top_tracks(artist_id, country)
+    return jsonify(response)
+
+
+@app.route('/spotify/search')
+def search():
+    print "here i am"
+    q = request.args.get('q')
+    type = request.args.get('type')
+    limit = request.args.get('limit')
+
+    response = sp.search(q, type=type, limit=limit)
+    print response
     return jsonify(response)
 
 
