@@ -4,7 +4,6 @@
 
     var numberOfArtistsToShow = 10;
     var playPopTrackTimeoutId;
-    var api = new SpotifyWebApi();
 
     var showCompletion = true;
     var repeatArtists = false;
@@ -14,6 +13,8 @@
 
     //replace with configured servers uri
     var serverBasePath = "http://localhost:10000";
+
+    var api = new spAPI(serverBasePath);
 
     var loadAllGenresUri = serverBasePath + "/api/genres"
     var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
@@ -68,7 +69,7 @@
             var search = document.getElementById('artist-search');
             api.searchArtists(
                 search.value.trim(),
-                { market: userCountry }
+                userCountry
                 ).then(function (data) {
                 if (data.artists && data.artists.items.length) {
                     initRootWithArtist(data.artists.items[0]);
