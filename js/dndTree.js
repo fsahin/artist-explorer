@@ -231,26 +231,8 @@ var dndTree = (function() {
                 return d._children ? "black" : "#fff";
             });
 
-        nodeEnter.append("text")
-            .attr("x", function(d) {
-                return 40;
-            })
-            .attr("dy", ".35em")
-            .attr('class', 'nodeText')
-            .attr("text-anchor", function(d) {
-                return d.children || d._children ? "end" : "start";
-            })
-            .text(function(d) {
-                if (isArtist(d)) {
-                    return d.artist.name;
-                } else if (isGenre(d)){
-                    return "Genre:" + AE.toTitleCase(d.genre.name);
-                }
-
-            })
-            .style("fill-opacity", 0);
-
         clipPathId++;
+        console.log(clipPathId)
 
         nodeEnter.append("clipPath")
             .attr("id", "clipCircle" + clipPathId)
@@ -302,6 +284,25 @@ var dndTree = (function() {
                     return 64;
                   }
               })
+
+        nodeEnter.append("text")
+            .attr("x", function(d) {
+                return 40;
+            })
+            .attr("dy", ".35em")
+            .attr('class', 'nodeText')
+            .attr("text-anchor", function(d) {
+                return "start";
+            })
+            .text(function(d) {
+                if (isArtist(d)) {
+                    return d.artist.name;
+                } else if (isGenre(d)){
+                    return "Genre:" + AE.toTitleCase(d.genre.name);
+                }
+
+            })
+            .style("fill-opacity", 0);
 
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
@@ -378,6 +379,52 @@ var dndTree = (function() {
     // Append a group which holds all nodes and which the zoom Listener can act upon.
     var svgGroup = baseSvg.append("g");
 
+    function copyTree(from, to) {
+        if (from.artist) {
+            to.artist = from.artist
+        }
+
+        if (from.genre) {
+            to.genre = from.genre
+        }
+
+        if (!from.children) {
+            return;
+        }
+        to.children = []
+        from.children.forEach(function(node) {
+            var child = {}
+            copyTree(node, child)
+            to.children.push(child);
+        })
+    }
+
+    function serializeTree() {
+        var obj = {};
+        copyTree(root, obj)
+        return obj;
+    }
+
+    function initWithData(from, to) {
+        to.artist = from.artist;
+        exploredArtistIds.push(to.artist.id);
+
+        if (from.children) {
+            to.children = []
+            from.children.forEach(function(child) {
+                var obj = {}
+                initWithData(child, obj);
+                to.children.push(obj);
+            })
+        }
+
+        if (to.children && to.children.length > 0) {
+            console.log(to.artist.name);
+            update(root);
+        }
+
+    }
+
     return {
          "setRoot" : function(artist) {
             exploredArtistIds = []
@@ -386,7 +433,7 @@ var dndTree = (function() {
             root.y0 = 0;
             update(root);
             centerNode(root);
-            click(root);
+            click(root)
         },
 
         "setRootGenre" : function(genreName) {
@@ -397,6 +444,19 @@ var dndTree = (function() {
             update(root);
             centerNode(root);
             click(root);
+        },
+
+        "getRoot": function() {
+            return serializeTree();
+        },
+
+        "setRootData": function(rootData) {
+            exploredArtistIds = []
+            initWithData(rootData, root);
+            root.x0 = viewerHeight / 2;
+            root.y0 = 0;
+            centerNode(root);
+            update(root);
         },
 
         "resizeOverlay" : function() {

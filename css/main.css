@@ -201,3 +201,12 @@ h4 {
   color: #6FB100;
 }
 
+#share-div {
+  background-color: yellow;
+  position: fixed;
+  height: 70px;
+  left: 20px;
+  bottom: 20px;
+  padding: 10px;
+}
+
