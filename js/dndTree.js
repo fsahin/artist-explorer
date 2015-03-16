@@ -232,7 +232,6 @@ var dndTree = (function() {
             });
 
         clipPathId++;
-        console.log(clipPathId)
 
         nodeEnter.append("clipPath")
             .attr("id", "clipCircle" + clipPathId)
@@ -406,8 +405,13 @@ var dndTree = (function() {
     }
 
     function initWithData(from, to) {
-        to.artist = from.artist;
-        exploredArtistIds.push(to.artist.id);
+        if (from.artist) {
+            to.artist = from.artist;
+            exploredArtistIds.push(to.artist.id);
+        }
+        if (from.genre) {
+            to.genre = from.genre;
+        }
 
         if (from.children) {
             to.children = []
@@ -419,8 +423,8 @@ var dndTree = (function() {
         }
 
         if (to.children && to.children.length > 0) {
-            console.log(to.artist.name);
-            update(root);
+            //console.log(to.artist.name);
+            //update(root);
         }
 
     }
@@ -451,12 +455,14 @@ var dndTree = (function() {
         },
 
         "setRootData": function(rootData) {
+            console.log(rootData);
             exploredArtistIds = []
+            root = {}
             initWithData(rootData, root);
             root.x0 = viewerHeight / 2;
             root.y0 = 0;
-            centerNode(root);
             update(root);
+            centerNode(root);
         },
 
         "resizeOverlay" : function() {

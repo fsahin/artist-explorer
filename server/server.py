@@ -3,6 +3,8 @@ from functools import  wraps
 from flask_cors import CORS, cross_origin
 from werkzeug.contrib.cache import SimpleCache
 import pyen
+import redis
+import uuid
 
 cache = SimpleCache(threshold=20000)
 
@@ -13,11 +15,14 @@ ORIGINS = ['*']
 
 app.config['CORS_HEADERS'] = "Content-Type"
 app.config['CORS_RESOURCES'] = {r"/*": {"origins": ORIGINS}}
+app.config['PROPAGATE_EXCEPTIONS'] = True
 
 cors = CORS(app)
 
 # Make sure ECHO_NEST_API_KEY environment variable is set
 en = pyen.Pyen()
+
+r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 def cached(timeout=5 * 60, key='view/%s'):
     def decorator(f):
@@ -61,6 +66,22 @@ def get_all_genres():
     response = en.get('genre/list', results=2000)
     return jsonify(response)
 
+
+@app.route('/api/savetree', methods=['POST'])
+def save_entry():
+    entry_id = str(uuid.uuid4()).replace('-', '')
+    entry_data = request.form['entry_data']
+    result = r.set(entry_id, entry_data)
+    if result:
+        return entry_id, 200, {'Content-Type': 'text/css; charset=utf-8'}
+    else:
+        return "Not Ok", 500, {'Content-Type': 'text/css; charset=utf-8'}
+
+
+@app.route('/api/entries/<entry_id>', methods=['GET'])
+def get_entry(entry_id):
+    result = r.get(entry_id)
+    return result
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)

@@ -124,15 +124,40 @@
           </form>
         </div>
         <div id="tree-container"></div>
-        <div id="share-div"> Share it! <br> <a href="http://artistexplorer.spotify.com/txa2t3td">http://artistexplorer.spotify.com/txa2t3td </div>
+        <div id="share-div">
+          <button type="button" class="btn btn-primary btn-lg" onClick="AE.share()">
+            Share this tree
+          </button>
+        </div>
       </div>
-    </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h3 class="modal-title" id="myModalLabel">Share The Tree</h3>
+            </div>
+            <div class="modal-body">
+              Here is your link:
+              </br>
+              <a id="shareLink" data-bind="text: link, attr: { href:link }"></a><button type="button" class="btn-small" onClick="AE.copyLink()">Copy</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
   </body>
   <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['gauge']}]}"></script>
   <script src="./bower_components/spotify-web-api-js/src/spotify-web-api.js"></script>
   <script src="./bower_components/knockout/dist/knockout.js"></script>
   <script src="./js/lib/jquery-1.10.2.min.js"></script>
   <script src="./js/lib/jquery-ui-1.11.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.12/d3.min.js"></script>
   <script src="js/dndTree.js"></script>
   <script src="js/main.js"></script>

@@ -40,9 +40,18 @@
 
     function initContainer() {
         var initArtistId = stripTrailingSlash(qs('artist_id')),
-            initGenre = stripTrailingSlash(qs('genre'));
+            initGenre = stripTrailingSlash(qs('genre')),
+            initEntry = stripTrailingSlash(qs('tree'));
 
-        if (initArtistId) {
+        if (initEntry) {
+            console.log("initEntry")
+            $.ajax({
+                url: serverBasePath + '/api/entries/' + initEntry
+            }).done(function (data) {
+                initRootWithData(JSON.parse(data));
+            });
+        }
+        else if (initArtistId) {
             api.getArtist(initArtistId).then(initRootWithArtist);
         } else if (initGenre) {
             initRootWithGenre(initGenre);
@@ -117,6 +126,13 @@
         $('#artist-search').val('');
     }
 
+    function initRootWithData(data) {
+        dndTree.setRootData(data);
+        $('#artist-search').val('');
+        $('#genre-search').val('');
+    }
+
+
     function loadAllGenres() {
         $.ajax({
             url: loadAllGenresUri
@@ -185,7 +201,7 @@
 
     var artistInfoModel = new artistInfoModel()
 
-    ko.applyBindings(artistInfoModel);
+    ko.applyBindings(artistInfoModel, document.getElementById('rightpane'));
 
     function _getInfo(artist) {
         $('#hoverwarning').css('display', 'none');
@@ -429,6 +445,42 @@
         return images[images.length - 1].url;
     }
 
+    function saveTree() {
+        $.post(serverBasePath + '/api/savetree',
+        {
+            entry_data: JSON.stringify(dndTree.getRoot())
+        }).done(function (data) {
+
+            console.log(data);
+        });
+    }
+
+    function share() {
+        $.post(serverBasePath + '/api/savetree',
+        {
+            entry_data: JSON.stringify(dndTree.getRoot())
+        }).done(function (entry_id) {
+            var linkk = "https://artistexplorer.spotify.com?tree=" + entry_id;
+            shareModel.link(linkk);
+            $('#fb-share').attr('data-href', linkk);
+            console.log(entry_id);
+            $('#myModal').modal('show');
+        });
+    }
+
+    var shareModel = function() {
+        var self = this;
+        self.link = ko.observable();
+    }
+
+    var shareModel = new shareModel()
+    ko.applyBindings(shareModel, document.getElementById('myModal'));
+
+    //todo:make it work
+    function copyLink() {
+        text = $('#shareLink').text();
+    }
+
     window.AE = {
         getSuitableImage: getSuitableImage,
         getRelated: getRelated,
@@ -438,6 +490,9 @@
         changeNumberOfArtists: changeNumberOfArtists,
         setRepeatArtists: setRepeatArtists,
         toTitleCase: toTitleCase,
-        artistInfoModel: artistInfoModel
+        artistInfoModel: artistInfoModel,
+        saveTree: saveTree,
+        share: share,
+        copyLink: copyLink
     };
 })();
