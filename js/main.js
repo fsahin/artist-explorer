@@ -455,17 +455,25 @@
         });
     }
 
+    var currentLink;
+
     function share() {
         $.post(serverBasePath + '/api/savetree',
         {
             entry_data: JSON.stringify(dndTree.getRoot())
         }).done(function (entry_id) {
-            var linkk = "https://artistexplorer.spotify.com?tree=" + entry_id;
-            shareModel.link(linkk);
-            $('#fb-share').attr('data-href', linkk);
+            currentLink = "https://artistexplorer.spotify.com?tree=" + entry_id;
+            shareModel.link(currentLink);
             console.log(entry_id);
             $('#myModal').modal('show');
         });
+    }
+
+    function fbShare() {
+        FB.ui({
+          method: 'share',
+          href: currentLink,
+        }, function(response){});
     }
 
     var shareModel = function() {
@@ -493,6 +501,7 @@
         artistInfoModel: artistInfoModel,
         saveTree: saveTree,
         share: share,
-        copyLink: copyLink
+        copyLink: copyLink,
+        fbShare: fbShare
     };
 })();
