@@ -8,6 +8,8 @@ import uuid
 import time
 from functools import update_wrapper
 from flask import request, g
+import zlib
+import json
 
 cache = SimpleCache(threshold=20000)
 
@@ -113,7 +115,17 @@ def get_all_genres():
 def save_entry():
     entry_id = str(uuid.uuid4()).replace('-', '')
     entry_data = request.form['entry_data']
-    result = r.set(entry_id, entry_data)
+    try:
+        val = json.loads(entry_data)
+    except:
+        return "Not Ok", 400, {'Content-Type': 'text/css; charset=utf-8'}
+
+    if 'children' not in val:
+        return "Not Ok", 400, {'Content-Type': 'text/css; charset=utf-8'}
+
+    compressed = zlib.compress(entry_data)
+
+    result = r.set(entry_id, compressed)
     if result:
         return entry_id, 200, {'Content-Type': 'text/css; charset=utf-8'}
     else:
@@ -122,7 +134,7 @@ def save_entry():
 
 @app.route('/api/entries/<entry_id>', methods=['GET'])
 def get_entry(entry_id):
-    result = r.get(entry_id)
+    result = zlib.decompress(r.get(entry_id))
     return result
 
 if __name__ == '__main__':
