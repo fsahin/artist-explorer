@@ -205,6 +205,12 @@ h4 {
   position: fixed;
   height: 70px;
   left: 20px;
-  bottom: 20px;
+  bottom: 10px;
 }
+
+.share-warning {
+  font-size: 12px;
+  color: red;
+}
+
 

@@ -455,7 +455,6 @@ var dndTree = (function() {
         },
 
         "setRootData": function(rootData) {
-            console.log(rootData);
             exploredArtistIds = []
             root = {}
             initWithData(rootData, root);

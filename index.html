@@ -3,7 +3,11 @@
   <head>
     <title>Artist Explorer</title>
     <meta charset="utf-8">
-    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css"> -->
+    <meta property="og:image" content="https://artistexplorer.spotify.com/img/artistexplorer.png">
+    <meta property="og:url" content="https://artistexplorer.spotify.com">
+    <meta property="og:site_name" content="Artist Explorer">
+    <meta property="og:title" content="Artist Explorer is a music discovery tool to to explore artists and music by browsing artists through a relationship tree">
+
     <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/main.css">
@@ -134,7 +138,7 @@
         <div id="tree-container"></div>
         <div id="share-div">
           <button type="button" class="btn btn-primary btn-lg" onClick="AE.share()">
-            Save this tree
+            Share this tree
           </button>
         </div>
       </div>
@@ -145,15 +149,16 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h3 class="modal-title" id="myModalLabel">Here is your link:</h3>
+                <h3 class="modal-title" id="myModalLabel">Here is your link:</h3>
+              <a id="shareLink" data-bind="text: link, attr: { href:link }"></a>
+              <div class="share-warning">
+                Note that links might disappear after some time as this still is an example project :)
+              </div>
             </div>
-            <div class="modal-body">
-              </br>
-              <a id="shareLink" data-bind="text: link, attr: { href:link }"></a><button type="button" class="btn-small" onClick="AE.copyLink()">Copy</button>
-            </div>
+
             <div class="modal-footer">
-              <button type="button" class="btn" onClick="AE.fbShare()">Share it on Facebook</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-facebook" onclick="AE.fbShare()">Share</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>

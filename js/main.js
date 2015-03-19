@@ -44,7 +44,6 @@
             initEntry = stripTrailingSlash(qs('tree'));
 
         if (initEntry) {
-            console.log("initEntry")
             $.ajax({
                 url: serverBasePath + '/api/entries/' + initEntry
             }).done(function (data) {
@@ -450,8 +449,7 @@
         {
             entry_data: JSON.stringify(dndTree.getRoot())
         }).done(function (data) {
-
-            console.log(data);
+            //console.log(data);
         });
     }
 
@@ -464,7 +462,6 @@
         }).done(function (entry_id) {
             currentLink = "https://artistexplorer.spotify.com?tree=" + entry_id;
             shareModel.link(currentLink);
-            console.log(entry_id);
             $('#myModal').modal('show');
         });
     }
@@ -473,6 +470,7 @@
         FB.ui({
           method: 'share',
           href: currentLink,
+          caption: 'Look at the relationship tree I just created',
         }, function(response){});
     }
 
