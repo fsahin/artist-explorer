@@ -123,7 +123,7 @@ def save_entry():
     if 'children' not in val:
         return "Not Ok", 400, {'Content-Type': 'text/css; charset=utf-8'}
 
-    compressed = zlib.compress(entry_data)
+    compressed = zlib.compress(entry_data.encode('utf-8'))
 
     result = r.set(entry_id, compressed)
     if result:
@@ -134,7 +134,7 @@ def save_entry():
 
 @app.route('/api/entries/<entry_id>', methods=['GET'])
 def get_entry(entry_id):
-    result = zlib.decompress(r.get(entry_id))
+    result = zlib.decompress(r.get(entry_id)).decode('utf-8')
     return result
 
 if __name__ == '__main__':
