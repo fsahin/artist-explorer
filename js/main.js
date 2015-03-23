@@ -521,18 +521,18 @@
 
     function createPlaylistFromTrackIds(trackIds) {
         api.createPlaylist(loginModel.userId(), {
-                'name': 'Artist Explorer Playlist 5',
+                'name': $('#text-playlist-name').val(),
                 'public': true
         },
         function(error, playlist) {
-            console.log("playlist");
-            console.log(playlist);
             var uris = [];
             trackIds.forEach(function(trackId) {
                 uris.push("spotify:track:" + trackId);
             });
             api.addTracksToPlaylist(loginModel.userId(), playlist.id, uris, {}, function(err, d) {
-                console.log(d);
+                $('#text-playlist-name').val("");
+                $('#createPlaylistModal').modal('hide');
+                $('#playlistCreatedModal').modal('show');
             });
         });
     }
@@ -551,7 +551,18 @@
         return result;
     }
 
+    function createPlaylistModal() {
+        $('#createPlaylistModal').modal('show');
+    }
+
     function createPlaylist() {
+        var playlistName = $('#text-playlist-name').val();
+        if (!playlistName) {
+            $('#playlist-name-form-group').addClass('has-error');
+            return;
+        } else {
+            $('#playlist-name-form-group').removeClass('has-error');
+        }
         var artistIds = dndTree.getAllArtists();
 
         var promises = []
@@ -591,6 +602,7 @@
         copyLink: copyLink,
         fbShare: fbShare,
         login: login,
+        createPlaylistModal: createPlaylistModal,
         createPlaylist: createPlaylist
     };
 })();
