@@ -487,6 +487,95 @@
         text = $('#shareLink').text();
     }
 
+    var loginModel = function() {
+        var self = this;
+        self.isLoggedIn = ko.observable(false);
+        self.userId = ko.observable();
+    }
+
+    var loginModel = new loginModel();
+    ko.applyBindings(loginModel, document.getElementById('nabvarup'));
+
+    function login() {
+        OAuthManager.obtainToken({
+          scopes: [
+              'playlist-read-private',
+              'playlist-modify-public',
+              'playlist-modify-private'
+            ]
+          }).then(function(token) {
+            console.log(token);
+            onTokenReceived(token);
+          }).catch(function(error) {
+            console.error(error);
+          });
+    }
+
+    function onTokenReceived(accessToken) {
+        loginModel.isLoggedIn(true);
+        api.setAccessToken(accessToken);
+        api.getMe().then(function(data){
+            loginModel.userId(data.id);
+        });
+    }
+
+    function createPlaylistFromTrackIds(trackIds) {
+        api.createPlaylist(loginModel.userId(), {
+                'name': 'Artist Explorer Playlist 5',
+                'public': true
+        },
+        function(error, playlist) {
+            console.log("playlist");
+            console.log(playlist);
+            var uris = [];
+            trackIds.forEach(function(trackId) {
+                uris.push("spotify:track:" + trackId);
+            });
+            api.addTracksToPlaylist(loginModel.userId(), playlist.id, uris, {}, function(err, d) {
+                console.log(d);
+            });
+        });
+    }
+
+    function getRandom(arr, n) {
+        var result = new Array(n),
+            len = arr.length,
+            taken = new Array(len);
+        if (n > len)
+            throw new RangeError("getRandom: more elements taken than available");
+        while (n--) {
+            var x = Math.floor(Math.random() * len);
+            result[n] = arr[x in taken ? taken[x] : x];
+            taken[x] = --len;
+        }
+        return result;
+    }
+
+    function createPlaylist() {
+        var artistIds = dndTree.getAllArtists();
+
+        var promises = []
+        artistIds.forEach(function(artistId){
+            var promise= api.getArtistTopTracks(artistId, userCountry);
+            promises.push(promise);
+        });
+
+        Promise.all(promises).then(function(data) {
+            var trackIds = [];
+            data.forEach(function(topTracks) {
+                topTracks.tracks.forEach(function(track) {
+                    trackIds.push(track.id);
+                });
+            });
+
+            trackIds = getRandom(trackIds, 50);
+            createPlaylistFromTrackIds(trackIds);
+
+        }, function() {
+          console.log("som ting fail");
+        });
+    }
+
     window.AE = {
         getSuitableImage: getSuitableImage,
         getRelated: getRelated,
@@ -500,6 +589,8 @@
         saveTree: saveTree,
         share: share,
         copyLink: copyLink,
-        fbShare: fbShare
+        fbShare: fbShare,
+        login: login,
+        createPlaylist: createPlaylist
     };
 })();

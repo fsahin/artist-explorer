@@ -429,6 +429,18 @@ var dndTree = (function() {
 
     }
 
+    function getAllArtists (node, artistIds) {
+        if (isArtist(node)) {
+            artistIds.push(node.artist.id);
+        }
+        if (!node.children) {
+            return;
+        }
+        node.children.forEach(function(child) {
+            getAllArtists(child, artistIds);
+        })
+    }
+
     return {
          "setRoot" : function(artist) {
             exploredArtistIds = []
@@ -466,6 +478,12 @@ var dndTree = (function() {
 
         "resizeOverlay" : function() {
             updateWindow();
+        },
+
+        "getAllArtists" : function() {
+            var artistIds = [];
+            getAllArtists(root, artistIds);
+            return artistIds;
         }
     }
 
