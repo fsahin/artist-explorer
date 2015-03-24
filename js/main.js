@@ -491,6 +491,8 @@
         var self = this;
         self.isLoggedIn = ko.observable(false);
         self.userId = ko.observable();
+        self.displayName = ko.observable();
+        self.userImage = ko.observable();
     }
 
     var loginModel = new loginModel();
@@ -516,6 +518,8 @@
         api.setAccessToken(accessToken);
         api.getMe().then(function(data){
             loginModel.userId(data.id);
+            loginModel.displayName(data.display_name);
+            loginModel.userImage(data.images[0].url);
         });
     }
 
@@ -587,6 +591,13 @@
         });
     }
 
+    function logout() {
+        loginModel.isLoggedIn(false);
+        loginModel.userId("");
+        loginModel.displayName("");
+        loginModel.userImage("");
+    }
+
     window.AE = {
         getSuitableImage: getSuitableImage,
         getRelated: getRelated,
@@ -603,6 +614,7 @@
         fbShare: fbShare,
         login: login,
         createPlaylistModal: createPlaylistModal,
-        createPlaylist: createPlaylist
+        createPlaylist: createPlaylist,
+        logout: logout
     };
 })();

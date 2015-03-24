@@ -120,9 +120,15 @@
             </div>
             <div class="collapse navbar-collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a target="_blank" data-bind="visible: isLoggedIn()" onClick="AE.createPlaylistModal()">Create Playlist</a></li>
-                <li class="active"><a target="_blank" data-bind="visible: !isLoggedIn()"  onClick="AE.login()">Login</a></li>
-                <li class="active"><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code</a></li>
+                <li><a target="_self" href="#" data-bind="visible: isLoggedIn()" onClick="AE.createPlaylistModal()">Create Playlist</a></li>
+                <li><a target="_self" href="#" data-bind="visible: !isLoggedIn()"  onClick="AE.login()">Login</a></li>
+                <li class="dropdown" data-bind="visible: isLoggedIn()">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-bind="text: displayName"></a>
+                  <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                    <li><a href="#" onClick="AE.logout()">Log Out</a></li>
+                  </ul>
+                </li>
+                <li><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code</a></li>
               </ul>
             </div>
             <!--/.nav-collapse -->
