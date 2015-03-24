@@ -506,7 +506,6 @@
               'playlist-modify-private'
             ]
           }).then(function(token) {
-            console.log(token);
             onTokenReceived(token);
           }).catch(function(error) {
             console.error(error);
@@ -556,7 +555,12 @@
     }
 
     function createPlaylistModal() {
-        $('#createPlaylistModal').modal('show');
+        if (!loginModel.isLoggedIn()) {
+            alert("Please log in first");
+        } else {
+            $('#createPlaylistModal').modal('show');
+        }
+
     }
 
     function createPlaylist() {
