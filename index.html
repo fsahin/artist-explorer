@@ -123,9 +123,10 @@
                 <li><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code on Github</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
-                <li><a  href="#" onClick="AE.createPlaylistModal()">Create Playlist</a></li>
+                <li><a  href="#" onClick="AE.createPlaylistModal()">Create a Playlist</a></li>
                 <li><a  href="#" data-bind="visible: !isLoggedIn()"  onClick="AE.login()">Login</a></li>
                 <li class="dropdown" data-bind="visible: isLoggedIn()">
+                  <img class="profile-image" src="http://media.giphy.com/media/Aab07O5PYOmQ/giphy.gif"/>
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-bind="text: displayName"></a>
                   <ul class="dropdown-menu dropdown-menu-left" role="menu">
                     <li><a href="#" onClick="AE.logout()">Log Out</a></li>
