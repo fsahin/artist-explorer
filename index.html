@@ -105,39 +105,40 @@
       </div>
 
       <div class ="left">
-        <div id= "nabvarup" class="navbar navbar-default" role="navigation">
-          <div class="menu-items">
+        <nav id="navbarup" class="navbar navbar-default navbar-static-top navbar-transparent-25" role="navigation">
+          <div class="container">
             <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="">
-              <span class="navbar-logo">Spotify</span>
-              <span class="navbar-title">Artist Explorer</span>
+              <a class="navbar-brand" href="#">
+                <span class="navbar-logo"></span>
+                <span class="navbar-title">Artist Explorer</span>
               </a>
             </div>
-            <div class="collapse navbar-collapse">
-              <ul class="nav navbar-nav navbar-left">
-                <li><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code on Github</a></li>
-              </ul>
+
+            <!-- Collect the nav links, forms, and other content for toggling on mobile -->
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
-                <li><a  href="#" onClick="AE.createPlaylistModal()">Create a Playlist</a></li>
-                <li><a  href="#" data-bind="visible: !isLoggedIn()"  onClick="AE.login()">Login</a></li>
+                <li><a  href="#" data-bind="visible: !isLoggedIn()" onClick="AE.login()">Login</a></li>
                 <li class="dropdown" data-bind="visible: isLoggedIn()">
-                  <img class="profile-image" src="http://media.giphy.com/media/Aab07O5PYOmQ/giphy.gif"/>
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-bind="text: displayName"></a>
+                  <img class="profile-image" data-bind="attr:{src: userImage}"/>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <span id="display-name" data-bind="text: displayName"></span>
+                  <span class="icon-chevron-down"></span></a>
                   <ul class="dropdown-menu dropdown-menu-left" role="menu">
                     <li><a href="#" onClick="AE.logout()">Log Out</a></li>
                   </ul>
                 </li>
+                <li><a href="#" class="btn btn-primary navbar-btn" onClick="AE.createPlaylistModal()">Create Playlist</a></li>
               </ul>
-            </div>
-            <!--/.nav-collapse -->
-          </div>
-        </div>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container -->
+        </nav>
+
         <div id="search" class="row">
           <form id="search-artist" class="form-horizontal col-sm-6 col-md-6" role="form">
             <input id="artist-search" class="form-control" placeholder="Search for an Artist">

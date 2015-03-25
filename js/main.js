@@ -496,7 +496,7 @@
     }
 
     var loginModel = new loginModel();
-    ko.applyBindings(loginModel, document.getElementById('nabvarup'));
+    ko.applyBindings(loginModel, document.getElementById('navbar-collapse-1'));
 
     function login() {
         OAuthManager.obtainToken({
