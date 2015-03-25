@@ -93,6 +93,7 @@ h4 {
 .main-container {
   overflow: hidden;
   height: auto;
+  background-color: #F6F6F6;
 }
 
 .left {
