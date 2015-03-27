@@ -556,7 +556,7 @@
 
     function createPlaylistModal() {
         if (!loginModel.isLoggedIn()) {
-            alert("Please log in first");
+            $('#notLoggedInModal').modal('show');
         } else {
             $('#createPlaylistModal').modal('show');
         }

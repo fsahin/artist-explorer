@@ -215,6 +215,10 @@ h4 {
   color: red;
 }
 
+.warning {
+  color: red;
+}
+
 .profile-image  {
   width: 40px;
   height: 40px;
