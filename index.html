@@ -62,9 +62,18 @@
             <li>Click on an artist to see related artists. </li>
             <li>Hover over an artist to hear a sample of their music.</li>
             <li>Enter an artist name or a genre and explore relationships between over 2,000,000 artists on Spotify.</li>
+            <li class="new-feature">New: Log In and press "Create Playlist" button to create a random playlist of top tracks of all the artists that are visible in the relationship tree</li>
           </ul>
           <h4>Info</h4>
           Artist Explorer displays data from two great music APIs: <a target="_blank" href="https://developer.spotify.com/web-api/">the Spotify Web API </a> and <a target="_blank" href="http://developer.echonest.com/docs/v4">the Echo Nest API </a>
+
+          <a target="_blank" href="https://github.com/fsahin/artist-explorer">
+            <div id= "see-the-code">
+                <img src="./img/github.png" style="float:left;"/>
+                <h3 style="margin-top:10px;">See the Code</h3>
+            </div>
+          </a>
+
         </div>
 
         <!-- Artist Info -->
@@ -123,7 +132,6 @@
             <!-- Collect the nav links, forms, and other content for toggling on mobile -->
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
-                <!-- <li><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code</a></li> -->
                 <li><a  href="#" data-bind="visible: !isLoggedIn()" onClick="AE.login()">Login</a></li>
                 <li class="dropdown" data-bind="visible: isLoggedIn()">
                   <img class="profile-image" data-bind="attr:{src: userImage}"/>
