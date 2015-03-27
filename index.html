@@ -123,7 +123,7 @@
             <!-- Collect the nav links, forms, and other content for toggling on mobile -->
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
-                <li><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code</a></li>
+                <!-- <li><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code</a></li> -->
                 <li><a  href="#" data-bind="visible: !isLoggedIn()" onClick="AE.login()">Login</a></li>
                 <li class="dropdown" data-bind="visible: isLoggedIn()">
                   <img class="profile-image" data-bind="attr:{src: userImage}"/>
@@ -201,17 +201,15 @@
         </div>
       </div>
 
-      <!-- Not logged in Modal -->
-       <div class="modal fade" id="notLoggedInModal" tabindex="-1" role="dialog" aria-labelledby="smallModal" aria-hidden="true">
+      <!-- Error Modal -->
+       <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="smallModal" aria-hidden="true">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title warning" id="exampleModalLabel">Error</h4>
             </div>
-            <div class="modal-body">
-              Please Log In First
-            </div>
+            <div class="modal-body" data-bind="text: errorMessage"></div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">OK</button>
             </div>
@@ -241,6 +239,7 @@
   <script src="./js/lib/jquery-ui-1.11.1.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.12/d3.min.js"></script>
+  <script src="js/util.js"></script>
   <script src="js/dndTree.js"></script>
   <script src="js/oauth-manager.js"></script>
   <script src="js/oauth-config.js"></script>

@@ -498,6 +498,16 @@
     var loginModel = new loginModel();
     ko.applyBindings(loginModel, document.getElementById('navbar-collapse-1'));
 
+
+    var errorBoxModel = function() {
+        var self = this;
+        self.errorMessage = ko.observable();
+    }
+
+    var errorBoxModel = new errorBoxModel();
+    ko.applyBindings(errorBoxModel, document.getElementById('error-modal'));
+
+
     function login() {
         OAuthManager.obtainToken({
           scopes: [
@@ -540,23 +550,10 @@
         });
     }
 
-    function getRandom(arr, n) {
-        var result = new Array(n),
-            len = arr.length,
-            taken = new Array(len);
-        if (n > len)
-            throw new RangeError("getRandom: more elements taken than available");
-        while (n--) {
-            var x = Math.floor(Math.random() * len);
-            result[n] = arr[x in taken ? taken[x] : x];
-            taken[x] = --len;
-        }
-        return result;
-    }
-
     function createPlaylistModal() {
         if (!loginModel.isLoggedIn()) {
-            $('#notLoggedInModal').modal('show');
+            errorBoxModel.errorMessage("Please log in first");
+            $('#error-modal').modal('show');
         } else {
             $('#createPlaylistModal').modal('show');
         }
@@ -587,12 +584,31 @@
                 });
             });
 
-            trackIds = getRandom(trackIds, 50);
+            var numOfItems;
+            try {
+                numOfItems = getTrackLength(trackIds.length);
+            } catch(err) {
+                $('#createPlaylistModal').modal('hide');
+                errorBoxModel.errorMessage("Not enough tracks to create playlists");
+                $('#error-modal').modal('show');
+                return;
+            }
+
+            trackIds = Util.getRandom(trackIds, numOfItems);
             createPlaylistFromTrackIds(trackIds);
 
         }, function() {
-          console.log("som ting fail");
+          console.log("Something failed");
         });
+    }
+
+    function getTrackLength(numOfTotalTracks) {
+        if (numOfTotalTracks >= 50) {
+            return 50;
+        } else if (numOfTotalTracks < 1) {
+            throw new RangeError("Not enough tracks");
+        }
+        return numOfTotalTracks;
     }
 
     function logout() {

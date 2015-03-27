@@ -483,6 +483,18 @@ var dndTree = (function() {
         "getAllArtists" : function() {
             var artistIds = [];
             getAllArtists(root, artistIds);
+            //Return no more than 30 artists and make sure root is always there
+            if (artistIds.length > 30) {
+                artistIds = Util.getRandom(artistIds, 30);
+                if (isArtist(root)) {
+                    console.log(root.artist);
+                    if (artistIds.indexOf(root.artist.id) != -1) {
+                        console.log("not in");
+                        artistIds.push(root.artist.id);
+                    }
+                }
+
+            }
             return artistIds;
         }
     }
