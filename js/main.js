@@ -14,7 +14,7 @@
     //replace with configured servers uri
     var serverBasePath = "http://localhost:10000";
 
-    var localApi = new spAPI(serverBasePath);
+    var localApi = new localProxyApi(serverBasePath);
     var spotifyWebApi = new SpotifyWebApi()
 
     var currentApi = localApi;
@@ -240,7 +240,6 @@
             });
         });
 
-        console.log(currentApi);
         currentApi.getArtistTopTracks(artist.id, userCountry).then(function (data) {
             Player.playForTrack(data.tracks[0]);
             artistInfoModel.topTracks([]);

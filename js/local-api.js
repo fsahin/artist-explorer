@@ -1,4 +1,4 @@
-var spAPI = function (serverBasePath) {
+var localProxyApi = function (serverBasePath) {
 
   var getArtistRelatedArtists = function(artistId) {
     var url = serverBasePath + '/spotify/artists/' + artistId + '/related-artists';
@@ -24,6 +24,13 @@ var spAPI = function (serverBasePath) {
     })
   };
 
+  var getArtists = function(artistIds) {
+    var url = serverBasePath + '/spotify/artists?ids=' + artistIds;
+    return $.ajax({
+        url: url
+    })
+  };
+
   var searchArtists = function(q, params) {
     var url = serverBasePath + '/spotify/search';
     var data = params
@@ -39,6 +46,7 @@ var spAPI = function (serverBasePath) {
   return {
     getArtistRelatedArtists: getArtistRelatedArtists,
     getArtist: getArtist,
+    getArtists: getArtists,
     searchArtists: searchArtists,
     getArtistTopTracks: getArtistTopTracks
   }

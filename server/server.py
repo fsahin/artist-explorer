@@ -119,6 +119,12 @@ def get_artist(artist_id):
     response = sp.artist(artist_id)
     return jsonify(response)
 
+@app.route('/spotify/artists')
+def get_artists():
+    ids = request.args.get('ids').split(',')
+    response = sp.artists(ids)
+    return jsonify(response)
+
 @app.route('/spotify/artists/<artist_id>/related-artists')
 def get_related_artists(artist_id):
     response = sp.artist_related_artists(artist_id)

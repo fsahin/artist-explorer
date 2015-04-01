@@ -487,9 +487,7 @@ var dndTree = (function() {
             if (artistIds.length > 30) {
                 artistIds = Util.getRandom(artistIds, 30);
                 if (isArtist(root)) {
-                    console.log(root.artist);
                     if (artistIds.indexOf(root.artist.id) != -1) {
-                        console.log("not in");
                         artistIds.push(root.artist.id);
                     }
                 }
