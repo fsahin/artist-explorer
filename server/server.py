@@ -11,6 +11,7 @@ from flask import request, g
 import zlib
 import json
 import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
 cache = SimpleCache(threshold=20000)
 
@@ -28,7 +29,8 @@ cors = CORS(app)
 # Make sure ECHO_NEST_API_KEY environment variable is set
 en = pyen.Pyen()
 
-sp = spotipy.Spotify()
+client_credentials_manager = SpotifyClientCredentials()
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -131,7 +133,6 @@ def get_top_tracks(artist_id):
 
 @app.route('/spotify/search')
 def search():
-    print "here i am"
     q = request.args.get('q')
     type = request.args.get('type')
     limit = request.args.get('limit')

@@ -14,7 +14,10 @@
     //replace with configured servers uri
     var serverBasePath = "http://localhost:10000";
 
-    var api = new spAPI(serverBasePath);
+    var localApi = new spAPI(serverBasePath);
+    var spotifyWebApi = new SpotifyWebApi()
+
+    var currentApi = localApi;
 
     var loadAllGenresUri = serverBasePath + "/api/genres"
     var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
@@ -52,11 +55,11 @@
             });
         }
         else if (initArtistId) {
-            api.getArtist(initArtistId).then(initRootWithArtist);
+            currentApi.getArtist(initArtistId).then(initRootWithArtist);
         } else if (initGenre) {
             initRootWithGenre(initGenre);
         } else {
-            api.getArtist('43ZHCT0cAZBISjO8DG9PnE').then(initRootWithArtist);
+            currentApi.getArtist('43ZHCT0cAZBISjO8DG9PnE').then(initRootWithArtist);
         }
     }
 
@@ -75,7 +78,7 @@
             showCompletion = false;
             e.preventDefault();
             var search = document.getElementById('artist-search');
-            api.searchArtists(
+            currentApi.searchArtists(
                 search.value.trim(),
                 userCountry
                 ).then(function (data) {
@@ -237,7 +240,8 @@
             });
         });
 
-        api.getArtistTopTracks(artist.id, userCountry).then(function (data) {
+        console.log(currentApi);
+        currentApi.getArtistTopTracks(artist.id, userCountry).then(function (data) {
             Player.playForTrack(data.tracks[0]);
             artistInfoModel.topTracks([]);
             data.tracks.forEach(function (track, i) {
@@ -256,7 +260,7 @@
 
     function getRelated(artistId, excludeList) {
         return new Promise(function (resolve, reject) {
-            return api.getArtistRelatedArtists(artistId).then(function (data) {
+            return currentApi.getArtistRelatedArtists(artistId).then(function (data) {
 
                 data.artists.sort(function (a, b) {
                     return b.popularity - a.popularity;
@@ -287,7 +291,7 @@
                         idsToRequest.push(getIdFromArtistUri(artist.foreign_ids[0].foreign_id));
                     }
                 });
-                return api.getArtists(idsToRequest).then(function (data) {
+                return currentApi.getArtists(idsToRequest).then(function (data) {
                     //Sort in popularity order
                     resolve(data.artists.sort(function (a, b) {
                         return b.popularity - a.popularity;
@@ -342,7 +346,7 @@
             .autocomplete({
                 minLength: 0,
                 source: function (request, response) {
-                    api.searchArtists(request.term + '*', {'limit': 50, market: userCountry}).then(function (data) {
+                    currentApi.searchArtists(request.term + '*', {'limit': 50, market: userCountry}).then(function (data) {
                         if (data.artists && data.artists.items.length) {
                             var res = [];
                             data.artists.items.forEach(function (artist) {
@@ -525,16 +529,17 @@
 
     function onTokenReceived(accessToken) {
         loginModel.isLoggedIn(true);
-        api.setAccessToken(accessToken);
-        api.getMe().then(function(data){
+        spotifyWebApi.setAccessToken(accessToken);
+        spotifyWebApi.getMe().then(function(data){
             loginModel.userId(data.id);
             loginModel.displayName(data.display_name);
             loginModel.userImage(data.images[0].url);
         });
+        currentApi = spotifyWebApi;
     }
 
     function createPlaylistFromTrackIds(trackIds) {
-        api.createPlaylist(loginModel.userId(), {
+        spotifyWebApi.createPlaylist(loginModel.userId(), {
                 'name': $('#text-playlist-name').val(),
                 'public': true
         },
@@ -543,7 +548,7 @@
             trackIds.forEach(function(trackId) {
                 uris.push("spotify:track:" + trackId);
             });
-            api.addTracksToPlaylist(loginModel.userId(), playlist.id, uris, {}, function(err, d) {
+            spotifyWebApi.addTracksToPlaylist(loginModel.userId(), playlist.id, uris, {}, function(err, d) {
                 $('#text-playlist-name').val("");
                 $('#createPlaylistModal').modal('hide');
                 $('#playlistCreatedModal').modal('show');
@@ -573,7 +578,7 @@
 
         var promises = []
         artistIds.forEach(function(artistId){
-            var promise= api.getArtistTopTracks(artistId, userCountry);
+            var promise= currentApi.getArtistTopTracks(artistId, userCountry);
             promises.push(promise);
         });
 
@@ -617,6 +622,7 @@
         loginModel.userId("");
         loginModel.displayName("");
         loginModel.userImage("");
+        currentApi = localApi;
     }
 
     window.AE = {
