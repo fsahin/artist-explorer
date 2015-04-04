@@ -483,9 +483,9 @@ var dndTree = (function() {
         "getAllArtists" : function() {
             var artistIds = [];
             getAllArtists(root, artistIds);
-            //Return no more than 30 artists and make sure root is always there
-            if (artistIds.length > 30) {
-                artistIds = Util.getRandom(artistIds, 30);
+            //Return no more than 50 artists and make sure root is always there
+            if (artistIds.length > 50) {
+                artistIds = Util.getRandom(artistIds, 50);
                 if (isArtist(root)) {
                     if (artistIds.indexOf(root.artist.id) != -1) {
                         artistIds.push(root.artist.id);
