@@ -493,13 +493,33 @@
 
     var loginModel = function() {
         var self = this;
-        self.isLoggedIn = ko.observable(false);
-        self.userId = ko.observable();
-        self.displayName = ko.observable();
-        self.userImage = ko.observable();
+        var localAccessToken = getAccessTokenLocal();
+        if (localAccessToken && localAccessToken !== '') {
+            self.isLoggedIn = ko.observable(true);
+            self.userId = ko.observable(localStorage.getItem('ae_userid',''));
+            self.displayName = ko.observable(localStorage.getItem('ae_display_name',''));
+            self.userImage = ko.observable(localStorage.getItem('ae_user_image',''));
+            spotifyWebApi.setAccessToken(localStorage.getItem('ae_token',''));
+        } else {
+            self.isLoggedIn = ko.observable(false);
+            self.userId = ko.observable();
+            self.displayName = ko.observable();
+            self.userImage = ko.observable();
+
+        }
+
     }
 
     var loginModel = new loginModel();
+
+    function getAccessTokenLocal() {
+        var expires = 0 + localStorage.getItem('ae_expires', '0');
+        if ((new Date()).getTime() > expires) {
+            return '';
+        }
+        return localStorage.getItem('ae_token', '');
+    }
+
     ko.applyBindings(loginModel, document.getElementById('navbar-collapse-1'));
 
 
@@ -529,10 +549,15 @@
     function onTokenReceived(accessToken) {
         loginModel.isLoggedIn(true);
         spotifyWebApi.setAccessToken(accessToken);
+        localStorage.setItem('ae_token', accessToken);
+        localStorage.setItem('ae_expires', (new Date()).getTime() + 3600 * 1000); // 1 hour
         spotifyWebApi.getMe().then(function(data){
             loginModel.userId(data.id);
             loginModel.displayName(data.display_name);
             loginModel.userImage(data.images[0].url);
+            localStorage.setItem('ae_userid', data.id);
+            localStorage.setItem('ae_display_name', data.display_name);
+            localStorage.setItem('ae_user_image', data.images[0].url);
         });
         currentApi = spotifyWebApi;
     }
@@ -621,6 +646,7 @@
         loginModel.userId("");
         loginModel.displayName("");
         loginModel.userImage("");
+        localStorage.clear();
         currentApi = localApi;
     }
 
