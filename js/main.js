@@ -546,6 +546,19 @@
           });
     }
 
+    function getDisplayName(str) {
+        var maxDisplayLength = 11;
+        if (str.length < maxDisplayLength) {
+            return str;
+        }
+
+        var spaceIndex = str.indexOf(' ');
+        if (spaceIndex != -1 && spaceIndex < maxDisplayLength) {
+            return str.substr(0, spaceIndex);
+        }
+        return str.substr(0, maxDisplayLength);
+    }
+
     function onTokenReceived(accessToken) {
         loginModel.isLoggedIn(true);
         spotifyWebApi.setAccessToken(accessToken);
@@ -553,7 +566,7 @@
         localStorage.setItem('ae_expires', (new Date()).getTime() + 3600 * 1000); // 1 hour
         spotifyWebApi.getMe().then(function(data){
             loginModel.userId(data.id);
-            loginModel.displayName(data.display_name);
+            loginModel.displayName(getDisplayName(data.display_name));
             loginModel.userImage(data.images[0].url);
             localStorage.setItem('ae_userid', data.id);
             localStorage.setItem('ae_display_name', data.display_name);
