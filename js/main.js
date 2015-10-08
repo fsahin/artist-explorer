@@ -12,7 +12,8 @@
     var userCountry = "US";
 
     //replace with configured servers uri
-    var serverBasePath = "http://localhost:10000";
+    var serverBasePath = "http://localhost:3000";
+    var initialNodeId = "fTDWNqroGMppqNzQq";
 
     var localApi = new localProxyApi(serverBasePath);
     var spotifyWebApi = new SpotifyWebApi()
@@ -68,6 +69,7 @@
     }
 
     //get id from some way, or id of sharing
+    //or DEFAULT ID
     function initContainer() {
         console.log('initContainer');
         var initArtistId = stripTrailingSlash(qs('artist_id')),
@@ -87,7 +89,7 @@
             initRootWithGenre(initGenre);
         } else {
             //Fallback on elvis presley
-            currentApi.getArtist('43ZHCT0cAZBISjO8DG9PnE').then(initRootWithArtist);
+            currentApi.getArtist(initialNodeId).then(initRootWithArtist);
         }
     }
 
@@ -110,6 +112,7 @@
     }
 
     //On load
+    //LOADING TREEEEE
     window.addEventListener('load', function () {
 
         $.ajax({
