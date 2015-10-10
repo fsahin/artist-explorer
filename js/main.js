@@ -16,7 +16,7 @@
     var initialNodeId = "fTDWNqroGMppqNzQq";
 
     var localApi = new localProxyApi(serverBasePath);
-    var spotifyWebApi = new SpotifyWebApi()
+    var spotifyWebApi = new SpotifyWebApi();
 
     var currentApi = localApi;
 

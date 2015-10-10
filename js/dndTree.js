@@ -7,7 +7,9 @@ var dndTree = (function() {
     var root;
     var rightPaneWidth = 350;
 
+    //History Vars
     var exploredArtistIds = [];
+    var lastExpandedNode;
 
     // avoid clippath issue by assigning each image its own clippath
     var clipPathId = 0;
@@ -16,8 +18,8 @@ var dndTree = (function() {
     var viewerWidth = $(window).width() - rightPaneWidth;
     var viewerHeight = $(window).height();
 
-    var lastExpandedNode;
 
+    //d3 objects
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
 
@@ -68,6 +70,7 @@ var dndTree = (function() {
 
     function setChildrenAndUpdateForArtist(node) {
         var artists;
+        //TODO: Add previous node info here
         AE.getRelated(node.artist.id, exploredArtistIds).then(function(artists) {
             if (!node.children) {
                 node.children = []
@@ -173,10 +176,27 @@ var dndTree = (function() {
     function click(d) {
         d = toggleChildren(d);
     }
-
+    //Calculates all the stuff related to nodes placement
+    //And node insertion + their hover
+    //and d3 js transitions does the smooth thing
+    //acts only the node given and goes only in one way
+    //artist: Object
+    // what is a node ???
+    // artist: Object ()...
+    // depth: 1
+    // id: 8
+    // parent: Object
+    // x: 375
+    // x0: 375
+    // y: 220
+    // y0: 220
     function update(source) {
         var levelWidth = [1];
         var childCount = function(level, n) {
+            //recursively counts the number of children and changes levelWidth to have the total number of nodes at each layer
+            //from root
+            //[1, 10, 6]
+            console.log(n);
             if (n.children && n.children.length > 0) {
                 if (levelWidth.length <= level + 1) levelWidth.push(0);
 
@@ -186,8 +206,9 @@ var dndTree = (function() {
                 });
             }
         };
-
+        console.log(levelWidth);
         childCount(0, root);
+        console.log(levelWidth);
         var newHeight = d3.max(levelWidth) * 100;
         tree = tree.size([newHeight, viewerWidth]);
 
@@ -199,10 +220,12 @@ var dndTree = (function() {
         nodes.forEach(function(d) {
              d.y = (d.depth * 220);
         });
-
         // Update the nodes…
         var node = svgGroup.selectAll("g.node")
+        //!!!! Bind the nodes data from tree object, based on id
+        // to the SVG stuff
             .data(nodes, function(d) {
+                console.log(d.id);
                 return d.id || (d.id = ++i);
             });
 
