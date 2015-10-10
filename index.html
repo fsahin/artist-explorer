@@ -76,37 +76,37 @@
 
         <!-- Artist Info -->
         <div data-bind="visible: isArtistInfoVisible" id="infobox">
-          <h4>Artist Info </h4>
+          <h4>Content Info </h4>
           <a target="_blank" data-bind="text: artistName, attr: { href:spotifyLink }" id="artistName"> </a>
           <p </p>
-          <div id="chart_div" style="width: 350px; height: 120px;"></div>
+          <div id="chart_div" style="width: 350px; height: 120px; display: none"></div>
 
-          <h4>Popular Tracks</h4>
+          <div data-bind="visible: bioExists" id="bigoraphyDiv">
+            <h4 id ="biography-label">Bridge</h4>
+            <p data-bind="html: biography" id="biography"> </p>
+          </div>
+
+<!--           <h4>Popular Tracks</h4>
 
           <ul data-bind="visible: topTracks().length > 0, foreach: topTracks" id="popularTracks">
             <li data-bind="event: { mouseover: $parent.playTrack, mouseout: $parent.playTrackCancel }, css: {active: isPlaying}" class = "now-playing">
               <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"> </a>
             </li>
-          </ul>
+          </ul> -->
 
-          <div data-bind="visible: topTracks().length <= 0" id="divPopularTracks" class="alert">
+<!--           <div data-bind="visible: topTracks().length <= 0" id="divPopularTracks" class="alert">
             Oops, seems like there are no available tracks in your country
-          </div>
+          </div> -->
 
           <hr>
 
           <div data-bind="visible: genres().length > 0">
-            <h4 id ="main-genres-label">Main Genres</h4>
+            <h4 id ="main-genres-label">Genres</h4>
             <ul data-bind="foreach: genres" id="mainGenres">
               <li>
                 <a data-bind="text: titleCaseName, click: $parent.switchToGenre"></a>
               </li>
             </ul>
-          </div>
-
-          <div data-bind="visible: bioExists" id="bigoraphyDiv">
-            <h4 id ="biography-label">Biography</h4>
-            <p data-bind="html: biography" id="biography"> </p>
           </div>
         </div>
       </div>
