@@ -57,10 +57,12 @@ var dndTree = (function() {
     function centerNode(source) {
         lastExpandedNode = source;
         var scale = zoomListener.scale();
-        var x = -source.y0;
+        var x = -source.y0 - viewerWidth/8;
         var y = -source.x0;
-        x = x * scale + viewerWidth / 2;
+
+        x = x * scale;
         y = y * scale + viewerHeight / 2;
+
         d3.select('#tree-container g').transition()
             .duration(duration)
             .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
