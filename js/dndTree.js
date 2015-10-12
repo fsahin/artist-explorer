@@ -59,11 +59,18 @@ var dndTree = (function() {
     function centerNode(source) {
         lastExpandedNode = source;
         var scale = zoomListener.scale();
-        var x = -source.y0 - viewerWidth/8;
+        var x = -source.y0;
         var y = -source.x0;
 
-        x = x * scale;
+
+        x = x * scale + viewerWidth / 4;
         y = y * scale + viewerHeight / 2;
+
+        //to center it:
+        //var x = -source.y0;
+        // var y = -source.x0;
+        // x = x * scale + viewerWidth / 2;
+        // y = y * scale + viewerHeight / 2;
 
         d3.select('#tree-container g').transition()
             .duration(duration)
@@ -541,6 +548,9 @@ var dndTree = (function() {
             click(root)
         },
 
+        "getExploredArtistsIds": function() {
+            return exploredArtistIds;
+        },
         "setRootGenre" : function(genreName) {
             exploredArtistIds = []
             root = initWithGenre(genreName);
