@@ -56,6 +56,7 @@ var dndTree = (function() {
     }
 
     // Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
+    // Looks really weird
     function centerNode(source) {
         lastExpandedNode = source;
         var scale = zoomListener.scale();
@@ -63,8 +64,9 @@ var dndTree = (function() {
         var y = -source.x0;
 
 
-        x = x * scale + viewerWidth / 4;
-        y = y * scale + viewerHeight / 2;
+        x = x * scale - viewerWidth / 4;
+        y = y * scale + viewerHeight / 2.7;
+        debugger;
 
         //to center it:
         //var x = -source.y0;
