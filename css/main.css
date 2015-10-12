@@ -120,10 +120,10 @@ h4 {
 
 #rightpane {
   font-size: 15px !important;
-  float: right;
+  float: left;
   top: 0px;
-  right:0px;
-  width: 350px;
+  left:0px;
+  width: 50vw;
   height: 100%;
   position: relative;
   padding: 11px;

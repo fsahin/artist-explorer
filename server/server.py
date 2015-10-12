@@ -29,8 +29,8 @@ cors = CORS(app)
 # Make sure ECHO_NEST_API_KEY environment variable is set
 en = pyen.Pyen()
 
-client_credentials_manager = SpotifyClientCredentials()
-sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+# client_credentials_manager = SpotifyClientCredentials()
+# sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -143,7 +143,7 @@ def search():
     type = request.args.get('type')
     limit = request.args.get('limit')
 
-    response = sp.search(q, type=type, limit=limit)
+    response = "No search"
     print response
     return jsonify(response)
 

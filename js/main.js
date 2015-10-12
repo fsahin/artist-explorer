@@ -12,16 +12,18 @@
     var userCountry = "US";
 
     //replace with configured servers uri
-    var serverBasePath = "http://localhost:10000";
+    var serverBasePath = "http://localhost:3000";
+    var initialNodeId = "fTDWNqroGMppqNzQq";
 
     var localApi = new localProxyApi(serverBasePath);
-    var spotifyWebApi = new SpotifyWebApi()
+    var spotifyWebApi = new SpotifyWebApi();
 
     var currentApi = localApi;
 
     var loadAllGenresUri = serverBasePath + "/api/genres"
     var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
 
+    // utilities stuff for resizing and getting UI not bound
     function getGenreArtistsUri(genreId) {
         return serverBasePath + "/api/genres/" + genreId + "/artists";
     }
@@ -34,6 +36,7 @@
 
     $('#rightpane').height($(window).height());
 
+
     function setRepeatArtists() {
         if (document.getElementById('repeatArtists').checked) {
             repeatArtists = true;
@@ -42,7 +45,33 @@
         }
     }
 
+    //String modif utilities
+    //whatdahell seems to be fetching something the url
+    //must be related to weird ways of sharing this
+    function qs(name) {
+        console.log('QS: ', name);
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+            results = regex.exec(location.search);
+        console.log(results, results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' ')));
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    function stripTrailingSlash(str) {
+        if (str.substr(-1) == '/') {
+            return str.substr(0, str.length - 1);
+        }
+        return str;
+    }
+
+    function toTitleCase(str) {
+        return str.replace(/\w\S*/g, function (txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+
+    //get id from some way, or id of sharing
+    //or DEFAULT ID
     function initContainer() {
+        console.log('initContainer');
         var initArtistId = stripTrailingSlash(qs('artist_id')),
             initGenre = stripTrailingSlash(qs('genre')),
             initEntry = stripTrailingSlash(qs('tree'));
@@ -59,10 +88,31 @@
         } else if (initGenre) {
             initRootWithGenre(initGenre);
         } else {
-            currentApi.getArtist('43ZHCT0cAZBISjO8DG9PnE').then(initRootWithArtist);
+            //Fallback on elvis presley
+            currentApi.getArtist(initialNodeId).then(initRootWithArtist);
         }
     }
 
+    //Function to initiate the dnd tree
+    //artist object ?
+    function initRootWithArtist(artist) {
+        dndTree.setRoot(artist);
+        $('#genre-search').val('');
+    }
+
+    function initRootWithGenre(genre) {
+        dndTree.setRootGenre(genre);
+        $('#artist-search').val('');
+    }
+
+    function initRootWithData(data) {
+        dndTree.setRootData(data);
+        $('#artist-search').val('');
+        $('#genre-search').val('');
+    }
+
+    //On load
+    //LOADING TREEEEE
     window.addEventListener('load', function () {
 
         $.ajax({
@@ -71,8 +121,10 @@
             userCountry = data.country_code;
         });
 
+        console.log('page loaded');
         initContainer();
 
+        //Search form behaviour
         var formArtist = document.getElementById('search-artist');
         formArtist.addEventListener('submit', function (e) {
             showCompletion = false;
@@ -101,41 +153,8 @@
 
     }, false);
 
-    function qs(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-            results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
-
-    function stripTrailingSlash(str) {
-        if (str.substr(-1) == '/') {
-            return str.substr(0, str.length - 1);
-        }
-        return str;
-    }
 
     var allGenres = [];
-
-    loadAllGenres();
-
-    function initRootWithArtist(artist) {
-        dndTree.setRoot(artist);
-        $('#genre-search').val('');
-    }
-
-    function initRootWithGenre(genre) {
-        dndTree.setRootGenre(genre);
-        $('#artist-search').val('');
-    }
-
-    function initRootWithData(data) {
-        dndTree.setRootData(data);
-        $('#artist-search').val('');
-        $('#genre-search').val('');
-    }
-
-
     function loadAllGenres() {
         $.ajax({
             url: loadAllGenresUri
@@ -145,12 +164,69 @@
             });
         });
     }
+    loadAllGenres();
 
-    function toTitleCase(str) {
-        return str.replace(/\w\S*/g, function (txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    //AE.getInfo functionality
+    //creates artistInfoModel from artist object
+    //and other calls
+    //draws the chart
+    //calls the api artistInfoUri to get bio and bioExists
+    //genres
+    //artist top tracks and plays the first one
+    function _getInfo(artist) {
+        $('#hoverwarning').css('display', 'none');
+
+        artistInfoModel.isArtistInfoVisible(true);
+        artistInfoModel.artistName(artist.name);
+        artistInfoModel.spotifyLink(artist.external_urls.spotify);
+
+        drawChart(artist.popularity);
+
+        $.ajax({
+            url: loadArtistInfoUri + artist.uri
+        }).done(function (data) {
+            var bioFound = false;
+            if (data.artist.biographies) {
+                data.artist.biographies.forEach(function (biography) {
+                    if (!biography.truncated && !bioFound) {
+                        artistInfoModel.biography(biography.text);
+                        bioFound = true;
+                    }
+                });
+            }
+            artistInfoModel.bioExists(bioFound);
+
+            dndTree.highlightPathAndNode(artist);
+
+            artistInfoModel.genres([]);
+            data.artist.genres.forEach(function (genre) {
+                artistInfoModel.genres.push(
+                    {
+                        'name': genre.name,
+                        'titleCaseName': toTitleCase(genre.name),
+                    }
+                )
+            });
+        });
+
+        currentApi.getArtistTopTracks(artist.id, userCountry).then(function (data) {
+            Player.playForTrack(data.tracks[0]);
+            artistInfoModel.topTracks([]);
+            data.tracks.forEach(function (track, i) {
+                artistInfoModel.topTracks.push({
+                    'isPlaying': i == 0 ? ko.observable(true): ko.observable(false),
+                    'id': track.id,
+                    'name': track.name,
+                    'preview_url': track.preview_url,
+                    'spotifyLink': track.external_urls.spotify,
+                });
+            });
+        }, function (err) {
+            Player.clearMusic();
+        });
     }
-
     var getInfoTimeoutid;
+    //wrapper around _getinfo with settimeout
     function getInfo(artist) {
         getInfoTimeoutid = window.setTimeout(function () {
             _getInfo(artist);
@@ -162,6 +238,30 @@
         window.clearTimeout(getInfoTimeoutid);
     }
 
+    //The function to draw the chart on the right where there is all the info for the artist with google charts
+    function drawChart(popularity) {
+        var popData = google.visualization.arrayToDataTable([
+             ['Popularity', popularity],
+        ], true);
+
+        var options = {
+            width: 300, height: 120,
+            redFrom: 80, redTo: 100,
+            yellowFrom:50, yellowTo: 80,
+            minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+        chart.draw(popData, options);
+    }
+
+    //The artist UI model display, bound to DOM panel on the right
+    // artistName and other observables
+    // playTrack (methods bounds to other parts)
+    // swithToGenre
+    function _playTrack(track) {
+        Player.playForTrack(track);
+    }
     var artistInfoModel = function() {
         var self = this;
 
@@ -197,66 +297,12 @@
             window.clearTimeout(playPopTrackTimeoutId);
         }
     }
-
-    function _playTrack(track) {
-        Player.playForTrack(track);
-    }
-
     var artistInfoModel = new artistInfoModel()
-
     ko.applyBindings(artistInfoModel, document.getElementById('rightpane'));
 
-    function _getInfo(artist) {
-        $('#hoverwarning').css('display', 'none');
-
-        artistInfoModel.isArtistInfoVisible(true);
-        artistInfoModel.artistName(artist.name);
-        artistInfoModel.spotifyLink(artist.external_urls.spotify)
-
-        drawChart(artist.popularity);
-
-        $.ajax({
-            url: loadArtistInfoUri + artist.uri
-        }).done(function (data) {
-            var bioFound = false;
-            if (data.artist.biographies) {
-                data.artist.biographies.forEach(function (biography) {
-                    if (!biography.truncated && !bioFound) {
-                        artistInfoModel.biography(biography.text);
-                        bioFound = true;
-                    }
-                });
-            }
-            artistInfoModel.bioExists(bioFound);
-
-            artistInfoModel.genres([]);
-            data.artist.genres.forEach(function (genre) {
-                artistInfoModel.genres.push(
-                    {
-                        'name': genre.name,
-                        'titleCaseName': toTitleCase(genre.name),
-                    }
-                )
-            });
-        });
-
-        currentApi.getArtistTopTracks(artist.id, userCountry).then(function (data) {
-            Player.playForTrack(data.tracks[0]);
-            artistInfoModel.topTracks([]);
-            data.tracks.forEach(function (track, i) {
-                artistInfoModel.topTracks.push({
-                    'isPlaying': i == 0 ? ko.observable(true): ko.observable(false),
-                    'id': track.id,
-                    'name': track.name,
-                    'preview_url': track.preview_url,
-                    'spotifyLink': track.external_urls.spotify,
-                });
-            });
-        }, function (err) {
-            Player.clearMusic();
-        });
-    }
-
+    //gets the next Artists from the first one
+    //with a promise on getArtistRelatedArtists (artistId)
+    //data.artists = [artists]
     function getRelated(artistId, excludeList) {
         return new Promise(function (resolve, reject) {
             return currentApi.getArtistRelatedArtists(artistId).then(function (data) {
@@ -279,6 +325,9 @@
         return artistUri.split(':').pop();
     }
 
+    //Gets from a genreName an array of artists
+    //goes to en first with genre name to retrieve spotify ids (???)
+    //and then goes to spotify
     function getArtistsForGenre(genreName) {
         return new Promise(function (resolve, reject) {
             return $.ajax({
@@ -305,6 +354,23 @@
         document.getElementById('range-indicator').innerHTML = value;
     }
 
+    //utility function to extract best images from the artist images field
+    function getSuitableImage(images) {
+        var minSize = 64;
+        if (images.length === 0) {
+            return 'img/spotify.jpeg';
+        }
+        images.forEach(function (image) {
+            if (image && image.width > minSize && image.width > 64) {
+                return image.url;
+            }
+        });
+
+        return images[images.length - 1].url;
+    }
+
+    //autocomplete div from search bar
+    //uses artist.name and artist.images
     function createAutoCompleteDiv(artist) {
         if (!artist) {
             return;
@@ -318,8 +384,8 @@
         return val;
     }
 
+    //stuff about countries and availabitliy
     var unavailCountryMessageSet = false;
-
     function setUnavailCountryErrorMessage() {
         var msg = 'Oops, seems like Spotify is not available in your country yet';
         if (unavailCountryMessageSet) {
@@ -332,7 +398,16 @@
         unavailCountryMessageSet = true;
     }
 
+    //only the DOM is loaded not the content
+    //loading the autocomplete
+    //with jquery plugin searchArtistsApi
+    //add * to the search term, ang gives a limit and market param
+    //data.artists & data.artists.items => items are the true objects
+    // genre search autocomplete
+    // goes in allGenres fetched before, and init with ui.item.value
+    // and not only ui.item like in artist
     $(function () {
+        console.log('Jquery loaded');
         $('#artist-search')
             // don't navigate away from the field on tab when selecting an item
             .bind('keydown', function (event) {
@@ -418,36 +493,7 @@
             });
     });
 
-    function drawChart(popularity) {
-        var popData = google.visualization.arrayToDataTable([
-             ['Popularity', popularity],
-        ], true);
-
-        var options = {
-            width: 300, height: 120,
-            redFrom: 80, redTo: 100,
-            yellowFrom:50, yellowTo: 80,
-            minorTicks: 5
-        };
-
-        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-        chart.draw(popData, options);
-    }
-
-    function getSuitableImage(images) {
-        var minSize = 64;
-        if (images.length === 0) {
-            return 'img/spotify.jpeg';
-        }
-        images.forEach(function (image) {
-            if (image && image.width > minSize && image.width > 64) {
-                return image.url;
-            }
-        });
-
-        return images[images.length - 1].url;
-    }
-
+    //Post function to save the tree on the server
     function saveTree() {
         $.post(serverBasePath + '/api/savetree',
         {
@@ -457,8 +503,8 @@
         });
     }
 
+    //share the stuff and display modal with to link to share after
     var currentLink;
-
     function share() {
         $.post(serverBasePath + '/api/savetree',
         {
@@ -466,10 +512,10 @@
         }).done(function (entry_id) {
             currentLink = "https://artistexplorer.spotify.com?tree=" + entry_id;
             shareModel.link(currentLink);
-            $('#myModal').modal('show');
-        });
-    }
 
+        });
+        $('#myModal').modal('show');
+    }
     function fbShare() {
         FB.ui({
           method: 'share',
@@ -477,12 +523,11 @@
           caption: 'Look at the relationship tree I just created',
         }, function(response){});
     }
-
+    //shareModel KO Object for the Modal
     var shareModel = function() {
         var self = this;
         self.link = ko.observable();
     }
-
     var shareModel = new shareModel()
     ko.applyBindings(shareModel, document.getElementById('myModal'));
 
@@ -491,6 +536,7 @@
         text = $('#shareLink').text();
     }
 
+    //Login UI Model for KO, accessToken and localStorage for ae_userid, ae_display_name ae_user_image etc...
     var loginModel = function() {
         var self = this;
         var localAccessToken = getAccessTokenLocal();
@@ -509,9 +555,7 @@
         }
 
     }
-
     var loginModel = new loginModel();
-
     function getAccessTokenLocal() {
         var expires = 0 + localStorage.getItem('ae_expires', '0');
         if ((new Date()).getTime() > expires) {
@@ -519,19 +563,17 @@
         }
         return localStorage.getItem('ae_token', '');
     }
-
     ko.applyBindings(loginModel, document.getElementById('navbar-collapse-1'));
 
-
+    //Error UI Model for KO
     var errorBoxModel = function() {
         var self = this;
         self.errorMessage = ko.observable();
     }
-
     var errorBoxModel = new errorBoxModel();
     ko.applyBindings(errorBoxModel, document.getElementById('error-modal'));
 
-
+    //OAUTH stuff
     function login() {
         OAuthManager.obtainToken({
           scopes: [
@@ -545,7 +587,7 @@
             console.error(error);
           });
     }
-
+    //trim display name for login stuff
     function getDisplayName(str) {
         var maxDisplayLength = 11;
         if (str.length < maxDisplayLength) {
@@ -558,7 +600,7 @@
         }
         return str.substr(0, maxDisplayLength);
     }
-
+    //login UI changes when token is received
     function onTokenReceived(accessToken) {
         loginModel.isLoggedIn(true);
         spotifyWebApi.setAccessToken(accessToken);
@@ -574,7 +616,16 @@
         });
         currentApi = spotifyWebApi;
     }
+    function logout() {
+        loginModel.isLoggedIn(false);
+        loginModel.userId("");
+        loginModel.displayName("");
+        loginModel.userImage("");
+        localStorage.clear();
+        currentApi = localApi;
+    }
 
+    //Create PLaylist ?? (Not sure how it works)
     function createPlaylistFromTrackIds(trackIds) {
         spotifyWebApi.createPlaylist(loginModel.userId(), {
                 'name': $('#text-playlist-name').val(),
@@ -592,7 +643,6 @@
             });
         });
     }
-
     function createPlaylistModal() {
         if (!loginModel.isLoggedIn()) {
             errorBoxModel.errorMessage("Please log in first");
@@ -602,7 +652,15 @@
         }
 
     }
-
+    //creates a plaulist form all artists and all their tracks
+    function getTrackLength(numOfTotalTracks) {
+        if (numOfTotalTracks >= 50) {
+            return 50;
+        } else if (numOfTotalTracks < 1) {
+            throw new RangeError("Not enough tracks");
+        }
+        return numOfTotalTracks;
+    } // limit the number of tracks in the playlist
     function createPlaylist() {
         var playlistName = $('#text-playlist-name').val();
         if (!playlistName) {
@@ -643,24 +701,6 @@
         }, function() {
           console.log("Something failed");
         });
-    }
-
-    function getTrackLength(numOfTotalTracks) {
-        if (numOfTotalTracks >= 50) {
-            return 50;
-        } else if (numOfTotalTracks < 1) {
-            throw new RangeError("Not enough tracks");
-        }
-        return numOfTotalTracks;
-    }
-
-    function logout() {
-        loginModel.isLoggedIn(false);
-        loginModel.userId("");
-        loginModel.displayName("");
-        loginModel.userImage("");
-        localStorage.clear();
-        currentApi = localApi;
     }
 
     window.AE = {
