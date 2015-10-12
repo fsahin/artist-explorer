@@ -1,6 +1,8 @@
 var dndTree = (function() {
     'use strict';
 
+    var svgGroup;
+
     // Misc. variables
     var i = 0;
     var duration = 750;
@@ -69,7 +71,7 @@ var dndTree = (function() {
         zoomListener.scale(scale);
         zoomListener.translate([x, y]);
     }
-
+    //This is called when we click on an artist and its update the model of the tree
     function setChildrenAndUpdateForArtist(node) {
         var artists;
         //TODO: Add previous node info here
@@ -140,7 +142,37 @@ var dndTree = (function() {
         return 'genre' in d;
     }
 
+    var highlightedPathAndNodeId;
 
+    function highlightPathAndNode(d) {
+        //remove old styling
+        svgGroup.select("#pathId" + highlightedPathAndNodeId)
+            .style("fill", "none")
+            .style("stroke", "#ccc");
+        svgGroup.selectAll("g.node")
+            .filter(function(data) {
+                return data.artist.id === highlightedPathAndNodeId;
+            })
+            .select("circle")
+                .style("stroke", "black")
+                .style("stroke-width", "2px");
+
+        //puts the new one
+        svgGroup.select("#pathId" + d.artist.id)
+            .style("fill", "orange")
+            .style("stroke", "orange");
+        svgGroup.selectAll("g.node")
+            .filter(function(data) {
+                return data.artist.id === d.artist.id;
+            })
+            .select("circle")
+                .style("stroke", "orange")
+                .style("stroke-width", "6px");
+
+        highlightedPathAndNodeId = d.artist.id;
+    }
+
+    //recursive function to remove children ids from explored
     function removeExpandedId(d) {
         if (d.children) {
             d.children.forEach(function(node) {
@@ -151,7 +183,7 @@ var dndTree = (function() {
         exploredArtistIds.splice(indexToRem, 1);
     }
 
-    function removeChildrenFromExplored(d) {
+    function removeChildrenFromExplored(d) { //something related to duplication of nodes ?
         d.children.forEach(function(node) {
             removeExpandedId(node);
         });
@@ -161,6 +193,7 @@ var dndTree = (function() {
     // Toggle children function
     function toggleChildren(d) {
         if (d.children) {
+            //remove the children from the tree
             removeChildrenFromExplored(d);
             d.children = null;
             update(d);
@@ -175,8 +208,10 @@ var dndTree = (function() {
         return d;
     }
 
+    //event on clicking a node
     function click(d) {
         d = toggleChildren(d);
+        highlightPathAndNode(d);
     }
     //Calculates all the stuff related to nodes placement
     //And node insertion + their hover
@@ -198,43 +233,58 @@ var dndTree = (function() {
             //recursively counts the number of children and changes levelWidth to have the total number of nodes at each layer
             //from root
             //[1, 10, 6]
-            console.log(n);
+            // console.log(n);
             if (n.children && n.children.length > 0) {
                 if (levelWidth.length <= level + 1) levelWidth.push(0);
 
                 levelWidth[level + 1] += n.children.length;
-                n.children.forEach(function(d) {
-                    childCount(level + 1, d);
+                n.children.forEach(function(c) {
+                    childCount(level + 1, c);
                 });
             }
         };
-        console.log(levelWidth);
+        // console.log(levelWidth);
         childCount(0, root);
-        console.log(levelWidth);
+        // console.log(levelWidth);
+        // update levelWidth to contain all the population of the tree
         var newHeight = d3.max(levelWidth) * 100;
+        //update height of tree
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
         var nodes = tree.nodes(root).reverse();
         var links = tree.links(nodes);
+        //link: {source:{
+        //artist,
+        //depth (in the tree),
+        //id,
+        //parent,
+        //x,x0,y,y0
+        //}, target}
+        // console.log(nodes);
+        // console.log(links);
 
         // Set widths between levels
-        nodes.forEach(function(d) {
-             d.y = (d.depth * 220);
+        // This is the left to right thing
+        nodes.forEach(function(n) {
+             n.y = (n.depth * 220);
         });
         // Update the nodes…
         var node = svgGroup.selectAll("g.node")
         //!!!! Bind the nodes data from tree object, based on id
         // to the SVG stuff
             .data(nodes, function(d) {
-                console.log(d.id);
+                // console.log(d.id);
                 return d.id || (d.id = ++i);
             });
 
         // Enter any new nodes at the parent's previous position.
+        // node.enter will make the new nodes enter the tree,
+        // append g will make them new elements
         var nodeEnter = node.enter().append("g")
             // .call(dragListener)
             .attr("class", "node")
+            //put a transform at the origin first
             .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
@@ -242,6 +292,8 @@ var dndTree = (function() {
                 if ('artist' in d) {
                     AE.getInfo(d.artist);
                 }
+                //add a clipPath modify
+                // highlightPathAndNode(d);
             })
             .on("mouseout", function(d) {
                 if ('artist' in d) {
@@ -256,6 +308,8 @@ var dndTree = (function() {
                 return d._children ? "black" : "#fff";
             });
 
+            //ClipPath Stuff, unique id for each
+            //this is to make the image round
         clipPathId++;
 
         nodeEnter.append("clipPath")
@@ -354,6 +408,10 @@ var dndTree = (function() {
             .style("fill-opacity", 0);
 
         // Update the links…
+        // path class=link
+        // separate from nodes
+        // bound the data from the tree model
+        // all the styling is in fill, stroke, and stroke-width
         var link = svgGroup.selectAll("path.link")
             .data(links, function(d) {
                 return d.target.id;
@@ -362,6 +420,9 @@ var dndTree = (function() {
         // Enter any new links at the parent's previous position.
         link.enter().insert("path", "g")
             .attr("class", "link")
+            .attr("id", function(d) {
+                return "pathId" + d.target.artist.id;
+            })
             .attr("d", function(d) {
                 var o = {
                     x: source.x0,
@@ -401,7 +462,7 @@ var dndTree = (function() {
     }
 
     // Append a group which holds all nodes and which the zoom Listener can act upon.
-    var svgGroup = baseSvg.append("g");
+    svgGroup = baseSvg.append("g");
 
     function copyTree(from, to) {
         if (from.artist) {
@@ -467,6 +528,9 @@ var dndTree = (function() {
     }
 
     return {
+        "highlightPathAndNode": function(artist) {
+            highlightPathAndNode({artist: artist});
+        },
          "setRoot" : function(artist) {
             exploredArtistIds = []
             root = initWithArtist(artist);

@@ -196,6 +196,8 @@
             }
             artistInfoModel.bioExists(bioFound);
 
+            dndTree.highlightPathAndNode(artist);
+
             artistInfoModel.genres([]);
             data.artist.genres.forEach(function (genre) {
                 artistInfoModel.genres.push(
@@ -510,8 +512,9 @@
         }).done(function (entry_id) {
             currentLink = "https://artistexplorer.spotify.com?tree=" + entry_id;
             shareModel.link(currentLink);
-            $('#myModal').modal('show');
+
         });
+        $('#myModal').modal('show');
     }
     function fbShare() {
         FB.ui({
