@@ -148,32 +148,5 @@ def search():
     return jsonify(response)
 
 
-@app.route('/api/savetree', methods=['POST'])
-@ratelimit(limit=3, per=10) # 3 times in 10 secs
-def save_entry():
-    entry_id = str(uuid.uuid4()).replace('-', '')
-    entry_data = request.form['entry_data']
-    try:
-        val = json.loads(entry_data)
-    except:
-        return "Not Ok", 400, {'Content-Type': 'text/css; charset=utf-8'}
-
-    if 'children' not in val:
-        return "Not Ok", 400, {'Content-Type': 'text/css; charset=utf-8'}
-
-    compressed = zlib.compress(entry_data.encode('utf-8'))
-
-    result = r.set(entry_id, compressed)
-    if result:
-        return entry_id, 200, {'Content-Type': 'text/css; charset=utf-8'}
-    else:
-        return "Not Ok", 500, {'Content-Type': 'text/css; charset=utf-8'}
-
-
-@app.route('/api/entries/<entry_id>', methods=['GET'])
-def get_entry(entry_id):
-    result = zlib.decompress(r.get(entry_id)).decode('utf-8')
-    return result
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)

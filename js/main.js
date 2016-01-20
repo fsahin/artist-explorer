@@ -448,48 +448,7 @@
         return images[images.length - 1].url;
     }
 
-    function saveTree() {
-        $.post(serverBasePath + '/api/savetree',
-        {
-            entry_data: JSON.stringify(dndTree.getRoot())
-        }).done(function (data) {
-            //console.log(data);
-        });
-    }
-
     var currentLink;
-
-    function share() {
-        $.post(serverBasePath + '/api/savetree',
-        {
-            entry_data: JSON.stringify(dndTree.getRoot())
-        }).done(function (entry_id) {
-            currentLink = "https://artistexplorer.spotify.com?tree=" + entry_id;
-            shareModel.link(currentLink);
-            $('#myModal').modal('show');
-        });
-    }
-
-    function fbShare() {
-        FB.ui({
-          method: 'share',
-          href: currentLink,
-          caption: 'Look at the relationship tree I just created',
-        }, function(response){});
-    }
-
-    var shareModel = function() {
-        var self = this;
-        self.link = ko.observable();
-    }
-
-    var shareModel = new shareModel()
-    ko.applyBindings(shareModel, document.getElementById('myModal'));
-
-    //todo:make it work
-    function copyLink() {
-        text = $('#shareLink').text();
-    }
 
     var loginModel = function() {
         var self = this;
@@ -673,10 +632,6 @@
         setRepeatArtists: setRepeatArtists,
         toTitleCase: toTitleCase,
         artistInfoModel: artistInfoModel,
-        saveTree: saveTree,
-        share: share,
-        copyLink: copyLink,
-        fbShare: fbShare,
         login: login,
         createPlaylistModal: createPlaylistModal,
         createPlaylist: createPlaylist,
