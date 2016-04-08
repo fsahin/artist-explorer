@@ -8,6 +8,7 @@
     <meta property="og:title" content="Artist Explorer is a music discovery tool to to explore artists and music by browsing artists through a relationship tree">
     <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/sp-bootstrap.min.css">
+    <link rel="stylesheet" href="css/spoticons.css">
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
@@ -83,11 +84,21 @@
 
           <h4>Popular Tracks</h4>
 
-          <ul data-bind="visible: topTracks().length > 0, foreach: topTracks" id="popularTracks">
-            <li data-bind="event: { mouseover: $parent.playTrack, mouseout: $parent.playTrackCancel }, css: {active: isPlaying}" class = "now-playing">
-              <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"> </a>
-            </li>
-          </ul>
+          <table class="table" data-bind="visible: topTracks().length > 0, foreach: topTracks">
+            <tbody>
+              <tr>
+                <td class="tl-play">
+                  <button data-bind="css: {'spoticon-play-16': !isPlaying(), 'spoticon-spotify-connect-16': isPlaying()}" class="astext"></button>
+                </td>
+                <td class="tl-save">
+                  <button type="button" class="astext spoticon-plus-16"></button>
+                </td>
+                <td class="wrapp" data-bind="event: { mouseover: $parent.playTrack, mouseout: $parent.playTrackCancel }">
+                  <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"> </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <div data-bind="visible: topTracks().length <= 0" id="divPopularTracks" class="alert">
             Oops, seems like there are no available tracks in your country

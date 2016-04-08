@@ -1,0 +1,1261 @@
+/**
+ * Spoticons
+ *
+ * Variable Set: Spoticons
+ *
+ * Styleguide 1.2.1
+ */
+@font-face {
+  font-family: "glue1-spoticon";
+  src: url("https://d2j0f09xqmv212.cloudfront.net/fonts/spoticon_c352fadfc25a3646b28ed254e8a6dff7.svg") format("svg"), url("https://d2j0f09xqmv212.cloudfront.net/fonts/spoticon_c352fadfc25a3646b28ed254e8a6dff7.woff") format("woff"), url("https://d2j0f09xqmv212.cloudfront.net/fonts/spoticon_c352fadfc25a3646b28ed254e8a6dff7.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+[class^="spoticon-"]:before,
+[class*=" spoticon-"]:before {
+  font-family: "glue1-spoticon";
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: inherit;
+  vertical-align: bottom;
+  display: inline-block;
+  text-decoration: inherit;
+}
+.spoticon-add-to-playlist-16:before {
+  content: "\f164";
+  font-size: 16px;
+}
+.spoticon-add-to-playlist-32:before {
+  content: "\f165";
+  font-size: 32px;
+}
+.spoticon-add-to-queue-16:before {
+  content: "\f1BD";
+  font-size: 16px;
+}
+.spoticon-add-to-queue-32:before {
+  content: "\f1BE";
+  font-size: 32px;
+}
+.spoticon-addfollow-16:before {
+  content: "\f1E5";
+  font-size: 16px;
+}
+.spoticon-addfollow-32:before {
+  content: "\f1E6";
+  font-size: 32px;
+}
+.spoticon-addfollowers-16:before {
+  content: "\f22F";
+  font-size: 16px;
+}
+.spoticon-addfollowers-32:before {
+  content: "\f230";
+  font-size: 32px;
+}
+.spoticon-addsuggestedsong-16:before {
+  content: "\f22C";
+  font-size: 16px;
+}
+.spoticon-addsuggestedsong-32:before {
+  content: "\f22D";
+  font-size: 32px;
+}
+.spoticon-airplay-16:before {
+  content: "\f277";
+  font-size: 16px;
+}
+.spoticon-airplay-32:before {
+  content: "\f278";
+  font-size: 32px;
+}
+.spoticon-album-16:before {
+  content: "\f100";
+  font-size: 16px;
+}
+.spoticon-album-32:before {
+  content: "\f101";
+  font-size: 32px;
+}
+.spoticon-album-contained-16:before {
+  content: "\f1C0";
+  font-size: 16px;
+}
+.spoticon-album-contained-32:before {
+  content: "\f1C1";
+  font-size: 32px;
+}
+.spoticon-appfinder-16:before {
+  content: "\f20D";
+  font-size: 16px;
+}
+.spoticon-appfinder-32:before {
+  content: "\f20E";
+  font-size: 32px;
+}
+.spoticon-arrow-down-16:before {
+  content: "\f1DF";
+  font-size: 16px;
+}
+.spoticon-arrow-down-32:before {
+  content: "\f1E0";
+  font-size: 32px;
+}
+.spoticon-arrow-left-16:before {
+  content: "\f183";
+  font-size: 16px;
+}
+.spoticon-arrow-left-32:before {
+  content: "\f184";
+  font-size: 32px;
+}
+.spoticon-arrow-right-16:before {
+  content: "\f186";
+  font-size: 16px;
+}
+.spoticon-arrow-right-32:before {
+  content: "\f187";
+  font-size: 32px;
+}
+.spoticon-arrow-up-16:before {
+  content: "\f1DC";
+  font-size: 16px;
+}
+.spoticon-arrow-up-32:before {
+  content: "\f1DD";
+  font-size: 32px;
+}
+.spoticon-artist-16:before {
+  content: "\f102";
+  font-size: 16px;
+}
+.spoticon-artist-32:before {
+  content: "\f103";
+  font-size: 32px;
+}
+.spoticon-attach-16:before {
+  content: "\f104";
+  font-size: 16px;
+}
+.spoticon-attach-32:before {
+  content: "\f105";
+  font-size: 32px;
+}
+.spoticon-block-16:before {
+  content: "\f106";
+  font-size: 16px;
+}
+.spoticon-block-32:before {
+  content: "\f107";
+  font-size: 32px;
+}
+.spoticon-browse-16:before {
+  content: "\f108";
+  font-size: 16px;
+}
+.spoticon-browse-32:before {
+  content: "\f109";
+  font-size: 32px;
+}
+.spoticon-camera-16:before {
+  content: "\f265";
+  font-size: 16px;
+}
+.spoticon-camera-32:before {
+  content: "\f266";
+  font-size: 32px;
+}
+.spoticon-carplay-16:before {
+  content: "\f271";
+  font-size: 16px;
+}
+.spoticon-carplay-32:before {
+  content: "\f272";
+  font-size: 32px;
+}
+.spoticon-chart-down-16:before {
+  content: "\f25E";
+  font-size: 16px;
+}
+.spoticon-chart-down-32:before {
+  content: "\f25F";
+  font-size: 32px;
+}
+.spoticon-chart-new-16:before {
+  content: "\f25B";
+  font-size: 16px;
+}
+.spoticon-chart-new-32:before {
+  content: "\f25C";
+  font-size: 32px;
+}
+.spoticon-chart-up-16:before {
+  content: "\f262";
+  font-size: 16px;
+}
+.spoticon-chart-up-32:before {
+  content: "\f263";
+  font-size: 32px;
+}
+.spoticon-check-16:before {
+  content: "\f10a";
+  font-size: 16px;
+}
+.spoticon-check-24:before {
+  content: "\f1C9";
+  font-size: 24px;
+}
+.spoticon-check-32:before {
+  content: "\f10b";
+  font-size: 32px;
+}
+.spoticon-chevron-down-16:before {
+  content: "\f10c";
+  font-size: 16px;
+}
+.spoticon-chevron-down-32:before {
+  content: "\f10d";
+  font-size: 32px;
+}
+.spoticon-chevron-left-16:before {
+  content: "\f10e";
+  font-size: 16px;
+}
+.spoticon-chevron-left-32:before {
+  content: "\f10f";
+  font-size: 32px;
+}
+.spoticon-chevron-right-16:before {
+  content: "\f110";
+  font-size: 16px;
+}
+.spoticon-chevron-right-32:before {
+  content: "\f111";
+  font-size: 32px;
+}
+.spoticon-chevron-up-16:before {
+  content: "\f112";
+  font-size: 16px;
+}
+.spoticon-chevron-up-32:before {
+  content: "\f113";
+  font-size: 32px;
+}
+.spoticon-chromecast-connected-16:before {
+  content: "\f30B";
+  font-size: 16px;
+}
+.spoticon-chromecast-connected-32:before {
+  content: "\f30C";
+  font-size: 32px;
+}
+.spoticon-chromecast-connecting-one-16:before {
+  content: "\f30D";
+  font-size: 16px;
+}
+.spoticon-chromecast-connecting-one-32:before {
+  content: "\f30E";
+  font-size: 32px;
+}
+.spoticon-chromecast-connecting-three-16:before {
+  content: "\f311";
+  font-size: 16px;
+}
+.spoticon-chromecast-connecting-three-32:before {
+  content: "\f312";
+  font-size: 32px;
+}
+.spoticon-chromecast-connecting-two-16:before {
+  content: "\f30F";
+  font-size: 16px;
+}
+.spoticon-chromecast-connecting-two-32:before {
+  content: "\f310";
+  font-size: 32px;
+}
+.spoticon-chromecast-disconnected-16:before {
+  content: "\f309";
+  font-size: 16px;
+}
+.spoticon-chromecast-disconnected-32:before {
+  content: "\f30A";
+  font-size: 32px;
+}
+.spoticon-collaborative-playlist-16:before {
+  content: "\f114";
+  font-size: 16px;
+}
+.spoticon-collaborative-playlist-32:before {
+  content: "\f115";
+  font-size: 32px;
+}
+.spoticon-collection-16:before {
+  content: "\f116";
+  font-size: 16px;
+}
+.spoticon-collection-32:before {
+  content: "\f117";
+  font-size: 32px;
+}
+.spoticon-commute-16:before {
+  content: "\f258";
+  font-size: 16px;
+}
+.spoticon-commute-32:before {
+  content: "\f259";
+  font-size: 32px;
+}
+.spoticon-device-arm-16:before {
+  content: "\f305";
+  font-size: 16px;
+}
+.spoticon-device-arm-32:before {
+  content: "\f306";
+  font-size: 32px;
+}
+.spoticon-device-car-16:before {
+  content: "\f317";
+  font-size: 16px;
+}
+.spoticon-device-car-32:before {
+  content: "\f318";
+  font-size: 32px;
+}
+.spoticon-device-computer-16:before {
+  content: "\f29B";
+  font-size: 16px;
+}
+.spoticon-device-computer-32:before {
+  content: "\f29C";
+  font-size: 32px;
+}
+.spoticon-device-mobile-16:before {
+  content: "\f301";
+  font-size: 16px;
+}
+.spoticon-device-mobile-32:before {
+  content: "\f302";
+  font-size: 32px;
+}
+.spoticon-device-multispeaker-16:before {
+  content: "\f315";
+  font-size: 16px;
+}
+.spoticon-device-multispeaker-32:before {
+  content: "\f316";
+  font-size: 32px;
+}
+.spoticon-device-other-16:before {
+  content: "\f29F";
+  font-size: 16px;
+}
+.spoticon-device-other-32:before {
+  content: "\f300";
+  font-size: 32px;
+}
+.spoticon-device-speaker-16:before {
+  content: "\f29D";
+  font-size: 16px;
+}
+.spoticon-device-speaker-32:before {
+  content: "\f29E";
+  font-size: 32px;
+}
+.spoticon-device-tablet-16:before {
+  content: "\f303";
+  font-size: 16px;
+}
+.spoticon-device-tablet-32:before {
+  content: "\f304";
+  font-size: 32px;
+}
+.spoticon-device-tv-16:before {
+  content: "\f307";
+  font-size: 16px;
+}
+.spoticon-device-tv-32:before {
+  content: "\f308";
+  font-size: 32px;
+}
+.spoticon-devices-16:before {
+  content: "\f213";
+  font-size: 16px;
+}
+.spoticon-devices-32:before {
+  content: "\f214";
+  font-size: 32px;
+}
+.spoticon-discover-16:before {
+  content: "\f172";
+  font-size: 16px;
+}
+.spoticon-discover-32:before {
+  content: "\f173";
+  font-size: 32px;
+}
+.spoticon-download-16:before {
+  content: "\f11a";
+  font-size: 16px;
+}
+.spoticon-download-32:before {
+  content: "\f11b";
+  font-size: 32px;
+}
+.spoticon-edit-16:before {
+  content: "\f1E2";
+  font-size: 16px;
+}
+.spoticon-edit-32:before {
+  content: "\f1E3";
+  font-size: 32px;
+}
+.spoticon-email-16:before {
+  content: "\f1E7";
+  font-size: 16px;
+}
+.spoticon-email-32:before {
+  content: "\f1E8";
+  font-size: 32px;
+}
+.spoticon-events-16:before {
+  content: "\f1B3";
+  font-size: 16px;
+}
+.spoticon-events-32:before {
+  content: "\f1B4";
+  font-size: 32px;
+}
+.spoticon-facebook-16:before {
+  content: "\f1E9";
+  font-size: 16px;
+}
+.spoticon-facebook-32:before {
+  content: "\f1EA";
+  font-size: 32px;
+}
+.spoticon-facebook-messenger-16:before {
+  content: "\f313";
+  font-size: 16px;
+}
+.spoticon-facebook-messenger-32:before {
+  content: "\f314";
+  font-size: 32px;
+}
+.spoticon-filter-16:before {
+  content: "\f11c";
+  font-size: 16px;
+}
+.spoticon-filter-32:before {
+  content: "\f11d";
+  font-size: 32px;
+}
+.spoticon-flag-16:before {
+  content: "\f11e";
+  font-size: 16px;
+}
+.spoticon-flag-32:before {
+  content: "\f11f";
+  font-size: 32px;
+}
+.spoticon-follow-16:before {
+  content: "\f120";
+  font-size: 16px;
+}
+.spoticon-follow-32:before {
+  content: "\f121";
+  font-size: 32px;
+}
+.spoticon-fullscreen-16:before {
+  content: "\f28C";
+  font-size: 16px;
+}
+.spoticon-fullscreen-32:before {
+  content: "\f28D";
+  font-size: 32px;
+}
+.spoticon-games-console-16:before {
+  content: "\f253";
+  font-size: 16px;
+}
+.spoticon-games-console-32:before {
+  content: "\f254";
+  font-size: 32px;
+}
+.spoticon-gears-16:before {
+  content: "\f122";
+  font-size: 16px;
+}
+.spoticon-gears-32:before {
+  content: "\f123";
+  font-size: 32px;
+}
+.spoticon-gluelogo-16:before {
+  content: "\f295";
+  font-size: 16px;
+}
+.spoticon-gluelogo-32:before {
+  content: "\f296";
+  font-size: 32px;
+}
+.spoticon-googleplus-16:before {
+  content: "\f244";
+  font-size: 16px;
+}
+.spoticon-googleplus-32:before {
+  content: "\f245";
+  font-size: 32px;
+}
+.spoticon-grid-view-16:before {
+  content: "\f178";
+  font-size: 16px;
+}
+.spoticon-grid-view-24:before {
+  content: "\f1CA";
+  font-size: 24px;
+}
+.spoticon-grid-view-32:before {
+  content: "\f179";
+  font-size: 32px;
+}
+.spoticon-helpcircle-16:before {
+  content: "\f23B";
+  font-size: 16px;
+}
+.spoticon-helpcircle-32:before {
+  content: "\f23C";
+  font-size: 32px;
+}
+.spoticon-helpring-16:before {
+  content: "\f23E";
+  font-size: 16px;
+}
+.spoticon-helpring-32:before {
+  content: "\f23F";
+  font-size: 32px;
+}
+.spoticon-highlight-16:before {
+  content: "\f247";
+  font-size: 16px;
+}
+.spoticon-highlight-32:before {
+  content: "\f248";
+  font-size: 32px;
+}
+.spoticon-home-16:before {
+  content: "\f1B6";
+  font-size: 16px;
+}
+.spoticon-home-32:before {
+  content: "\f1B7";
+  font-size: 32px;
+}
+.spoticon-inbox-16:before {
+  content: "\f124";
+  font-size: 16px;
+}
+.spoticon-inbox-32:before {
+  content: "\f125";
+  font-size: 32px;
+}
+.spoticon-info-16:before {
+  content: "\f126";
+  font-size: 16px;
+}
+.spoticon-info-32:before {
+  content: "\f127";
+  font-size: 32px;
+}
+.spoticon-library-16:before {
+  content: "\f20A";
+  font-size: 16px;
+}
+.spoticon-library-32:before {
+  content: "\f20B";
+  font-size: 32px;
+}
+.spoticon-list-view-16:before {
+  content: "\f17C";
+  font-size: 16px;
+}
+.spoticon-list-view-24:before {
+  content: "\f1CB";
+  font-size: 24px;
+}
+.spoticon-list-view-32:before {
+  content: "\f17D";
+  font-size: 32px;
+}
+.spoticon-localfile-16:before {
+  content: "\f1FA";
+  font-size: 16px;
+}
+.spoticon-localfile-32:before {
+  content: "\f1FB";
+  font-size: 32px;
+}
+.spoticon-locked-16:before {
+  content: "\f128";
+  font-size: 16px;
+}
+.spoticon-locked-32:before {
+  content: "\f129";
+  font-size: 32px;
+}
+.spoticon-menu-16:before {
+  content: "\f1FD";
+  font-size: 16px;
+}
+.spoticon-menu-32:before {
+  content: "\f1FE";
+  font-size: 32px;
+}
+.spoticon-messages-16:before {
+  content: "\f12a";
+  font-size: 16px;
+}
+.spoticon-messages-32:before {
+  content: "\f12b";
+  font-size: 32px;
+}
+.spoticon-minimise-16:before {
+  content: "\f268";
+  font-size: 16px;
+}
+.spoticon-minimise-32:before {
+  content: "\f269";
+  font-size: 32px;
+}
+.spoticon-more-16:before {
+  content: "\f12c";
+  font-size: 16px;
+}
+.spoticon-more-24:before {
+  content: "\f1CC";
+  font-size: 24px;
+}
+.spoticon-more-32:before {
+  content: "\f12d";
+  font-size: 32px;
+}
+.spoticon-more-android-16:before {
+  content: "\f219";
+  font-size: 16px;
+}
+.spoticon-more-android-24:before {
+  content: "\f21A";
+  font-size: 24px;
+}
+.spoticon-more-android-32:before {
+  content: "\f21B";
+  font-size: 32px;
+}
+.spoticon-new-volume-16:before {
+  content: "\f1D0";
+  font-size: 16px;
+}
+.spoticon-new-volume-24:before {
+  content: "\f1D1";
+  font-size: 24px;
+}
+.spoticon-newradio-16:before {
+  content: "\f220";
+  font-size: 16px;
+}
+.spoticon-newradio-32:before {
+  content: "\f221";
+  font-size: 32px;
+}
+.spoticon-nikeplus-16:before {
+  content: "\f274";
+  font-size: 16px;
+}
+.spoticon-nikeplus-32:before {
+  content: "\f275";
+  font-size: 32px;
+}
+.spoticon-notifications-16:before {
+  content: "\f12e";
+  font-size: 16px;
+}
+.spoticon-notifications-32:before {
+  content: "\f12f";
+  font-size: 32px;
+}
+.spoticon-offline-16:before {
+  content: "\f21D";
+  font-size: 16px;
+}
+.spoticon-offline-32:before {
+  content: "\f21E";
+  font-size: 32px;
+}
+.spoticon-offline-sync-16:before {
+  content: "\f1B9";
+  font-size: 16px;
+}
+.spoticon-offline-sync-32:before {
+  content: "\f1BA";
+  font-size: 32px;
+}
+.spoticon-pause-16:before {
+  content: "\f130";
+  font-size: 16px;
+}
+.spoticon-pause-24:before {
+  content: "\f1D3";
+  font-size: 24px;
+}
+.spoticon-pause-32:before {
+  content: "\f131";
+  font-size: 32px;
+}
+.spoticon-payment-16:before {
+  content: "\f241";
+  font-size: 16px;
+}
+.spoticon-payment-32:before {
+  content: "\f242";
+  font-size: 32px;
+}
+.spoticon-paymenthistory-16:before {
+  content: "\f24A";
+  font-size: 16px;
+}
+.spoticon-paymenthistory-32:before {
+  content: "\f24B";
+  font-size: 32px;
+}
+.spoticon-play-16:before {
+  content: "\f132";
+  font-size: 16px;
+}
+.spoticon-play-24:before {
+  content: "\f1C8";
+  font-size: 24px;
+}
+.spoticon-play-32:before {
+  content: "\f133";
+  font-size: 32px;
+}
+.spoticon-play-next-16:before {
+  content: "\f18B";
+  font-size: 16px;
+}
+.spoticon-play-next-32:before {
+  content: "\f18C";
+  font-size: 32px;
+}
+.spoticon-playlist-16:before {
+  content: "\f134";
+  font-size: 16px;
+}
+.spoticon-playlist-32:before {
+  content: "\f135";
+  font-size: 32px;
+}
+.spoticon-playlist-folder-16:before {
+  content: "\f136";
+  font-size: 16px;
+}
+.spoticon-playlist-folder-32:before {
+  content: "\f137";
+  font-size: 32px;
+}
+.spoticon-plus-16:before {
+  content: "\f138";
+  font-size: 16px;
+}
+.spoticon-plus-24:before {
+  content: "\f1C6";
+  font-size: 24px;
+}
+.spoticon-plus-32:before {
+  content: "\f139";
+  font-size: 32px;
+}
+.spoticon-podcasts-16:before {
+  content: "\f238";
+  font-size: 16px;
+}
+.spoticon-podcasts-32:before {
+  content: "\f239";
+  font-size: 32px;
+}
+.spoticon-public-16:before {
+  content: "\f190";
+  font-size: 16px;
+}
+.spoticon-public-32:before {
+  content: "\f191";
+  font-size: 32px;
+}
+.spoticon-queue-16:before {
+  content: "\f13a";
+  font-size: 16px;
+}
+.spoticon-queue-32:before {
+  content: "\f13b";
+  font-size: 32px;
+}
+.spoticon-radio-16:before {
+  content: "\f13c";
+  font-size: 16px;
+}
+.spoticon-radio-24:before {
+  content: "\f1C7";
+  font-size: 24px;
+}
+.spoticon-radio-32:before {
+  content: "\f13d";
+  font-size: 32px;
+}
+.spoticon-radioqueue-16:before {
+  content: "\f26E";
+  font-size: 16px;
+}
+.spoticon-radioqueue-32:before {
+  content: "\f26F";
+  font-size: 32px;
+}
+.spoticon-redeem-16:before {
+  content: "\f24D";
+  font-size: 16px;
+}
+.spoticon-redeem-32:before {
+  content: "\f24E";
+  font-size: 32px;
+}
+.spoticon-refresh-16:before {
+  content: "\f195";
+  font-size: 16px;
+}
+.spoticon-refresh-32:before {
+  content: "\f196";
+  font-size: 32px;
+}
+.spoticon-released-16:before {
+  content: "\f198";
+  font-size: 16px;
+}
+.spoticon-released-32:before {
+  content: "\f199";
+  font-size: 32px;
+}
+.spoticon-repeat-16:before {
+  content: "\f13e";
+  font-size: 16px;
+}
+.spoticon-repeat-24:before {
+  content: "\f1D4";
+  font-size: 24px;
+}
+.spoticon-repeat-32:before {
+  content: "\f13f";
+  font-size: 32px;
+}
+.spoticon-repeatonce-16:before {
+  content: "\f200";
+  font-size: 16px;
+}
+.spoticon-repeatonce-24:before {
+  content: "\f201";
+  font-size: 24px;
+}
+.spoticon-repeatonce-32:before {
+  content: "\f202";
+  font-size: 32px;
+}
+.spoticon-report-abuse-16:before {
+  content: "\f261";
+  font-size: 32px;
+}
+.spoticon-report-abuse-32:before {
+  content: "\f256";
+  font-size: 32px;
+}
+.spoticon-reviews-16:before {
+  content: "\f19C";
+  font-size: 16px;
+}
+.spoticon-reviews-32:before {
+  content: "\f19D";
+  font-size: 32px;
+}
+.spoticon-running-16:before {
+  content: "\f28F";
+  font-size: 16px;
+}
+.spoticon-running-32:before {
+  content: "\f290";
+  font-size: 32px;
+}
+.spoticon-search-16:before {
+  content: "\f140";
+  font-size: 16px;
+}
+.spoticon-search-32:before {
+  content: "\f141";
+  font-size: 32px;
+}
+.spoticon-sendto-16:before {
+  content: "\f232";
+  font-size: 16px;
+}
+.spoticon-sendto-32:before {
+  content: "\f233";
+  font-size: 32px;
+}
+.spoticon-share-16:before {
+  content: "\f142";
+  font-size: 16px;
+}
+.spoticon-share-32:before {
+  content: "\f143";
+  font-size: 32px;
+}
+.spoticon-share-android-16:before {
+  content: "\f216";
+  font-size: 16px;
+}
+.spoticon-share-android-32:before {
+  content: "\f217";
+  font-size: 32px;
+}
+.spoticon-sharetofollowers-16:before {
+  content: "\f235";
+  font-size: 16px;
+}
+.spoticon-sharetofollowers-32:before {
+  content: "\f236";
+  font-size: 32px;
+}
+.spoticon-shows-16:before {
+  content: "\f27D";
+  font-size: 16px;
+}
+.spoticon-shows-32:before {
+  content: "\f27E";
+  font-size: 32px;
+}
+.spoticon-shuffle-16:before {
+  content: "\f144";
+  font-size: 16px;
+}
+.spoticon-shuffle-24:before {
+  content: "\f1D5";
+  font-size: 24px;
+}
+.spoticon-shuffle-32:before {
+  content: "\f145";
+  font-size: 32px;
+}
+.spoticon-skip-back-16:before {
+  content: "\f146";
+  font-size: 16px;
+}
+.spoticon-skip-back-24:before {
+  content: "\f1D6";
+  font-size: 24px;
+}
+.spoticon-skip-back-32:before {
+  content: "\f147";
+  font-size: 32px;
+}
+.spoticon-skip-forward-16:before {
+  content: "\f148";
+  font-size: 16px;
+}
+.spoticon-skip-forward-24:before {
+  content: "\f1D7";
+  font-size: 24px;
+}
+.spoticon-skip-forward-32:before {
+  content: "\f149";
+  font-size: 32px;
+}
+.spoticon-skipback15-16:before {
+  content: "\f280";
+  font-size: 16px;
+}
+.spoticon-skipback15-32:before {
+  content: "\f281";
+  font-size: 32px;
+}
+.spoticon-skipforward15-16:before {
+  content: "\f283";
+  font-size: 16px;
+}
+.spoticon-skipforward15-32:before {
+  content: "\f284";
+  font-size: 32px;
+}
+.spoticon-sleeptimer-16:before {
+  content: "\f289";
+  font-size: 16px;
+}
+.spoticon-sleeptimer-32:before {
+  content: "\f28A";
+  font-size: 32px;
+}
+.spoticon-sms-16:before {
+  content: "\f1EB";
+  font-size: 16px;
+}
+.spoticon-sms-32:before {
+  content: "\f1EC";
+  font-size: 32px;
+}
+.spoticon-sort-16:before {
+  content: "\f223";
+  font-size: 16px;
+}
+.spoticon-sort-32:before {
+  content: "\f224";
+  font-size: 32px;
+}
+.spoticon-sortdown-16:before {
+  content: "\f226";
+  font-size: 16px;
+}
+.spoticon-sortdown-32:before {
+  content: "\f227";
+  font-size: 32px;
+}
+.spoticon-sortup-16:before {
+  content: "\f229";
+  font-size: 16px;
+}
+.spoticon-sortup-32:before {
+  content: "\f22A";
+  font-size: 32px;
+}
+.spoticon-spotify-connect-16:before {
+  content: "\f1A3";
+  font-size: 16px;
+}
+.spoticon-spotify-connect-24:before {
+  content: "\f1D8";
+  font-size: 24px;
+}
+.spoticon-spotify-connect-32:before {
+  content: "\f1A4";
+  font-size: 32px;
+}
+.spoticon-spotifylogo-16:before {
+  content: "\f298";
+  font-size: 16px;
+}
+.spoticon-spotifylogo-32:before {
+  content: "\f299";
+  font-size: 32px;
+}
+.spoticon-spotifypremium-16:before {
+  content: "\f292";
+  font-size: 16px;
+}
+.spoticon-spotifypremium-32:before {
+  content: "\f293";
+  font-size: 32px;
+}
+.spoticon-star-16:before {
+  content: "\f14a";
+  font-size: 16px;
+}
+.spoticon-star-32:before {
+  content: "\f14b";
+  font-size: 32px;
+}
+.spoticon-startpage-16:before {
+  content: "\f286";
+  font-size: 16px;
+}
+.spoticon-startpage-32:before {
+  content: "\f287";
+  font-size: 32px;
+}
+.spoticon-tag-16:before {
+  content: "\f14c";
+  font-size: 16px;
+}
+.spoticon-tag-32:before {
+  content: "\f14d";
+  font-size: 32px;
+}
+.spoticon-thumbs-down-16:before {
+  content: "\f14e";
+  font-size: 16px;
+}
+.spoticon-thumbs-down-24:before {
+  content: "\f1D9";
+  font-size: 24px;
+}
+.spoticon-thumbs-down-32:before {
+  content: "\f14f";
+  font-size: 32px;
+}
+.spoticon-thumbs-up-16:before {
+  content: "\f150";
+  font-size: 16px;
+}
+.spoticon-thumbs-up-24:before {
+  content: "\f1DA";
+  font-size: 24px;
+}
+.spoticon-thumbs-up-32:before {
+  content: "\f151";
+  font-size: 32px;
+}
+.spoticon-time-16:before {
+  content: "\f152";
+  font-size: 16px;
+}
+.spoticon-time-32:before {
+  content: "\f153";
+  font-size: 32px;
+}
+.spoticon-topcountry-16:before {
+  content: "\f27A";
+  font-size: 16px;
+}
+.spoticon-topcountry-32:before {
+  content: "\f27B";
+  font-size: 32px;
+}
+.spoticon-toplist-16:before {
+  content: "\f154";
+  font-size: 16px;
+}
+.spoticon-toplist-32:before {
+  content: "\f155";
+  font-size: 32px;
+}
+.spoticon-track-16:before {
+  content: "\f156";
+  font-size: 16px;
+}
+.spoticon-track-32:before {
+  content: "\f157";
+  font-size: 32px;
+}
+.spoticon-trending-16:before {
+  content: "\f158";
+  font-size: 16px;
+}
+.spoticon-trending-32:before {
+  content: "\f159";
+  font-size: 32px;
+}
+.spoticon-trending-meter-16:before {
+  content: "\f1AC";
+  font-size: 16px;
+}
+.spoticon-trending-meter-32:before {
+  content: "\f1AD";
+  font-size: 32px;
+}
+.spoticon-tumblr-16:before {
+  content: "\f250";
+  font-size: 16px;
+}
+.spoticon-tumblr-32:before {
+  content: "\f251";
+  font-size: 32px;
+}
+.spoticon-twitter-16:before {
+  content: "\f1ED";
+  font-size: 16px;
+}
+.spoticon-twitter-32:before {
+  content: "\f1EE";
+  font-size: 32px;
+}
+.spoticon-user-16:before {
+  content: "\f15c";
+  font-size: 16px;
+}
+.spoticon-user-32:before {
+  content: "\f15d";
+  font-size: 32px;
+}
+.spoticon-video-16:before {
+  content: "\f26B";
+  font-size: 16px;
+}
+.spoticon-video-32:before {
+  content: "\f26C";
+  font-size: 32px;
+}
+.spoticon-volume-16:before {
+  content: "\f15e";
+  font-size: 16px;
+}
+.spoticon-volume-24:before {
+  content: "\f1DB";
+  font-size: 24px;
+}
+.spoticon-volume-32:before {
+  content: "\f15f";
+  font-size: 32px;
+}
+.spoticon-volume-off-16:before {
+  content: "\f1EF";
+  font-size: 16px;
+}
+.spoticon-volume-off-32:before {
+  content: "\f1F0";
+  font-size: 32px;
+}
+.spoticon-volume-onewave-16:before {
+  content: "\f203";
+  font-size: 16px;
+}
+.spoticon-volume-onewave-24:before {
+  content: "\f204";
+  font-size: 24px;
+}
+.spoticon-volume-onewave-32:before {
+  content: "\f205";
+  font-size: 32px;
+}
+.spoticon-volume-twowave-16:before {
+  content: "\f206";
+  font-size: 16px;
+}
+.spoticon-volume-twowave-24:before {
+  content: "\f207";
+  font-size: 24px;
+}
+.spoticon-volume-twowave-32:before {
+  content: "\f208";
+  font-size: 32px;
+}
+.spoticon-warning-16:before {
+  content: "\f1F2";
+  font-size: 16px;
+}
+.spoticon-warning-32:before {
+  content: "\f1F3";
+  font-size: 32px;
+}
+.spoticon-whatsapp-16:before {
+  content: "\f210";
+  font-size: 16px;
+}
+.spoticon-whatsapp-32:before {
+  content: "\f211";
+  font-size: 32px;
+}
+.spoticon-x-16:before {
+  content: "\f160";
+  font-size: 16px;
+}
+.spoticon-x-24:before {
+  content: "\f1C5";
+  font-size: 24px;
+}
+.spoticon-x-32:before {
+  content: "\f161";
+  font-size: 32px;
+}

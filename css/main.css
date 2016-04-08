@@ -280,3 +280,16 @@ div #see-the-code {
   }
 }
 
+.wrapp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.astext {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+}
+
