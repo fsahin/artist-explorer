@@ -104,7 +104,6 @@ def search():
     limit = request.args.get('limit')
 
     response = sp.search(q, type=type, limit=limit)
-    print response
     return jsonify(response)
 
 
