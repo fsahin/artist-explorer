@@ -22,6 +22,12 @@
     var loadAllGenresUri = serverBasePath + "/api/genres"
     var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
 
+    var artistExplorerPlaylistName = "Saved Tracks from Artist Explorer";
+    var artistExplorerPlaylistExists = false;
+    var artistExplorerPlaylistId;
+
+    var savedTracks = [];
+
     function getGenreArtistsUri(genreId) {
         return serverBasePath + "/api/genres/" + genreId + "/artists";
     }
@@ -173,6 +179,24 @@
         self.bioExists = ko.observable();
         self.genres = ko.observableArray([]);
         self.topTracks = ko.observableArray([]);
+        self.savedTracks = ko.observableArray(savedTracks);
+        self.errorMessage = ko.observable();
+
+        var localAccessToken = getAccessTokenLocal();
+        if (localAccessToken && localAccessToken !== '') {
+            self.isLoggedIn = ko.observable(true);
+            self.userId = ko.observable(localStorage.getItem('ae_userid',''));
+            self.displayName = ko.observable(localStorage.getItem('ae_display_name',''));
+            self.userImage = ko.observable(localStorage.getItem('ae_user_image',''));
+            spotifyWebApi.setAccessToken(localStorage.getItem('ae_token',''));
+            checkArtistExplorerPlaylistExists(self.userId(), 0, 50);
+        } else {
+            self.isLoggedIn = ko.observable(false);
+            self.userId = ko.observable();
+            self.displayName = ko.observable();
+            self.userImage = ko.observable();
+
+        }
 
         self.switchToGenre = function() {
             initRootWithGenre(this.name);
@@ -196,6 +220,43 @@
         self.playTrackCancel = function() {
             window.clearTimeout(playPopTrackTimeoutId);
         }
+
+        //TODO: Use promises to connect them to each other.
+        self.saveTrack = function (track, event) {
+            return new Promise(function (resolve, reject) {
+                if (!self.isLoggedIn()) {
+                    console.log("logging in");
+                    login().then(function() {
+                        resolve(createPlaylistAndAddTracks(track));
+                    });
+                } else {
+                    resolve(createPlaylistAndAddTracks(track));
+                }
+            });
+        }
+    }
+
+    function createPlaylistAndAddTracks(track) {
+        return new Promise(function (resolve, reject) {
+            if (!artistExplorerPlaylistExists) {
+                console.log("no artist exporer playkist");
+                createArtistExplorerPlaylist().then(function() {
+                    var uris = [];
+                    uris.push("spotify:track:" + track.id);
+                    spotifyWebApi.addTracksToPlaylist(artistInfoModel.userId(), artistExplorerPlaylistId, uris, {}, function(err, d) {
+                        console.log(err);
+                    });
+                });
+            } else {
+                var uris = [];
+                uris.push("spotify:track:" + track.id);
+                spotifyWebApi.addTracksToPlaylist(artistInfoModel.userId(), artistExplorerPlaylistId, uris, {}, function(err, d) {
+                    console.log(err);
+                });
+            }
+            savedTracks.push(track.id);
+            resolve();
+        });
     }
 
     function _playTrack(track) {
@@ -204,7 +265,7 @@
 
     var artistInfoModel = new artistInfoModel()
 
-    ko.applyBindings(artistInfoModel, document.getElementById('rightpane'));
+    ko.applyBindings(artistInfoModel, document.getElementById('mainn'));
 
     function _getInfo(artist) {
         $('#hoverwarning').css('display', 'none');
@@ -245,7 +306,8 @@
             artistInfoModel.topTracks([]);
             data.tracks.forEach(function (track, i) {
                 artistInfoModel.topTracks.push({
-                    'isPlaying': i == 0 ? ko.observable(true): ko.observable(false),
+                    'isPlaying': ko.observable(i == 0),
+                    'isSaved': ko.observable(savedTracks.indexOf(track.id) > -1),
                     'id': track.id,
                     'name': track.name,
                     'preview_url': track.preview_url,
@@ -450,27 +512,6 @@
 
     var currentLink;
 
-    var loginModel = function() {
-        var self = this;
-        var localAccessToken = getAccessTokenLocal();
-        if (localAccessToken && localAccessToken !== '') {
-            self.isLoggedIn = ko.observable(true);
-            self.userId = ko.observable(localStorage.getItem('ae_userid',''));
-            self.displayName = ko.observable(localStorage.getItem('ae_display_name',''));
-            self.userImage = ko.observable(localStorage.getItem('ae_user_image',''));
-            spotifyWebApi.setAccessToken(localStorage.getItem('ae_token',''));
-        } else {
-            self.isLoggedIn = ko.observable(false);
-            self.userId = ko.observable();
-            self.displayName = ko.observable();
-            self.userImage = ko.observable();
-
-        }
-
-    }
-
-    var loginModel = new loginModel();
-
     function getAccessTokenLocal() {
         var expires = 0 + localStorage.getItem('ae_expires', '0');
         if ((new Date()).getTime() > expires) {
@@ -479,29 +520,24 @@
         return localStorage.getItem('ae_token', '');
     }
 
-    ko.applyBindings(loginModel, document.getElementById('navbar-collapse-1'));
-
-
     var errorBoxModel = function() {
         var self = this;
         self.errorMessage = ko.observable();
     }
 
-    var errorBoxModel = new errorBoxModel();
-    ko.applyBindings(errorBoxModel, document.getElementById('error-modal'));
-
-
     function login() {
-        OAuthManager.obtainToken({
-          scopes: [
-              'playlist-read-private',
-              'playlist-modify-public',
-              'playlist-modify-private'
-            ]
-          }).then(function(token) {
-            onTokenReceived(token);
-          }).catch(function(error) {
-            console.error(error);
+        return new Promise(function (resolve, reject) {
+            OAuthManager.obtainToken({
+              scopes: [
+                  'playlist-read-private',
+                  'playlist-modify-public',
+                  'playlist-modify-private'
+                ]
+              }).then(function(token) {
+                resolve(onTokenReceived(token));
+              }).catch(function(error) {
+                console.error(error);
+              });
           });
     }
 
@@ -519,23 +555,27 @@
     }
 
     function onTokenReceived(accessToken) {
-        loginModel.isLoggedIn(true);
-        spotifyWebApi.setAccessToken(accessToken);
-        localStorage.setItem('ae_token', accessToken);
-        localStorage.setItem('ae_expires', (new Date()).getTime() + 3600 * 1000); // 1 hour
-        spotifyWebApi.getMe().then(function(data){
-            loginModel.userId(data.id);
-            loginModel.displayName(getDisplayName(data.display_name));
-            loginModel.userImage(data.images[0].url);
-            localStorage.setItem('ae_userid', data.id);
-            localStorage.setItem('ae_display_name', data.display_name);
-            localStorage.setItem('ae_user_image', data.images[0].url);
+        return new Promise(function (resolve, reject) {
+            artistInfoModel.isLoggedIn(true);
+            spotifyWebApi.setAccessToken(accessToken);
+            localStorage.setItem('ae_token', accessToken);
+            localStorage.setItem('ae_expires', (new Date()).getTime() + 3600 * 1000); // 1 hour
+            spotifyWebApi.getMe().then(function(data){
+                artistInfoModel.userId(data.id);
+                artistInfoModel.displayName(getDisplayName(data.display_name));
+                artistInfoModel.userImage(data.images[0].url);
+                localStorage.setItem('ae_userid', data.id);
+                localStorage.setItem('ae_display_name', data.display_name);
+                localStorage.setItem('ae_user_image', data.images[0].url);
+                currentApi = spotifyWebApi;
+                resolve(checkArtistExplorerPlaylistExists(artistInfoModel.userId(), 0, 50));
+            });
+
         });
-        currentApi = spotifyWebApi;
     }
 
     function createPlaylistFromTrackIds(trackIds) {
-        spotifyWebApi.createPlaylist(loginModel.userId(), {
+        spotifyWebApi.createPlaylist(artistInfoModel.userId(), {
                 'name': $('#text-playlist-name').val(),
                 'public': true
         },
@@ -544,7 +584,7 @@
             trackIds.forEach(function(trackId) {
                 uris.push("spotify:track:" + trackId);
             });
-            spotifyWebApi.addTracksToPlaylist(loginModel.userId(), playlist.id, uris, {}, function(err, d) {
+            spotifyWebApi.addTracksToPlaylist(artistInfoModel.userId(), playlist.id, uris, {}, function(err, d) {
                 $('#text-playlist-name').val("");
                 $('#createPlaylistModal').modal('hide');
                 $('#playlistCreatedModal').modal('show');
@@ -553,13 +593,72 @@
     }
 
     function createPlaylistModal() {
-        if (!loginModel.isLoggedIn()) {
+        if (!artistInfoModel.isLoggedIn()) {
             errorBoxModel.errorMessage("Please log in first");
             $('#error-modal').modal('show');
         } else {
             $('#createPlaylistModal').modal('show');
         }
 
+    }
+
+    function createArtistExplorerPlaylist() {
+        return new Promise(function (resolve, reject) {
+            spotifyWebApi.createPlaylist(artistInfoModel.userId(), {
+                'name': artistExplorerPlaylistName,
+                'public': true
+            },
+            function(error, playlist) {
+                console.log(playlist);
+                artistExplorerPlaylistName = playlist.name;
+                artistExplorerPlaylistId = playlist.id;
+                artistExplorerPlaylistExists = true;
+                resolve(playlist);
+            });
+
+        });
+
+    }
+
+    //todo: not only get the first page, but get all tracks
+    function getAllTracksInArtistExplorerPlaylist(playlistId) {
+        return new Promise(function(resolve, reject) {
+            spotifyWebApi.getPlaylist(artistInfoModel.userId(), playlistId)
+                .then(function(playlist) {
+                    playlist.tracks.items.forEach(function(item) {
+                        savedTracks.push(item.track.id);
+                    });
+                    console.log(savedTracks);
+                    resolve();
+                }, function(err) {
+                    console.error(err);
+                });
+        });
+    }
+
+    function checkArtistExplorerPlaylistExists(userId, offset, limit) {
+        return new Promise(function (resolve, reject) {
+            spotifyWebApi.getUserPlaylists(userId, {
+                'offset': offset,
+                'limit': limit
+            },
+            function(error, result) {
+                result.items.forEach(function(playlist) {
+                    if (playlist.name === artistExplorerPlaylistName) {
+                        console.log("artist explorer playlist found with id: " + playlist.id);
+                        artistExplorerPlaylistExists = true;
+                        artistExplorerPlaylistId = playlist.id;
+                        resolve(getAllTracksInArtistExplorerPlaylist(artistExplorerPlaylistId));
+                    }
+                });
+                if (!artistExplorerPlaylistExists && result.next != null) {
+                    checkArtistExplorerPlaylistExists(userId, limit + offset, limit);
+                } else {
+                    resolve();
+                }
+            });
+
+        });
     }
 
     function createPlaylist() {
@@ -614,13 +713,15 @@
     }
 
     function logout() {
-        loginModel.isLoggedIn(false);
-        loginModel.userId("");
-        loginModel.displayName("");
-        loginModel.userImage("");
+        artistInfoModel.isLoggedIn(false);
+        artistInfoModel.userId("");
+        artistInfoModel.displayName("");
+        artistInfoModel.userImage("");
+        artistExplorerPlaylistExists = false;
         localStorage.clear();
         currentApi = localApi;
     }
+
 
     window.AE = {
         getSuitableImage: getSuitableImage,

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/spoticons.css">
     <link rel="stylesheet" href="css/main.css">
   </head>
-  <body>
+  <body id="mainn">
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -61,7 +61,7 @@
             <li>Click on an artist to see related artists. </li>
             <li>Hover over an artist to hear a sample of their music.</li>
             <li>Enter an artist name or a genre and explore relationships between over 2,000,000 artists on Spotify.</li>
-            <li class="new-feature">New: Log In and press "Create Playlist" button to create a random playlist of top tracks of all the artists that are visible in the relationship tree</li>
+            <li>Log In and press "Create Playlist" button to create a random playlist of top tracks of all the artists that are visible in the relationship tree</li>
           </ul>
           <h4>Info</h4>
           Artist Explorer displays data from two great music APIs: <a target="_blank" href="https://developer.spotify.com/web-api/">the Spotify Web API </a> and <a target="_blank" href="http://developer.echonest.com/docs/v4">the Echo Nest API </a>
@@ -91,7 +91,7 @@
                   <button data-bind="css: {'spoticon-play-16': !isPlaying(), 'spoticon-spotify-connect-16': isPlaying()}" class="astext"></button>
                 </td>
                 <td class="tl-save">
-                  <button type="button" class="astext spoticon-plus-16"></button>
+                  <button type="button" data-bind="click: $parent.saveTrack" data-bind="css: {'spoticon-plus-16': !isSaved(), 'spoticon-check-16': isSaved()}"></button>
                 </td>
                 <td class="wrapp" data-bind="event: { mouseover: $parent.playTrack, mouseout: $parent.playTrackCancel }">
                   <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"> </a>
@@ -99,10 +99,6 @@
               </tr>
             </tbody>
           </table>
-
-          <div data-bind="visible: topTracks().length <= 0" id="divPopularTracks" class="alert">
-            Oops, seems like there are no available tracks in your country
-          </div>
 
           <hr>
 
@@ -143,6 +139,7 @@
               <ul class="nav navbar-nav navbar-left">
                 <li><a target="_blank" href="https://github.com/fsahin/artist-explorer">See the code</a></li>
               </ul>
+
               <ul class="nav navbar-nav navbar-right">
                 <li><a  href="#" data-bind="visible: !isLoggedIn()" onClick="AE.login()">Log In</a></li>
                 <li class="dropdown" data-bind="visible: isLoggedIn()">
@@ -169,27 +166,6 @@
           </form>
         </div>
         <div id="tree-container"></div>
-      </div>
-
-      <!-- Modal -->
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close btn-sm" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title" id="myModalLabel">Here is your link:</h3>
-              <a id="shareLink" data-bind="text: link, attr: { href:link }"></a>
-              <div class="share-warning">
-                Note that links might disappear after some time as this still is an example project :)
-              </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-facebook btn-sm" onclick="AE.fbShare()">Share</button>
-                <button type="button" class="btn btn-sm" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Create Playlist Modal -->
