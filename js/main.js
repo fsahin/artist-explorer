@@ -218,6 +218,23 @@
             }, 500);
         }
 
+
+        self.playTrackWithoutGap = function() {
+            var self2 = this;
+            var track = {
+                'preview_url': this.preview_url,
+                'id': this.id,
+            }
+            
+            _playTrack(track);
+            ko.utils.arrayForEach(self.topTracks(), function(track) {
+                track.isPlaying(false);
+                track.isSaved(savedTracks.indexOf(track.id) > -1);
+            });
+            self2.isPlaying(true);
+
+        }
+
         self.playTrackCancel = function() {
             window.clearTimeout(playPopTrackTimeoutId);
         }
