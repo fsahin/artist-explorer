@@ -175,7 +175,6 @@
         self.isArtistInfoVisible = ko.observable(false);
         self.spotifyLink = ko.observable();
         self.popularity = ko.observable();
-        self.bioExists = ko.observable();
         self.genres = ko.observableArray([]);
         self.topTracks = ko.observableArray([]);
         //self.savedTracks = ko.observableArray(savedTracks);
@@ -242,7 +241,6 @@
         self.saveTrack = function (track, event) {
             return new Promise(function (resolve, reject) {
                 if (!self.isLoggedIn()) {
-                    console.log("logging in");
                     login().then(function() {
                         resolve(createPlaylistAndAddTracks(track));
                     });
@@ -257,12 +255,10 @@
     function createPlaylistAndAddTracks(track) {
         return new Promise(function (resolve, reject) {
             if (!artistExplorerPlaylistExists) {
-                console.log("no artist exporer playkist");
                 createArtistExplorerPlaylist().then(function() {
                     var uris = [];
                     uris.push("spotify:track:" + track.id);
                     spotifyWebApi.addTracksToPlaylist(artistInfoModel.userId(), artistExplorerPlaylistId, uris, {}, function(err, d) {
-                        console.log(err);
                     });
                 });
             } else {
@@ -446,7 +442,6 @@
             })
             .autocomplete('instance')._renderItem = function (ul, item) {
                 if (!item) {
-                    console.log('no item');
                     return;
                 }
                 return $('<li></li>')
@@ -617,7 +612,6 @@
                 'public': true
             },
             function(error, playlist) {
-                console.log(playlist);
                 artistExplorerPlaylistName = playlist.name;
                 artistExplorerPlaylistId = playlist.id;
                 artistExplorerPlaylistExists = true;
@@ -636,7 +630,6 @@
                     playlist.tracks.items.forEach(function(item) {
                         savedTracks.push(item.track.id);
                     });
-                    console.log(savedTracks);
                     resolve();
                 }, function(err) {
                     console.error(err);
@@ -653,7 +646,6 @@
             function(error, result) {
                 result.items.forEach(function(playlist) {
                     if (playlist.name === artistExplorerPlaylistName) {
-                        console.log("artist explorer playlist found with id: " + playlist.id);
                         artistExplorerPlaylistExists = true;
                         artistExplorerPlaylistId = playlist.id;
                         resolve(getAllTracksInArtistExplorerPlaylist(artistExplorerPlaylistId));
