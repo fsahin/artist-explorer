@@ -88,10 +88,10 @@
             <tbody>
               <tr>
                 <td class="tl-play">
-                  <button data-bind="css: {'spoticon-play-16': !isPlaying(), 'spoticon-spotify-connect-16': isPlaying()}" class="astext"></button>
+                  <button data-bind="css: {'spoticon-play-16': !isPlaying(), 'spoticon-spotify-connect-16': isPlaying()}, click: $parent.playTrack" class="astext"></button>
                 </td>
                 <td class="tl-save">
-                  <button type="button" data-bind="click: $parent.saveTrack" data-bind="css: {'spoticon-plus-16': !isSaved(), 'spoticon-check-16': isSaved()}"></button>
+                  <button type="button" data-bind="css: {'spoticon-plus-16': !isSaved(), 'spoticon-check-16': isSaved()}, click: $parent.saveTrack", class="astext"></button>
                 </td>
                 <td class="wrapp" data-bind="event: { mouseover: $parent.playTrack, mouseout: $parent.playTrackCancel }">
                   <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"> </a>

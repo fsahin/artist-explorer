@@ -179,7 +179,7 @@
         self.bioExists = ko.observable();
         self.genres = ko.observableArray([]);
         self.topTracks = ko.observableArray([]);
-        self.savedTracks = ko.observableArray(savedTracks);
+        //self.savedTracks = ko.observableArray(savedTracks);
         self.errorMessage = ko.observable();
 
         var localAccessToken = getAccessTokenLocal();
@@ -212,6 +212,7 @@
                 _playTrack(track);
                 ko.utils.arrayForEach(self.topTracks(), function(track) {
                     track.isPlaying(false);
+                    track.isSaved(savedTracks.indexOf(track.id) > -1);
                 });
                 self2.isPlaying(true);
             }, 500);
@@ -719,6 +720,7 @@
         artistInfoModel.userImage("");
         artistExplorerPlaylistExists = false;
         localStorage.clear();
+        savedTracks = [];
         currentApi = localApi;
     }
 
