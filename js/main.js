@@ -175,7 +175,6 @@
         self.isArtistInfoVisible = ko.observable(false);
         self.spotifyLink = ko.observable();
         self.popularity = ko.observable();
-        self.biography = ko.observable();
         self.bioExists = ko.observable();
         self.genres = ko.observableArray([]);
         self.topTracks = ko.observableArray([]);
@@ -299,17 +298,6 @@
         $.ajax({
             url: loadArtistInfoUri + artist.uri
         }).done(function (data) {
-            var bioFound = false;
-            if (data.artist.biographies) {
-                data.artist.biographies.forEach(function (biography) {
-                    if (!biography.truncated && !bioFound) {
-                        artistInfoModel.biography(biography.text);
-                        bioFound = true;
-                    }
-                });
-            }
-            artistInfoModel.bioExists(bioFound);
-
             artistInfoModel.genres([]);
             data.artist.genres.forEach(function (genre) {
                 artistInfoModel.genres.push(
