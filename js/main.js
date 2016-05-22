@@ -250,6 +250,7 @@
                 } else {
                     resolve(createPlaylistAndAddTracks(track));
                 }
+
             });
         }
     }
@@ -269,10 +270,11 @@
                 var uris = [];
                 uris.push("spotify:track:" + track.id);
                 spotifyWebApi.addTracksToPlaylist(artistInfoModel.userId(), artistExplorerPlaylistId, uris, {}, function(err, d) {
-                    console.log(err);
+
                 });
             }
             savedTracks.push(track.id);
+            track.isSaved(true);
             resolve();
         });
     }
