@@ -20,7 +20,7 @@
     var currentApi = localApi;
 
     var loadAllGenresUri = serverBasePath + "/api/genres"
-    var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
+    //var loadArtistInfoUri = serverBasePath + "/api/artist-info/"
 
     var artistExplorerPlaylistName = "Saved Tracks from Artist Explorer";
     var artistExplorerPlaylistExists = false;
@@ -147,7 +147,7 @@
             url: loadAllGenresUri
         }).done(function (data) {
             data.genres.forEach(function (genre) {
-                allGenres.push(toTitleCase(genre.name));
+                allGenres.push(toTitleCase(genre));
             });
         });
     }
@@ -291,20 +291,6 @@
 
         drawChart(artist.popularity);
 
-        $.ajax({
-            url: loadArtistInfoUri + artist.uri
-        }).done(function (data) {
-            artistInfoModel.genres([]);
-            data.artist.genres.forEach(function (genre) {
-                artistInfoModel.genres.push(
-                    {
-                        'name': genre.name,
-                        'titleCaseName': toTitleCase(genre.name),
-                    }
-                )
-            });
-        });
-
         currentApi.getArtistTopTracks(artist.id, userCountry).then(function (data) {
             Player.playForTrack(data.tracks[0]);
             artistInfoModel.topTracks([]);
@@ -351,15 +337,17 @@
                 url: getGenreArtistsUri(encodeURIComponent(genreName.toLowerCase()))
             }).then(function (data) {
                 var idsToRequest = [];
-                data.artists.forEach(function (artist) {
-                    if (artist.foreign_ids) {
-                        idsToRequest.push(getIdFromArtistUri(artist.foreign_ids[0].foreign_id));
-                    }
+                data.tracks.forEach(function (track) {
+                    track.artists.forEach(function(artist) {
+                        if (idsToRequest.indexOf(artist.id) < 0 && idsToRequest.length <= 20) {
+                            idsToRequest.push(artist.id);
+                        }
+                    });
                 });
                 return currentApi.getArtists(idsToRequest).then(function (data) {
                     //Sort in popularity order
                     resolve(data.artists.sort(function (a, b) {
-                        return b.popularity - a.popularity;
+                        //return b.popularity - a.popularity;
                     }).slice(0, numberOfArtistsToShow));
                 });
             });

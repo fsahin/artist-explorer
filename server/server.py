@@ -26,11 +26,14 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 
 cors = CORS(app)
 
-# Make sure ECHO_NEST_API_KEY environment variable is set
-en = pyen.Pyen()
-
 client_credentials_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
+
+genres = {
+    "genres": [ "acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music" ]
+}
+
 
 def cached(timeout=5 * 60, key='view/%s'):
     def decorator(f):
@@ -47,32 +50,16 @@ def cached(timeout=5 * 60, key='view/%s'):
     return decorator
 
 
-@app.route('/api/artist-info/<artist_uri>')
-@cached(timeout=30 * 60)
-def get_artist_info(artist_uri):
-    echonest_response = en.get('artist/profile', id=artist_uri, bucket=['genre','biographies'])
-    response = {}
-    response['status'] = echonest_response['status']
-    response['artist'] = {}
-    response['artist']['genres'] = echonest_response['artist']['genres']
-    for bio in echonest_response['artist']['biographies']:
-        if ('truncated' not in bio) or bio['truncated'] == False:
-            response['artist']['biographies'] = [bio]
-            break
-
-    return jsonify(response)
-
 @app.route('/api/genres/<genre_name>/artists')
 @cached(timeout=30 * 60)
 def get_genre_artists(genre_name):
-    response = en.get('genre/artists', name=genre_name, results=15, bucket=['id:spotify'], limit=True)
+    response = sp.recommendations(seed_genres=genre_name, limit=50)
     return jsonify(response)
 
 @app.route('/api/genres')
 @cached(timeout=30 * 60)
 def get_all_genres():
-    response = en.get('genre/list', results=2000)
-    return jsonify(response)
+    return jsonify(genres)
 
 @app.route('/spotify/artists/<artist_id>')
 def get_artist(artist_id):
