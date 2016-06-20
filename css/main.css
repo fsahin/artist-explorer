@@ -171,20 +171,6 @@ h4 {
   text-align: justify;
 }
 
-.now-playing {
-  padding-left: 37px;
-}
-
-.now-playing::before {
-  display: inlne-block;
-}
-
-.now-playing.active {
-  background: url('../img/spotify.png') no-repeat left top;
-  background-size: 67px;
-  background-position-x: 0px;
-}
-
 #popularTracks {
   list-style-position: inside;
   text-indent: -12px;
