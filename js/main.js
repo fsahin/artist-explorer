@@ -74,7 +74,9 @@
         $.ajax({
             url: "https://freegeoip.net/json/"
         }).done(function (data) {
-            userCountry = data.country_code;
+            if (data.country_code) {
+                userCountry = data.country_code;
+            }
         });
 
         initContainer();
