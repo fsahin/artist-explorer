@@ -5,10 +5,9 @@ See Artist Explorer at [artistexplorer.spotify.com](https://artistexplorer.spoti
 
 Artists Explorer is a tool that helps serious music enthusiasts explore artist relationships and discover new music. Start from any artist and quickly navigate through trees of related artists, previewing their music as you go.
 
-The app pulls related artist information from Spotify and additional data (genre, biography) from the Echo Nest. Have a look at the documentation of these APIs at:
+The app pulls related artist information from Spotify Web APIs. Have a look at the documentation at:
 
 * [https://developer.spotify.com/web-api/](https://developer.spotify.com/web-api/)
-* [https://developer.echonest.com/docs/v4](https://developer.echonest.com/docs/v4)
 
 Running Locally
 ===============
