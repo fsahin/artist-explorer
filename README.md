@@ -19,7 +19,7 @@ Echo Nest API calls are proxied through a flask server. You need to start the se
 ```
 cd server
 pip install -r requirements.txt
-env SPOTIFY_CLIENT_ID="<your_client_id>" SPOTIFY_CLIENT_SECRET="<your_client_secret>" python server.py
+env SPOTIPY_CLIENT_ID="<your_client_id>" SPOTIPY_CLIENT_SECRET="<your_client_secret>" python server.py
 ```
 
 And you also need to serve the files at the root of the project. You can use SimpleHTTPServer module in python. To do that, change directyory to the project base and enter the following command:
