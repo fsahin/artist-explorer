@@ -6,6 +6,7 @@ import pyen
 import redis
 import uuid
 import time
+import os
 from functools import update_wrapper
 from flask import request, g
 import zlib
@@ -26,7 +27,9 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 
 cors = CORS(app)
 
-client_credentials_manager = SpotifyClientCredentials()
+client_id = os.environ['SPOTIFY_CLIENT_ID']
+client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
+client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 
