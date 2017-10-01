@@ -53,7 +53,7 @@ def cached(timeout=5 * 60, key='view/%s'):
 @app.route('/api/genres/<genre_name>/artists')
 @cached(timeout=30 * 60)
 def get_genre_artists(genre_name):
-    response = sp.recommendations(seed_genres=genre_name, limit=50)
+    response = sp.recommendations(seed_genres=[genre_name], limit=50)
     return jsonify(response)
 
 @app.route('/api/genres')

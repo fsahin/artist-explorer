@@ -95,7 +95,7 @@
                   <button type="button" data-bind="css: {'spoticon-plus-16': !isSaved(), 'spoticon-check-16': isSaved()}, click: $parent.saveTrack", class="astext"></button>
                 </td>
                 <td class="wrapp" data-bind="event: { mouseover: $parent.playTrack, mouseout: $parent.playTrackCancel }">
-                  <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"> </a>
+                  <a target="_blank" data-bind="text: name, attr: { href:spotifyLink }"></a>
                 </td>
               </tr>
             </tbody>
@@ -108,6 +108,7 @@
             <ul data-bind="foreach: genres" id="mainGenres">
               <li>
                 <a data-bind="text: titleCaseName, click: $parent.switchToGenre"></a>
+                <a target="_blank" data-bind="attr: { href:spotifyLink }" class="spoticon-spotify-icon-16"></a>
               </li>
             </ul>
           </div>

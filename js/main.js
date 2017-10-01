@@ -289,7 +289,14 @@
 
         artistInfoModel.isArtistInfoVisible(true);
         artistInfoModel.artistName(artist.name);
-        artistInfoModel.spotifyLink(artist.external_urls.spotify)
+        artistInfoModel.spotifyLink(artist.external_urls.spotify);
+        artistInfoModel.genres.removeAll();
+        artist.genres.forEach(function (genreName) {
+            artistInfoModel.genres.push({
+                titleCaseName: genreName,
+                spotifyLink: 'https://open.spotify.com/search/results/' + genreName
+            });
+        });
 
         drawChart(artist.popularity);
 
@@ -346,6 +353,9 @@
                         }
                     });
                 });
+                if(idsToRequest.length === 0){
+                    return;
+                }
                 return currentApi.getArtists(idsToRequest).then(function (data) {
                     //Sort in popularity order
                     resolve(data.artists.sort(function (a, b) {

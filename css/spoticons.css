@@ -747,6 +747,10 @@
   content: "\f18C";
   font-size: 32px;
 }
+.spoticon-spotify-icon-16:before {
+  content: "\f298";
+  font-size: 16px;
+}
 .spoticon-playlist-16:before {
   content: "\f134";
   font-size: 16px;
