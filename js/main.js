@@ -203,36 +203,32 @@
         }
 
         self.playTrack = function() {
-            var self2 = this;
-            var track = {
-                'preview_url': this.preview_url,
-                'id': this.id,
-            }
-            playPopTrackTimeoutId = window.setTimeout(function () {
-                _playTrack(track);
-                ko.utils.arrayForEach(self.topTracks(), function(track) {
-                    track.isPlaying(false);
-                    track.isSaved(savedTracks.indexOf(track.id) > -1);
-                });
-                self2.isPlaying(true);
-            }, 500);
-        }
+            var track = this;
+          playTrackIfItHasPreview(track, 500);
+        };
 
 
         self.playTrackWithoutGap = function() {
-            var self2 = this;
-            var track = {
-                'preview_url': this.preview_url,
-                'id': this.id,
-            }
-            
+            var track = this;
+            playTrackIfItHasPreview(track, 0);
+        };
+
+        function playTrackIfItHasPreview(trackToPlay, waitTimeInMs){
+          if(!trackToPlay.hasPreviewTrack()){
+            return;
+          }
+          var trackIdToPlay = trackToPlay.id;
+          var track = {
+            'preview_url': trackToPlay.preview_url,
+            'id': trackIdToPlay,
+          };
+          playPopTrackTimeoutId = window.setTimeout(function () {
             _playTrack(track);
             ko.utils.arrayForEach(self.topTracks(), function(track) {
-                track.isPlaying(false);
-                track.isSaved(savedTracks.indexOf(track.id) > -1);
+              track.isPlaying(track.id === trackIdToPlay);
+              track.isSaved(savedTracks.indexOf(track.id) > -1);
             });
-            self2.isPlaying(true);
-
+          }, waitTimeInMs);
         }
 
         self.playTrackCancel = function() {
@@ -294,17 +290,24 @@
         drawChart(artist.popularity);
 
         currentApi.getArtistTopTracks(artist.id, userCountry).then(function (data) {
-            Player.playForTrack(data.tracks[0]);
             artistInfoModel.topTracks([]);
-            data.tracks.forEach(function (track, i) {
-                artistInfoModel.topTracks.push({
-                    'isPlaying': ko.observable(i == 0),
-                    'isSaved': ko.observable(savedTracks.indexOf(track.id) > -1),
-                    'id': track.id,
-                    'name': track.name,
-                    'preview_url': track.preview_url,
-                    'spotifyLink': track.external_urls.spotify,
-                });
+            var hasATrackBeenPickedToPlay = false;
+            data.tracks.forEach(function (track) {
+              var processedTrack = {
+                'isPlaying': ko.observable(false),
+                'isSaved': ko.observable(savedTracks.indexOf(track.id) > -1),
+                'hasPreviewTrack': ko.observable(track.preview_url !== null),
+                'id': track.id,
+                'name': track.name,
+                'preview_url': track.preview_url,
+                'spotifyLink': track.external_urls.spotify,
+              };
+              if(processedTrack.hasPreviewTrack() && !hasATrackBeenPickedToPlay) {
+                  processedTrack.isPlaying(true);
+                  _playTrack(track);
+                  hasATrackBeenPickedToPlay = true;
+              }
+              artistInfoModel.topTracks.push(processedTrack);
             });
         }, function (err) {
             Player.clearMusic();
