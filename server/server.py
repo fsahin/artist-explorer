@@ -3,7 +3,6 @@ from functools import  wraps
 from flask_cors import CORS, cross_origin
 from werkzeug.contrib.cache import SimpleCache
 import pyen
-import redis
 import uuid
 import time
 from functools import update_wrapper
