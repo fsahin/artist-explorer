@@ -1,4 +1,4 @@
-Flask==0.10.1
+Flask==1.0
 Flask-Cors==1.9.0
 pyen==2.3
 spotipy==2.3.3
